@@ -2,6 +2,7 @@ package com.github.x3r.mekanism_weaponry.common.registry;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.item.GauntletItem;
+import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -17,7 +18,12 @@ public class ItemRegistry {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MekanismWeaponry.MOD_ID);
 
-    public static final DeferredHolder<Item, Item> GAUNTLET = ITEMS.register("gauntlet", () -> new GauntletItem(Tiers.GOLD, BlockTags.MINEABLE_WITH_PICKAXE, new Item.Properties()));
+    public static final DeferredHolder<Item, Item> GAUNTLET = ITEMS.register("gauntlet",
+            () -> new GauntletItem(new Item.Properties()));
+
+    public static final DeferredHolder<Item, Item> PLASMA_RIFLE = ITEMS.register("plasma_rifle",
+            () -> new PlasmaRifleItem(new Item.Properties()));
+
 
     public static class ModItemTab {
 

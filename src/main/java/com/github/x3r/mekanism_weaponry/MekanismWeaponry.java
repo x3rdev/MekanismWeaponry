@@ -1,5 +1,6 @@
 package com.github.x3r.mekanism_weaponry;
 
+import com.github.x3r.mekanism_weaponry.common.CommonSetup;
 import com.github.x3r.mekanism_weaponry.common.registry.BlockRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import net.neoforged.bus.api.IEventBus;
@@ -22,5 +23,7 @@ public class MekanismWeaponry {
         ItemRegistry.ITEMS.register(modEventBus);
         ItemRegistry.ModItemTab.CREATIVE_MODE_TABS.register(modEventBus);
 //        SoundRegistry.SOUNDS.register(modEventBus);
+
+        modEventBus.addListener(CommonSetup::registerClientExtensions);
     }
 }

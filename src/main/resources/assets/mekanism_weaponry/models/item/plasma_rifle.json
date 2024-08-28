@@ -1,0 +1,16 @@
+{
+  "parent": "builtin/entity",
+  "texture_size": [
+    64,
+    64
+  ],
+  "display": {
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        -8,
+        -4
+      ]
+    }
+  }
+}
