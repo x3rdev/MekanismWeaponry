@@ -1,0 +1,8 @@
+{
+  "plasma_rifle_shoot": {
+    "sounds": [
+      "mekanism_weaponry:item/plasma_rifle_shoot"
+    ],
+    "subtitle": "mekanism_weaponry.subtitle.plasma_rifle_shoot"
+  }
+}

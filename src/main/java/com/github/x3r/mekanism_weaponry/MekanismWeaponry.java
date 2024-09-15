@@ -1,8 +1,9 @@
 package com.github.x3r.mekanism_weaponry;
 
+import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.common.CommonSetup;
-import com.github.x3r.mekanism_weaponry.common.registry.BlockRegistry;
-import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
+import com.github.x3r.mekanism_weaponry.common.packet.MekanismWeaponryPacketHandler;
+import com.github.x3r.mekanism_weaponry.common.registry.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -17,13 +18,17 @@ public class MekanismWeaponry {
         IEventBus neoEventBus = NeoForge.EVENT_BUS;
 
         BlockRegistry.BLOCKS.register(modEventBus);
+        DataComponentRegistry.DATA_COMPONENTS.register(modEventBus);
 //        BlockEntityTypeRegistry.BLOCK_ENTITY_TYPES.register(modEventBus);
 //        ContainerTypeRegistry.CONTAINER_TYPES.register(modEventBus);
-//        EntityRegistry.ENTITY_TYPES.register(modEventBus);
+
+        EntityRegistry.ENTITY_TYPES.register(modEventBus);
         ItemRegistry.ITEMS.register(modEventBus);
         ItemRegistry.ModItemTab.CREATIVE_MODE_TABS.register(modEventBus);
-//        SoundRegistry.SOUNDS.register(modEventBus);
+        SoundRegistry.SOUND_EVENTS.register(modEventBus);
 
-        modEventBus.addListener(CommonSetup::registerClientExtensions);
+        modEventBus.addListener(MekanismWeaponryPacketHandler::registerPayloadHandler);
+        neoEventBus.addListener(ClientSetup::pressKey);
+        neoEventBus.addListener(ClientSetup::onClientTick);
     }
 }

@@ -37,4 +37,6 @@ public class GauntletRenderer extends DynamicGeoItemRenderer<GauntletItem> {
     protected IntIntPair computeTextureSize(ResourceLocation texture) {
         return TEXTURE_DIMENSIONS_CACHE.computeIfAbsent(getTextureLocation(this.animatable), RenderUtil::getTextureDimensions);
     }
+
+
 }

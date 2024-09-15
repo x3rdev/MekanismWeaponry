@@ -47,14 +47,25 @@ runs {
     data {
         programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
+
+    junit {
+
+    }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven { url 'https://modmaven.dev/' }
-    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroup("software.bernie.geckolib")
+        }
+    }
     maven { url 'https://www.cursemaven.com' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 configurations {
@@ -62,10 +73,10 @@ configurations {
 }
 
 dependencies {
-
     implementation "net.neoforged:neoforge:${neo_version}"
     implementation "mekanism:Mekanism:${minecraft_version}-${mekanism_version}"
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    implementation "curse.maven:spark-361579:5622205"
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:19.5.0.35"
 }
 
