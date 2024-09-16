@@ -28,6 +28,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
 
     private static final RawAnimation IDLE = RawAnimation.begin().then("idle", Animation.LoopType.LOOP);
     private static final RawAnimation RELOAD = RawAnimation.begin().then("reload", Animation.LoopType.PLAY_ONCE);
+    private static final RawAnimation SHOOT = RawAnimation.begin().then("shot", Animation.LoopType.PLAY_ONCE);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -47,9 +48,8 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
             LaserEntity laser = new LaserEntity(player.level(), pos, 1.0F, 102, 102, 255, 130);
             laser.setDeltaMovement(player.getLookAngle().normalize().scale(3));
             level.addFreshEntity(laser);
-            //TODO make weapon pitch up as it shoots
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.LASER_RIFLE_SHOOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-            triggerAnim(player, GeoItem.getOrAssignId(stack, player.serverLevel()), "muzzle_flash", "flash");
+            triggerAnim(player, GeoItem.getOrAssignId(stack, player.serverLevel()), "controller", "shoot");
         }
     }
 
@@ -60,7 +60,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
 
     @Override
     public void serverReload(ItemStack stack, GunItem item, ServerPlayer player) {
-        triggerAnim(player, GeoItem.getOrAssignId(stack, player.serverLevel()), "reload", "reload");
+        triggerAnim(player, GeoItem.getOrAssignId(stack, player.serverLevel()), "controller", "reload");
     }
 
     @Override
@@ -85,12 +85,14 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "reload", 0, state -> {
+        controllers.add(new AnimationController<>(this, "controller", 0, state -> {
             if(state.getData(DataTickets.ITEM_RENDER_PERSPECTIVE).firstPerson()) {
                 return PlayState.STOP;
             }
             return state.setAndContinue(IDLE);
-        }).triggerableAnim("reload", RELOAD));
+        })
+                .triggerableAnim("reload", RELOAD)
+                .triggerableAnim("shoot", SHOOT));
     }
 
     @Override

@@ -75,7 +75,7 @@ public class LaserEntity extends Projectile {
             if(hitResult instanceof BlockHitResult blockHitResult) {
                 handleBlockCollision(blockHitResult);
             }
-            if(this.tickCount < 20*10) {
+            if(this.tickCount > 20*10) {
                 this.remove(RemovalReason.KILLED);
                 return;
             }
@@ -88,9 +88,11 @@ public class LaserEntity extends Projectile {
 
     private void handleBlockCollision(BlockHitResult hitResult) {
         BlockState state = level().getBlockState(hitResult.getBlockPos());
-        if(!state.getVisualShape(level(), hitResult.getBlockPos(), CollisionContext.empty()).isEmpty()) {
-            this.remove(RemovalReason.KILLED);
+        if(state.getCollisionShape(level(), hitResult.getBlockPos(), CollisionContext.empty()).isEmpty() ||
+                state.getVisualShape(level(), hitResult.getBlockPos(), CollisionContext.empty()).isEmpty()) {
+            return;
         }
+        this.remove(RemovalReason.KILLED);
     }
 
     public List<BlockHitResult> traceBlockCollisions(Vec3 startVec, Vec3 endVec) {

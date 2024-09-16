@@ -1679,10 +1679,7 @@
 								"down": {"uv": [60, 10.5], "uv_size": [0.5, -4.5]}
 							}
 						}
-					],
-					"locators": {
-						"smoke_locator": [3, 9, -8]
-					}
+					]
 				},
 				{
 					"name": "arms",
