@@ -2,6 +2,7 @@ package com.github.x3r.mekanism_weaponry.common.registry;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.item.GauntletItem;
+import com.github.x3r.mekanism_weaponry.common.item.ModChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -23,6 +24,9 @@ public class ItemRegistry {
 
     public static final DeferredHolder<Item, Item> PLASMA_RIFLE = ITEMS.register("plasma_rifle",
             () -> new PlasmaRifleItem(new Item.Properties()));
+
+    public static final DeferredHolder<Item, Item> MOD_CHIP = ITEMS.register("mod_chip",
+            () -> new ModChipItem(new Item.Properties()));
 
 
     public static class ModItemTab {

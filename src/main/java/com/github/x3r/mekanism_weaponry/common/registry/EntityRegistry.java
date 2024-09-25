@@ -3,6 +3,7 @@ package com.github.x3r.mekanism_weaponry.common.registry;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.entity.LaserEntity;
+import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -21,4 +22,11 @@ public class EntityRegistry {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "laser").toString()));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<PlasmaEntity>> PLASMA = ENTITY_TYPES.register("plasma",
+            () -> EntityType.Builder.<PlasmaEntity>of(PlasmaEntity::new, MobCategory.MISC)
+                    .sized(0.125F, 0.125F)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "plasma").toString()));
 }

@@ -363,6 +363,24 @@
 					}
 				}
 			}
+		},
+		"zoom_in": {
+			"animation_length": 0.48,
+			"bones": {
+				"gun": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.48": {
+							"vector": [14, 4, 0]
+						}
+					}
+				}
+			}
 		}
 	},
 	"geckolib_format_version": 2

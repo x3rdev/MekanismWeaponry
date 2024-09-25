@@ -17,11 +17,22 @@ public class DataComponentRegistry {
             ).apply(instance, GunItem.DataComponentCooldown::new)
     );
 
+    private static final Codec<GunItem.DataComponentZoom> ZOOM_CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                    Codec.BOOL.fieldOf("zoomed").forGetter(GunItem.DataComponentZoom::zoomed)
+            ).apply(instance, GunItem.DataComponentZoom::new)
+    );
+
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(MekanismWeaponry.MOD_ID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<GunItem.DataComponentCooldown>> COOLDOWN = DATA_COMPONENTS.registerComponentType(
             "cooldown",
             builder -> builder.persistent(COOLDOWN_CODEC)
+    );
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<GunItem.DataComponentZoom>> ZOOM = DATA_COMPONENTS.registerComponentType(
+            "zoom",
+            builder -> builder.persistent(ZOOM_CODEC)
     );
 
 }
