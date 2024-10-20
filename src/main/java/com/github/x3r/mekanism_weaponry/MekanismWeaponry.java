@@ -3,6 +3,7 @@ package com.github.x3r.mekanism_weaponry;
 import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.common.CommonSetup;
 import com.github.x3r.mekanism_weaponry.common.packet.MekanismWeaponryPacketHandler;
+import com.github.x3r.mekanism_weaponry.common.recipe.AddChipRecipe;
 import com.github.x3r.mekanism_weaponry.common.registry.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -28,7 +29,13 @@ public class MekanismWeaponry {
         SoundRegistry.SOUND_EVENTS.register(modEventBus);
 
         modEventBus.addListener(MekanismWeaponryPacketHandler::registerPayloadHandler);
+        modEventBus.addListener(CommonSetup::registerCapabilities);
+        neoEventBus.addListener(AddChipRecipe::anvilUpdate);
+
         neoEventBus.addListener(ClientSetup::pressKey);
         neoEventBus.addListener(ClientSetup::onClientTick);
+        neoEventBus.addListener(ClientSetup::cameraSetupEvent);
+
+
     }
 }

@@ -4,6 +4,7 @@ import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.client.renderer.LaserRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRenderer;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
+import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
@@ -15,6 +16,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -22,10 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
@@ -64,8 +63,6 @@ public class ClientSetup {
             public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
                 return HumanoidModel.ArmPose.BOW_AND_ARROW;
             }
-
-
         }, ItemRegistry.PLASMA_RIFLE.get()); // All guns?
     }
 
@@ -81,5 +78,23 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(RELOAD_MAPPING.get());
+    }
+
+    public static float recoil;
+
+    // Neo Bus event, registered in mod class
+    public static void cameraSetupEvent(ViewportEvent.ComputeCameraAngles event) {
+        if(recoil > 0) {
+            event.setPitch(event.getPitch() - recoil);
+            recoil-=0.25F;
+            if (recoil < 0.05) {
+                recoil = 0;
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
+        event.register(ItemRegistry.PLASMA_RIFLE.get(), PlasmaRifleItem.decorator());
     }
 }

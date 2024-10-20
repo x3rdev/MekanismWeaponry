@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'idea'
-    id 'net.neoforged.gradle.userdev' version '7.0.145'
+    id 'net.neoforged.gradle.userdev' version '7.0.165'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -45,7 +45,7 @@ runs {
     }
 
     data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        getArguments().addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 
     junit {
@@ -65,7 +65,6 @@ repositories {
         }
     }
     maven { url 'https://www.cursemaven.com' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 configurations {
@@ -76,8 +75,8 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
     implementation "mekanism:Mekanism:${minecraft_version}-${mekanism_version}"
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    implementation "curse.maven:spark-361579:5622205"
-    localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:19.5.0.35"
+//    implementation "curse.maven:spark-361579:5622205"
+    localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:19.18.10.218"
 }
 
 tasks.withType(ProcessResources).configureEach {

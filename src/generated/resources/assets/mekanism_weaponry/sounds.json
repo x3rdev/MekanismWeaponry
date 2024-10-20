@@ -1,4 +1,10 @@
 {
+  "plasma_rifle_out_of_energy": {
+    "sounds": [
+      "mekanism_weaponry:item/plasma_rifle_out_of_energy"
+    ],
+    "subtitle": "mekanism_weaponry.subtitle.plasma_rifle_out_of_energy"
+  },
   "plasma_rifle_shoot": {
     "sounds": [
       "mekanism_weaponry:item/plasma_rifle_shoot"

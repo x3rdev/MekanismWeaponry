@@ -16,10 +16,15 @@ public class MWSoundDefProvider extends SoundDefinitionsProvider {
 
     @Override
     public void registerSounds() {
-        add(SoundRegistry.LASER_RIFLE_SHOOT.get(), definition()
+        add(SoundRegistry.PLASMA_RIFLE_SHOOT.get(), definition()
                 .subtitle("mekanism_weaponry.subtitle.plasma_rifle_shoot")
                 .with(SoundDefinition.Sound.sound(
                         ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/plasma_rifle_shoot"),
+                        SoundDefinition.SoundType.SOUND)));
+        add(SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), definition()
+                .subtitle("mekanism_weaponry.subtitle.plasma_rifle_out_of_energy")
+                .with(SoundDefinition.Sound.sound(
+                        ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/plasma_rifle_out_of_energy"),
                         SoundDefinition.SoundType.SOUND)));
     }
 }

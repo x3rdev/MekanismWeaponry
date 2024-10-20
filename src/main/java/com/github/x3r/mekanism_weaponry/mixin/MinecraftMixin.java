@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
 
@@ -42,10 +41,11 @@ public abstract class MinecraftMixin {
     }
 
     private void leftClickGun(ItemStack stack) {
-        if(stack.getItem() instanceof GunItem item && item.isGunReady(stack, level.getGameTime())) {
-            PacketDistributor.sendToServer(new ActivateGunPayload());
-            item.clientShoot(stack, item, player);
-            item.setTickOfLastShot(stack, level.getGameTime());
+        if(stack.getItem() instanceof GunItem item) {
+            if(item.isOffCooldown(stack, level.getGameTime())) {
+                PacketDistributor.sendToServer(new ActivateGunPayload());
+                item.setTickOfLastShot(stack, level.getGameTime());
+            }
         }
     }
 }
