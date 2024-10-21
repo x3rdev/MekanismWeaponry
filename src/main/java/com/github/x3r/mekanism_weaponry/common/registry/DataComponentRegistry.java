@@ -36,9 +36,9 @@ public class DataComponentRegistry {
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> HEAT = DATA_COMPONENTS.registerComponentType(
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> HEAT = DATA_COMPONENTS.registerComponentType(
             "heat",
-            builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
+            builder -> builder.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT)
     );
 
 }

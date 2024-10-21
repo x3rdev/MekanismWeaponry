@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,16 +22,35 @@ import java.util.List;
 
 public abstract class GunItem extends Item {
 
+    public static final float MAX_HEAT = 100;
+    protected final float heatPerShot;
     protected final int cooldown;
     protected final int energyUsage;
 
-    protected GunItem(Item.Properties pProperties, int cooldown, int energyUsage) {
+    protected GunItem(Properties pProperties, float heatPerShot, int cooldown, int energyUsage) {
         super(pProperties.stacksTo(1).setNoRepair()
                 .component(DataComponentRegistry.LAST_SHOT_TICK.get(), 0L)
-                .component(DataComponentRegistry.HEAT.get(), 0)
+                .component(DataComponentRegistry.HEAT.get(), 0F)
                 .component(DataComponentRegistry.CHIPS.get(), new DataComponentChips(new ArrayList<>())));
+        this.heatPerShot = heatPerShot;
         this.cooldown = cooldown;
         this.energyUsage = energyUsage;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        float heat = getHeat(stack);
+        if(heat > 0) {
+            if (isSelected) {
+                setHeat(stack, Mth.sqrt(heat));
+            } else {
+                setHeat(stack, heat - 1F);
+            }
+            if(heat < 0.05) {
+                setHeat(stack, 0F);
+            }
+        }
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
     @Override
@@ -66,11 +86,23 @@ public abstract class GunItem extends Item {
 
     public boolean isReady(ItemStack stack, Level level) {
         long tick = level.getGameTime();
-        return isOffCooldown(stack, tick) && hasSufficientEnergy(stack);
+        return isOffCooldown(stack, tick) && hasSufficientEnergy(stack) && !isOverheated(stack);
+    }
+
+    public float getHeat(ItemStack stack) {
+        return stack.get(DataComponentRegistry.HEAT.get()).floatValue();
+    }
+
+    public void setHeat(ItemStack stack, float heat) {
+        stack.set(DataComponentRegistry.HEAT.get(), heat);
+    }
+
+    public boolean isOverheated(ItemStack stack) {
+        return getHeat(stack) > MAX_HEAT;
     }
 
     public int getCooldown(ItemStack stack) {
-        return cooldown;
+        return ((GunItem) stack.getItem()).cooldown;
     }
 
     public long getLastShotTick(ItemStack stack) {
@@ -103,10 +135,8 @@ public abstract class GunItem extends Item {
         gunStack.set(DataComponentRegistry.CHIPS.get(), new DataComponentChips(copyList));
     }
 
-    public void removeChip(ItemStack gunStack, int index) {
-        List<ItemStack> copyList = new ArrayList<>(gunStack.get(DataComponentRegistry.CHIPS.get()).chips());
-        copyList.remove(index);
-        gunStack.set(DataComponentRegistry.CHIPS.get(), new DataComponentChips(copyList));
+    public void clearChips(ItemStack gunStack) {
+        gunStack.set(DataComponentRegistry.CHIPS.get(), new DataComponentChips(new ArrayList<>()));
     }
 
     public boolean containsChip(ItemStack stack, GunChipItem.ChipType chipType) {

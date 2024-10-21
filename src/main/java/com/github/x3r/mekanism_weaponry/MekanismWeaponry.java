@@ -3,7 +3,8 @@ package com.github.x3r.mekanism_weaponry;
 import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.common.CommonSetup;
 import com.github.x3r.mekanism_weaponry.common.packet.MekanismWeaponryPacketHandler;
-import com.github.x3r.mekanism_weaponry.common.recipe.AnvilRecipes;
+import com.github.x3r.mekanism_weaponry.common.recipe.AnvilRecipe;
+import com.github.x3r.mekanism_weaponry.common.recipe.RemoveUpgradesRecipe;
 import com.github.x3r.mekanism_weaponry.common.registry.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -30,7 +31,9 @@ public class MekanismWeaponry {
 
         modEventBus.addListener(MekanismWeaponryPacketHandler::registerPayloadHandler);
         modEventBus.addListener(CommonSetup::registerCapabilities);
-        neoEventBus.addListener(AnvilRecipes::anvilUpdate);
+
+        neoEventBus.addListener(AnvilRecipe::anvilUpdate);
+        neoEventBus.addListener(RemoveUpgradesRecipe::onRightClick);
 
         neoEventBus.addListener(ClientSetup::pressKey);
         neoEventBus.addListener(ClientSetup::onClientTick);
