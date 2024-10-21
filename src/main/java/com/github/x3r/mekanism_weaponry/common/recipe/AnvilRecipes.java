@@ -8,7 +8,7 @@ import net.neoforged.neoforge.event.AnvilUpdateEvent;
 /*
     not exactly a recipe class but yeah whatever deal with it
  */
-public class AddChipRecipe {
+public class AnvilRecipes {
 
     public static void anvilUpdate(AnvilUpdateEvent event) {
         if(event.getLeft().getItem() instanceof GunItem gunItem

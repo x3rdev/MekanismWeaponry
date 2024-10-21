@@ -51,7 +51,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     @Override
     public void serverShoot(ItemStack stack, GunItem item, ServerPlayer player) {
         Level level = player.level();
-        setTickOfLastShot(stack, level.getGameTime());
+        setListShotTick(stack, level.getGameTime());
         Vec3 pos = player.getEyePosition()
                 .add(0, 0, -0.025)
                 .add(player.getLookAngle().normalize().scale(1.5));
@@ -103,8 +103,9 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
             public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
                 for (int i = 0; i < 13; i++) {
                     guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+13, xOffset+2+i+1, yOffset+13+1, COLORS[i]);
+                    guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+14, xOffset+2+i+1, yOffset+14+1, 0xFF000000);
                 }
-                guiGraphics.fill(RenderType.guiOverlay(), xOffset+2, yOffset+14, xOffset+2+13, yOffset+14+1, 0xFF000000);
+
                 return true;
             }
         };

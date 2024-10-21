@@ -2,7 +2,6 @@ package com.github.x3r.mekanism_weaponry.common.item;
 
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.google.common.collect.ImmutableList;
-import mekanism.common.util.StorageUtils;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +26,8 @@ public abstract class GunItem extends Item {
 
     protected GunItem(Item.Properties pProperties, int cooldown, int energyUsage) {
         super(pProperties.stacksTo(1).setNoRepair()
-                .component(DataComponentRegistry.COOLDOWN.get(), new DataComponentCooldown(0))
+                .component(DataComponentRegistry.LAST_SHOT_TICK.get(), 0L)
+                .component(DataComponentRegistry.HEAT.get(), 0)
                 .component(DataComponentRegistry.CHIPS.get(), new DataComponentChips(new ArrayList<>())));
         this.cooldown = cooldown;
         this.energyUsage = energyUsage;
@@ -73,16 +73,16 @@ public abstract class GunItem extends Item {
         return cooldown;
     }
 
-    public long getTickOfLastShot(ItemStack stack) {
-        return stack.get(DataComponentRegistry.COOLDOWN.get()).tickOfLastShot();
+    public long getLastShotTick(ItemStack stack) {
+        return stack.get(DataComponentRegistry.LAST_SHOT_TICK.get()).longValue();
     }
 
-    public void setTickOfLastShot(ItemStack stack, long tick) {
-        stack.set(DataComponentRegistry.COOLDOWN.get(), new DataComponentCooldown(tick));
+    public void setListShotTick(ItemStack stack, long tick) {
+        stack.set(DataComponentRegistry.LAST_SHOT_TICK.get(), tick);
     }
 
     public boolean isOffCooldown(ItemStack stack, long tick) {
-        return tick - getTickOfLastShot(stack) >= getCooldown(stack);
+        return tick - getLastShotTick(stack) >= getCooldown(stack);
     }
 
     public IEnergyStorage getEnergyStorage(ItemStack stack) {
@@ -131,7 +131,5 @@ public abstract class GunItem extends Item {
 
     public abstract boolean canInstallChip(ItemStack gunStack, ItemStack chipStack);
 
-    public record DataComponentCooldown(long tickOfLastShot) {}
-    public record DataComponentHeat(int heat){}
     public record DataComponentChips(List<ItemStack> chips){}
 }
