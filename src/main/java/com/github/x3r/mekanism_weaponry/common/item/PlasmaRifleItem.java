@@ -60,7 +60,9 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
             plasma.setDeltaMovement(player.getLookAngle().normalize().scale(3));
             level.addFreshEntity(plasma);
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_SHOOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+
             getEnergyStorage(stack).extractEnergy(energyUsage, false);
+            item.setHeat(stack, item.getHeat(stack) + heatPerShot);
         } else {
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
         }
@@ -69,7 +71,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     @Override
     public void clientShoot(ItemStack stack, GunItem item, LocalPlayer player) {
         triggerAnim(player, GeoItem.getId(stack), "controller", "shoot");
-        ClientSetup.recoil = 5;
+        ClientSetup.recoil += 5;
     }
 
     @Override
