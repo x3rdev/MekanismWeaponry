@@ -45,7 +45,6 @@ public class ClientSetup {
         while (RELOAD_MAPPING.get().consumeClick()) {
             if(stack.getItem() instanceof GunItem item) {
                 PacketDistributor.sendToServer(new ReloadGunPayload());
-                item.clientReload(stack, item, player);
             }
         }
     }
@@ -85,7 +84,7 @@ public class ClientSetup {
     // Neo Bus event, registered in mod class
     public static void cameraSetupEvent(ViewportEvent.ComputeCameraAngles event) {
         if(recoil > 0) {
-            event.setPitch(event.getPitch() - recoil);
+            event.setPitch(event.getPitch() - recoil/2);
             recoil-=0.25F;
             if (recoil < 0.05) {
                 recoil = 0;
@@ -95,6 +94,6 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
-        event.register(ItemRegistry.PLASMA_RIFLE.get(), PlasmaRifleItem.decorator());
+        event.register(ItemRegistry.PLASMA_RIFLE.get(), GunItem.decorator());
     }
 }

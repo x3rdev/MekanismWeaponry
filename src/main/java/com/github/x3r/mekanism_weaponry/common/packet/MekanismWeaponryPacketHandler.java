@@ -18,14 +18,16 @@ public final class MekanismWeaponryPacketHandler {
                 new DirectionalPayloadHandler<>(
                         ActivateGunPayload::handleClient,
                         ActivateGunPayload::handleServer
-
                 )
 
         );
-        registrar.playToServer(
+        registrar.playBidirectional(
                 ReloadGunPayload.TYPE,
                 ReloadGunPayload.STREAM_CODEC,
-                ReloadGunPayload::handleServer
+                new DirectionalPayloadHandler<>(
+                        ReloadGunPayload::handleClient,
+                        ReloadGunPayload::handleServer
+                )
         );
     }
 }

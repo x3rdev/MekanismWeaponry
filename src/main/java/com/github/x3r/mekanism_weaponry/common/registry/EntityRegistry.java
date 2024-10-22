@@ -20,13 +20,13 @@ public class EntityRegistry {
             () -> EntityType.Builder.<LaserEntity>of(LaserEntity::new, MobCategory.MISC)
                     .sized(0.125F, 0.125F)
                     .clientTrackingRange(4)
-                    .updateInterval(10)
+                    .updateInterval(20)
                     .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "laser").toString()));
 
     public static final DeferredHolder<EntityType<?>, EntityType<PlasmaEntity>> PLASMA = ENTITY_TYPES.register("plasma",
             () -> EntityType.Builder.<PlasmaEntity>of(PlasmaEntity::new, MobCategory.MISC)
                     .sized(0.125F, 0.125F)
                     .clientTrackingRange(4)
-                    .updateInterval(10)
+                    .updateInterval(20)
                     .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "plasma").toString()));
 }

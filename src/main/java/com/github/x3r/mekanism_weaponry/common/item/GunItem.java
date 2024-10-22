@@ -1,8 +1,13 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
+import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
+import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -15,7 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.client.IItemDecorator;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,18 +46,26 @@ public abstract class GunItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        float heat = getHeat(stack);
-        if(heat > 0) {
-            if (isSelected) {
-                setHeat(stack, Mth.sqrt(heat));
-            } else {
-                setHeat(stack, heat - 1F);
-            }
-            if(heat < 0.05) {
-                setHeat(stack, 0F);
+        if(entity instanceof ServerPlayer player) {
+            float heat = getHeat(stack);
+            if (heat > 0) {
+                setHeat(stack, heat - 0.25F);
+                if (heat < 0.01) {
+                    setHeat(stack, 0F);
+                }
+                if (heat > MAX_HEAT) {
+                    tryStartReload(stack, player);
+                }
             }
         }
         super.inventoryTick(stack, level, entity, slotId, isSelected);
+    }
+
+    public void tryStartReload(ItemStack stack, ServerPlayer player) {
+        if(stack.getItem() instanceof GunItem item) {
+            item.serverReload(stack, item, player);
+            PacketDistributor.sendToPlayer(player, new ReloadGunPayload());
+        }
     }
 
     @Override
@@ -151,6 +166,30 @@ public abstract class GunItem extends Item {
         return i;
     }
 
+    private static final int[] COLORS = new int[]{
+            0xFF49ef1f, 0xFF58dd1e, 0xFF66ca1d, 0xFF75b81c,
+            0xFF83a61b, 0xFF92931a, 0xFFa08119, 0xFFaf6f18,
+            0xFFbd5c17, 0xFFcb4a16, 0xFFda3815, 0xFFe92514,
+            0xFFf71313
+    };
+
+    public static IItemDecorator decorator() {
+        return new IItemDecorator() {
+
+            @Override
+            public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
+                GunItem item = (GunItem) stack.getItem();
+                float f = Math.min(1F, item.getHeat(stack)/GunItem.MAX_HEAT);
+                for (int i = 0; i < MAX_BAR_WIDTH * f; i++) {
+                    guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+13, xOffset+2+i+1, yOffset+13+1, COLORS[i]);
+                    guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+14, xOffset+2+i+1, yOffset+14+1, 0xFF000000);
+                }
+
+                return true;
+            }
+        };
+    }
+
     public abstract void serverShoot(ItemStack stack, GunItem item, ServerPlayer player);
 
     public abstract void clientShoot(ItemStack stack, GunItem item, LocalPlayer player);
@@ -162,4 +201,5 @@ public abstract class GunItem extends Item {
     public abstract boolean canInstallChip(ItemStack gunStack, ItemStack chipStack);
 
     public record DataComponentChips(List<ItemStack> chips){}
+
 }

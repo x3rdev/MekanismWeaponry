@@ -4,6 +4,7 @@ import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRifleRenderer;
 import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
+import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
@@ -34,7 +35,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public PlasmaRifleItem(Properties pProperties) {
-        super(pProperties, 10, 8, 250);
+        super(pProperties, 30, 6, 250);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
@@ -76,6 +77,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
 
     @Override
     public void serverReload(ItemStack stack, GunItem item, ServerPlayer player) {
+        Scheduler.schedule(() -> setHeat(stack, 0), 50);
     }
 
     @Override
@@ -90,32 +92,6 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
             return true;
         }
         return false;
-    }
-
-    //TODO probably move this to common code
-
-    private static final int[] COLORS = new int[]{
-            0xFF49ef1f, 0xFF58dd1e, 0xFF66ca1d, 0xFF75b81c,
-            0xFF83a61b, 0xFF92931a, 0xFFa08119, 0xFFaf6f18,
-            0xFFbd5c17, 0xFFcb4a16, 0xFFda3815, 0xFFe92514,
-            0xFFf71313
-    };
-
-    public static IItemDecorator decorator() {
-        return new IItemDecorator() {
-
-            @Override
-            public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
-                GunItem item = (GunItem) stack.getItem();
-                float f = Math.min(1F, item.getHeat(stack)/GunItem.MAX_HEAT);
-                for (int i = 0; i < MAX_BAR_WIDTH * f; i++) {
-                    guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+13, xOffset+2+i+1, yOffset+13+1, COLORS[i]);
-                    guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+14, xOffset+2+i+1, yOffset+14+1, 0xFF000000);
-                }
-
-                return true;
-            }
-        };
     }
 
     @Override
