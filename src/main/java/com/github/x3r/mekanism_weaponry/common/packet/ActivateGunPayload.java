@@ -37,9 +37,8 @@ public record ActivateGunPayload() implements CustomPacketPayload {
             ServerPlayer player = (ServerPlayer) context.player();
             ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
             GeoItem.getOrAssignId(stack, player.serverLevel());
-            if(stack.getItem() instanceof GunItem item && item.isReady(stack, player.serverLevel())) {
+            if(stack.getItem() instanceof GunItem item) {
                 item.serverShoot(stack, item, player);
-                PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
             }
         });
     }

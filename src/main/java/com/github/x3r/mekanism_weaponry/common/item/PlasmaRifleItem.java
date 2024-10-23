@@ -3,19 +3,18 @@ package com.github.x3r.mekanism_weaponry.common.item;
 import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRifleRenderer;
 import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
+import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.IItemDecorator;
+import net.neoforged.neoforge.network.PacketDistributor;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
@@ -52,11 +51,13 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     @Override
     public void serverShoot(ItemStack stack, GunItem item, ServerPlayer player) {
         Level level = player.level();
-        setListShotTick(stack, level.getGameTime());
         Vec3 pos = player.getEyePosition()
                 .add(0, 0, -0.025)
                 .add(player.getLookAngle().normalize().scale(1.5));
-        if(hasSufficientEnergy(stack)) {
+        if(isReady(stack, level)) {
+            setListShotTick(stack, level.getGameTime());
+            PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
+
             PlasmaEntity plasma = new PlasmaEntity(player.level(), pos, 1.0F);
             plasma.setDeltaMovement(player.getLookAngle().normalize().scale(3));
             level.addFreshEntity(plasma);
@@ -64,8 +65,14 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
 
             getEnergyStorage(stack).extractEnergy(energyUsage, false);
             item.setHeat(stack, item.getHeat(stack) + heatPerShot);
+            item.setReloading(stack, false);
         } else {
-            level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            if(!hasSufficientEnergy(stack)) {
+                level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            }
+            if(isOverheated(stack)) {
+                level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1.0F, 1.0F);
+            }
         }
     }
 
@@ -77,7 +84,16 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
 
     @Override
     public void serverReload(ItemStack stack, GunItem item, ServerPlayer player) {
-        Scheduler.schedule(() -> setHeat(stack, 0), 50);
+        setReloading(stack, true);
+        Scheduler.schedule(() -> {
+            if(item.isReloading(stack)) {
+                setHeat(stack, 0);
+                setReloading(stack, false);
+                player.serverLevel().playSound(null,
+                        player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
+            }
+        }, 45);
     }
 
     @Override

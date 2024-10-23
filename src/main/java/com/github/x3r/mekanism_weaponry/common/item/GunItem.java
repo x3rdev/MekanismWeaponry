@@ -38,6 +38,7 @@ public abstract class GunItem extends Item {
         super(pProperties.stacksTo(1).setNoRepair()
                 .component(DataComponentRegistry.LAST_SHOT_TICK.get(), 0L)
                 .component(DataComponentRegistry.HEAT.get(), 0F)
+                .component(DataComponentRegistry.RELOADING, false)
                 .component(DataComponentRegistry.CHIPS.get(), new DataComponentChips(new ArrayList<>())));
         this.heatPerShot = heatPerShot;
         this.cooldown = cooldown;
@@ -138,6 +139,14 @@ public abstract class GunItem extends Item {
 
     public boolean hasSufficientEnergy(ItemStack stack) {
         return getEnergyStorage(stack).getEnergyStored() >= energyUsage;
+    }
+
+    public void setReloading(ItemStack stack, boolean b) {
+        stack.set(DataComponentRegistry.RELOADING.get(), b);
+    }
+
+    public boolean isReloading(ItemStack stack) {
+        return stack.get(DataComponentRegistry.RELOADING.get()).booleanValue();
     }
 
     public ImmutableList<ItemStack> getChips(ItemStack stack) {

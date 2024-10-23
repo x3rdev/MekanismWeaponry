@@ -41,4 +41,9 @@ public class DataComponentRegistry {
             builder -> builder.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT)
     );
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> RELOADING = DATA_COMPONENTS.registerComponentType(
+            "reloading",
+            builder -> builder.persistent(Codec.BOOL)
+    );
+
 }
