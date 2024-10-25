@@ -201,11 +201,11 @@ public abstract class GunItem extends Item {
 
     public abstract void serverShoot(ItemStack stack, GunItem item, ServerPlayer player);
 
-    public abstract void clientShoot(ItemStack stack, GunItem item, LocalPlayer player);
+    public abstract void clientShoot(ItemStack stack, GunItem item, Player player);
 
     public abstract void serverReload(ItemStack stack, GunItem item, ServerPlayer player);
 
-    public abstract void clientReload(ItemStack stack, GunItem item, LocalPlayer player);
+    public abstract void clientReload(ItemStack stack, GunItem item, Player player);
 
     public abstract boolean canInstallChip(ItemStack gunStack, ItemStack chipStack);
 

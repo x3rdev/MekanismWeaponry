@@ -3,12 +3,14 @@ package com.github.x3r.mekanism_weaponry.client;
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.client.renderer.LaserRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRenderer;
+import com.github.x3r.mekanism_weaponry.client.screen.WeaponWorkbenchScreen;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
+import com.github.x3r.mekanism_weaponry.common.registry.MenuTypeRegistry;
 import com.github.x3r.mekanism_weaponry.mixin.MinecraftMixin;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.InputType;
@@ -95,5 +97,10 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
         event.register(ItemRegistry.PLASMA_RIFLE.get(), GunItem.decorator());
+    }
+
+    @SubscribeEvent
+    public static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(MenuTypeRegistry.WEAPON_WORKBENCH.get(), WeaponWorkbenchScreen::new);
     }
 }

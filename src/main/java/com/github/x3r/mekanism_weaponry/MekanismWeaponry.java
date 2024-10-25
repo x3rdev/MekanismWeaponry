@@ -22,7 +22,7 @@ public class MekanismWeaponry {
         BlockRegistry.BLOCKS.register(modEventBus);
         DataComponentRegistry.DATA_COMPONENTS.register(modEventBus);
 //        BlockEntityTypeRegistry.BLOCK_ENTITY_TYPES.register(modEventBus);
-//        ContainerTypeRegistry.CONTAINER_TYPES.register(modEventBus);
+        MenuTypeRegistry.MENU_TYPES.register(modEventBus);
 
         EntityRegistry.ENTITY_TYPES.register(modEventBus);
         ItemRegistry.ITEMS.register(modEventBus);

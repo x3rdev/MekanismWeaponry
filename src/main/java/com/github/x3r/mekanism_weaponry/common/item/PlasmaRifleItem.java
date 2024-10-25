@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -77,7 +78,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public void clientShoot(ItemStack stack, GunItem item, LocalPlayer player) {
+    public void clientShoot(ItemStack stack, GunItem item, Player player) {
         triggerAnim(player, GeoItem.getId(stack), "controller", "shoot");
         ClientSetup.recoil += 5;
     }
@@ -97,7 +98,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public void clientReload(ItemStack stack, GunItem item, LocalPlayer player) {
+    public void clientReload(ItemStack stack, GunItem item, Player player) {
         triggerAnim(player, GeoItem.getId(stack), "controller", "reload");
     }
 
