@@ -2,7 +2,7 @@ package com.github.x3r.mekanism_weaponry.common.registry;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.item.GauntletItem;
-import com.github.x3r.mekanism_weaponry.common.item.GunChipItem;
+import com.github.x3r.mekanism_weaponry.common.item.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -25,7 +25,7 @@ public class ItemRegistry {
             () -> new PlasmaRifleItem(new Item.Properties()));
 
     public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP = ITEMS.register("fire_rate_chip",
-            () -> new GunChipItem(GunChipItem.ChipType.FIRE_RATE_CHIP));
+            () -> new GunAddonItem(new Item.Properties(), GunAddonItem.AddonType.CHIP));
 
     public static final DeferredHolder<Item, BlockItem> WEAPON_WORKBENCH = ITEMS.register("weapon_workbench",
             () -> new BlockItem(BlockRegistry.WEAPON_WORKBENCH.get(), new Item.Properties()));

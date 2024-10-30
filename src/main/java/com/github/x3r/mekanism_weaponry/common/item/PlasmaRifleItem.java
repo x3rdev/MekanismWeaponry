@@ -46,7 +46,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
 
     @Override
     public int getCooldown(ItemStack stack) {
-        return super.getCooldown(stack) - getChipCount(stack, GunChipItem.ChipType.FIRE_RATE_CHIP);
+        return super.getCooldown(stack);
     }
 
     @Override
@@ -103,11 +103,11 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public boolean canInstallChip(ItemStack gunStack, ItemStack chipStack) {
-        GunChipItem.ChipType chipType = ((GunChipItem) chipStack.getItem()).getChipType();
-        if(chipType.equals(GunChipItem.ChipType.FIRE_RATE_CHIP)) {
-            return true;
-        }
+    public boolean canInstallAddon(ItemStack gunStack, ItemStack chipStack) {
+//        GunChipItem.ChipType chipType = ((GunChipItem) chipStack.getItem()).getChipType();
+//        if(chipType.equals(GunChipItem.ChipType.FIRE_RATE_CHIP)) {
+//            return true;
+//        }
         return false;
     }
 

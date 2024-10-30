@@ -2,15 +2,11 @@ package com.github.x3r.mekanism_weaponry.common.item;
 
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
-import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,9 +19,12 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.IItemDecorator;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import javax.annotation.Nonnull;
+import javax.xml.crypto.Data;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class GunItem extends Item {
 
@@ -39,7 +38,7 @@ public abstract class GunItem extends Item {
                 .component(DataComponentRegistry.LAST_SHOT_TICK.get(), 0L)
                 .component(DataComponentRegistry.HEAT.get(), 0F)
                 .component(DataComponentRegistry.RELOADING, false)
-                .component(DataComponentRegistry.CHIPS.get(), new DataComponentChips(new ArrayList<>())));
+                .component(DataComponentRegistry.ADDONS.get(), new DataComponentAddons()));
         this.heatPerShot = heatPerShot;
         this.cooldown = cooldown;
         this.energyUsage = energyUsage;
@@ -72,16 +71,16 @@ public abstract class GunItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.literal(String.format("%d/%d FE", getEnergyStorage(stack).getEnergyStored(), getEnergyStorage(stack).getMaxEnergyStored())));
-        if(!getChips(stack).isEmpty()) {
-            tooltipComponents.add(Component.literal(String.format("%d chips installed [SHIFT]", getChips(stack).size())));
-            if(tooltipFlag.hasShiftDown()) {
-                tooltipComponents.removeLast();
-                for (ItemStack chip : getChips(stack)) {
-                    GunChipItem gunChipItem = (GunChipItem) chip.getItem();
-                    tooltipComponents.add(Component.literal(gunChipItem.getChipType().getId()));
-                }
-            }
-        }
+//        if(!getChips(stack).isEmpty()) {
+//            tooltipComponents.add(Component.literal(String.format("%d chips installed [SHIFT]", getChips(stack).size())));
+//            if(tooltipFlag.hasShiftDown()) {
+//                tooltipComponents.removeLast();
+//                for (ItemStack chip : getChips(stack)) {
+//                    GunChipItem gunChipItem = (GunChipItem) chip.getItem();
+//                    tooltipComponents.add(Component.literal(gunChipItem.getChipType().getId()));
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -102,7 +101,10 @@ public abstract class GunItem extends Item {
 
     public boolean isReady(ItemStack stack, Level level) {
         long tick = level.getGameTime();
-        return isOffCooldown(stack, tick) && hasSufficientEnergy(stack) && !isOverheated(stack);
+        return !isReloading(stack) &&
+                isOffCooldown(stack, tick) &&
+                hasSufficientEnergy(stack) &&
+                !isOverheated(stack);
     }
 
     public float getHeat(ItemStack stack) {
@@ -149,30 +151,9 @@ public abstract class GunItem extends Item {
         return stack.get(DataComponentRegistry.RELOADING.get()).booleanValue();
     }
 
-    public ImmutableList<ItemStack> getChips(ItemStack stack) {
-        return ImmutableList.copyOf(stack.get(DataComponentRegistry.CHIPS.get()).chips());
-    }
+    public void putAddon(ItemStack stack, int index) {
+        DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
 
-    public void addChip(ItemStack gunStack, ItemStack chipStack) {
-        List<ItemStack> copyList = new ArrayList<>(gunStack.get(DataComponentRegistry.CHIPS.get()).chips());
-        copyList.add(chipStack);
-        gunStack.set(DataComponentRegistry.CHIPS.get(), new DataComponentChips(copyList));
-    }
-
-    public void clearChips(ItemStack gunStack) {
-        gunStack.set(DataComponentRegistry.CHIPS.get(), new DataComponentChips(new ArrayList<>()));
-    }
-
-    public boolean containsChip(ItemStack stack, GunChipItem.ChipType chipType) {
-        return getChips(stack).contains(chipType);
-    }
-
-    public int getChipCount(ItemStack stack, GunChipItem.ChipType chipType) {
-        int i = 0;
-        for (ItemStack chip : getChips(stack)) {
-            if(((GunChipItem) chip.getItem()).getChipType().equals(chipType)) i++;
-        }
-        return i;
     }
 
     private static final int[] COLORS = new int[]{
@@ -207,8 +188,88 @@ public abstract class GunItem extends Item {
 
     public abstract void clientReload(ItemStack stack, GunItem item, Player player);
 
-    public abstract boolean canInstallChip(ItemStack gunStack, ItemStack chipStack);
+    public abstract boolean canInstallAddon(ItemStack gunStack, ItemStack chipStack);
 
-    public record DataComponentChips(List<ItemStack> chips){}
+    public static class DataComponentAddons {
+
+        private ItemStack chip1;
+        private ItemStack paint;
+        private ItemStack chip2;
+        private ItemStack scope;
+        private ItemStack chip3;
+
+        public DataComponentAddons() {
+            this(ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
+        }
+
+        public DataComponentAddons(
+                ItemStack chip1,
+                ItemStack paint,
+                ItemStack chip2,
+                ItemStack scope,
+                ItemStack chip3
+        ) {
+            this.chip1 = chip1;
+            this.paint = paint;
+            this.chip2 = chip2;
+            this.scope = scope;
+            this.chip3 = chip3;
+        }
+
+        public ItemStack getAddon(int index) {
+            switch (index) {
+                case 0 -> {
+                    return this.chip1;
+                }
+                case 1 -> {
+                    return this.paint;
+                }
+                case 2 -> {
+                    return this.chip2;
+                }
+                case 3 -> {
+                    return this.scope;
+                }
+                case 4 -> {
+                    return this.chip3;
+                }
+                default -> throw new IndexOutOfBoundsException();
+            }
+        }
+
+        public void setAddon(ItemStack stack, int index) {
+            switch (index) {
+                case 0 -> this.chip1 = stack;
+                case 1 -> this.paint = stack;
+                case 2 -> this.chip2 = stack;
+                case 3 -> this.scope = stack;
+                case 4 -> this.chip3 = stack;
+                default -> throw new IndexOutOfBoundsException();
+            }
+        }
+
+        public void removeAddon(int index) {
+            setAddon(ItemStack.EMPTY, index);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(chip1, paint, chip2, scope, chip3);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            } else {
+                return obj instanceof DataComponentAddons other
+                        && this.chip1.equals(other.chip1)
+                        && this.paint.equals(other.paint)
+                        && this.chip2.equals(other.chip2)
+                        && this.scope.equals(other.scope)
+                        && this.chip3.equals(other.chip3);
+            }
+        }
+    }
 
 }

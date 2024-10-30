@@ -35,19 +35,21 @@ public class WeaponWorkbenchScreen extends AbstractContainerScreen<WeaponWorkben
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+        renderTooltip(guiGraphics, mouseX, mouseY);
         if(getMenu().getSlot(0).hasItem()) {
             renderItemPreview(guiGraphics, getMenu().getSlot(0).getItem(), mouseX, mouseY);
         }
+
     }
 
     private void renderItemPreview(GuiGraphics guiGraphics, ItemStack stack, int mouseX, int mouseY) {
         guiGraphics.pose().pushPose();
 
-        guiGraphics.pose().translate(guiGraphics.guiWidth()/2F, guiGraphics.guiHeight()/2.4F, 100);
+        guiGraphics.pose().translate(guiGraphics.guiWidth()/2F, guiGraphics.guiHeight()/2F-30, 100);
         guiGraphics.pose().scale(20.0F, -20.0F, 20.0F);
 
-        float xMouseAngle = -(float)Math.atan((guiGraphics.guiWidth()/2F - mouseX)/150.0F);
-        float yMouseAngle = -(float)Math.atan((guiGraphics.guiHeight()/2.5F - mouseY)/150.0F);
+        float xMouseAngle = -(float)Math.atan((guiGraphics.guiWidth()/2F - mouseX)/200.0F);
+        float yMouseAngle = -(float)Math.atan((guiGraphics.guiHeight()/2F - mouseY-20)/200.0F);
         guiGraphics.pose().mulPose(Axis.YP.rotation(Mth.HALF_PI*xMouseAngle+Mth.HALF_PI));
         guiGraphics.pose().mulPose(Axis.ZP.rotation(Mth.HALF_PI*yMouseAngle));
 

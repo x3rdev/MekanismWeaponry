@@ -13,10 +13,14 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class DataComponentRegistry {
 
-    private static final Codec<GunItem.DataComponentChips> CHIPS_CODEC = RecordCodecBuilder.create(instance ->
+    private static final Codec<GunItem.DataComponentAddons> ADDONS_CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    Codec.list(ItemStack.CODEC).fieldOf("chips").forGetter(GunItem.DataComponentChips::chips)
-            ).apply(instance, GunItem.DataComponentChips::new)
+                    ItemStack.CODEC.fieldOf("chip1").forGetter(o -> o.getAddon(0)),
+                    ItemStack.CODEC.fieldOf("paint").forGetter(o -> o.getAddon(1)),
+                    ItemStack.CODEC.fieldOf("chip2").forGetter(o -> o.getAddon(2)),
+                    ItemStack.CODEC.fieldOf("scope").forGetter(o -> o.getAddon(3)),
+                    ItemStack.CODEC.fieldOf("chip3").forGetter(o -> o.getAddon(4))
+            ).apply(instance, GunItem.DataComponentAddons::new)
     );
 
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MekanismWeaponry.MOD_ID);
@@ -26,9 +30,9 @@ public class DataComponentRegistry {
             builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)
     );
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<GunItem.DataComponentChips>> CHIPS = DATA_COMPONENTS.registerComponentType(
-            "chips",
-            builder -> builder.persistent(CHIPS_CODEC)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<GunItem.DataComponentAddons>> ADDONS = DATA_COMPONENTS.registerComponentType(
+            "addons",
+            builder -> builder.persistent(ADDONS_CODEC)
     );
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ENERGY = DATA_COMPONENTS.registerComponentType(

@@ -1,6 +1,6 @@
 package com.github.x3r.mekanism_weaponry.common.menu;
 
-import com.github.x3r.mekanism_weaponry.common.item.GunChipItem;
+import com.github.x3r.mekanism_weaponry.common.item.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.registry.BlockRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.MenuTypeRegistry;
@@ -73,6 +73,16 @@ public class WeaponWorkbenchMenu extends AbstractContainerMenu {
     @Override
     public void slotsChanged(Container container) {
         super.slotsChanged(container);
+        if(container.equals(this.container)) {
+            ItemStack gunStack = getSlot(0).getItem();
+            if(!gunStack.isEmpty()) {
+
+            }
+        }
+    }
+
+    private void updateGun() {
+
     }
 
     @Override
@@ -111,17 +121,6 @@ public class WeaponWorkbenchMenu extends AbstractContainerMenu {
         return stillValid(access, player, BlockRegistry.WEAPON_WORKBENCH.get());
     }
 
-    private static class WeaponWorkbenchSlot extends Slot {
-        public WeaponWorkbenchSlot(Container container, int slot, int x, int y) {
-            super(container, slot, x, y);
-        }
-
-        @Override
-        public void setChanged() {
-            super.setChanged();
-        }
-    }
-
     private static class ChipSlot extends Slot {
         public ChipSlot(Container container, int slot, int x, int y) {
             super(container, slot, x, y);
@@ -129,7 +128,7 @@ public class WeaponWorkbenchMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            return stack.getItem() instanceof GunChipItem;
+            return stack.getItem() instanceof GunAddonItem ;
         }
     }
 }

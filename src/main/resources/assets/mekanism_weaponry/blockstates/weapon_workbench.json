@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "mekanism_weaponry:block/weapon_workbench"
+    }
+  }
+}
