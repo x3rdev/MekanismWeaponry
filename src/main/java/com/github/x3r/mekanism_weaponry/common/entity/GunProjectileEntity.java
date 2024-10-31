@@ -67,8 +67,10 @@ public class GunProjectileEntity extends Projectile{
         }
     }
     private void handleEntityCollision(EntityHitResult hitResult) {
-        hitResult.getEntity().hurt(new DamageTypeRegistry(level().registryAccess()).laser(), (float) this.damage);
-        this.remove(Entity.RemovalReason.KILLED);
+        if(!hitResult.getEntity().equals(getOwner())) {
+            hitResult.getEntity().hurt(new DamageTypeRegistry(level().registryAccess()).laser(), (float) this.damage);
+            this.remove(Entity.RemovalReason.KILLED);
+        }
     }
 
     private void handleBlockCollision(BlockHitResult hitResult) {

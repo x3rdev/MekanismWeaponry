@@ -54,12 +54,12 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
                 .add(0, 0, -0.025)
-                .add(player.getLookAngle().normalize().scale(1.5));
+                .add(player.getLookAngle().normalize().scale(0.1));
         if(isReady(stack, level)) {
             setListShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
 
-            PlasmaEntity plasma = new PlasmaEntity(player.level(), pos, 1.0F);
+            PlasmaEntity plasma = new PlasmaEntity(player, pos, 8.0F);
             plasma.setDeltaMovement(player.getLookAngle().normalize().scale(3));
             level.addFreshEntity(plasma);
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_SHOOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
