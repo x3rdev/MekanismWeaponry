@@ -19,10 +19,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.IItemDecorator;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Objects;
 
@@ -151,9 +148,14 @@ public abstract class GunItem extends Item {
         return stack.get(DataComponentRegistry.RELOADING.get()).booleanValue();
     }
 
-    public void putAddon(ItemStack stack, int index) {
+    public ItemStack getAddon(ItemStack stack, int index) {
         DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
+        return addons.getAddon(index);
+    }
 
+    public void setAddon(ItemStack stack, ItemStack chipStack, int index) {
+        DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
+        addons.setAddon(chipStack, index);
     }
 
     private static final int[] COLORS = new int[]{
@@ -237,19 +239,15 @@ public abstract class GunItem extends Item {
             }
         }
 
-        public void setAddon(ItemStack stack, int index) {
+        public void setAddon(ItemStack addonStack, int index) {
             switch (index) {
-                case 0 -> this.chip1 = stack;
-                case 1 -> this.paint = stack;
-                case 2 -> this.chip2 = stack;
-                case 3 -> this.scope = stack;
-                case 4 -> this.chip3 = stack;
+                case 0 -> this.chip1 = addonStack;
+                case 1 -> this.paint = addonStack;
+                case 2 -> this.chip2 = addonStack;
+                case 3 -> this.scope = addonStack;
+                case 4 -> this.chip3 = addonStack;
                 default -> throw new IndexOutOfBoundsException();
             }
-        }
-
-        public void removeAddon(int index) {
-            setAddon(ItemStack.EMPTY, index);
         }
 
         @Override
@@ -269,6 +267,16 @@ public abstract class GunItem extends Item {
                         && this.scope.equals(other.scope)
                         && this.chip3.equals(other.chip3);
             }
+        }
+
+        @Override
+        public String toString() { //mainly for debugging
+            return
+                    "Chip 1: " + chip1.toString() + " \n" +
+                    "Paint: " + paint.toString() + " \n" +
+                    "Chip 2: " + chip2.toString() + " \n" +
+                    "Scope: " + scope.toString() + " \n" +
+                    "Chip 3: " + chip3.toString();
         }
     }
 
