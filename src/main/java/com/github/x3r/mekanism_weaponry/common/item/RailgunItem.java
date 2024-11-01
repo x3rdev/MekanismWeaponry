@@ -29,7 +29,7 @@ public class RailgunItem extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public RailgunItem(Properties pProperties) {
-        super(pProperties, 10, 20, 1000);
+        super(pProperties, 20, 1000);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 

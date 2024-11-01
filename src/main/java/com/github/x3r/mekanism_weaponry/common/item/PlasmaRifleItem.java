@@ -26,7 +26,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class PlasmaRifleItem extends GunItem implements GeoItem {
+public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
 
     private static final RawAnimation IDLE = RawAnimation.begin().then("idle", Animation.LoopType.HOLD_ON_LAST_FRAME);
     private static final RawAnimation RELOAD = RawAnimation.begin().then("reload", Animation.LoopType.PLAY_ONCE);
@@ -35,7 +35,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public PlasmaRifleItem(Properties pProperties) {
-        super(pProperties, 30, 6, 250);
+        super(pProperties, 6, 250, 30);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
@@ -55,7 +55,7 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_SHOOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
 
             getEnergyStorage(stack).extractEnergy(energyUsage, false);
-            item.setHeat(stack, item.getHeat(stack) + heatPerShot);
+            ((HeatGunItem) item).setHeat(stack, ((HeatGunItem) item).getHeat(stack) + heatPerShot);
             item.setReloading(stack, false);
         } else {
             if(!hasSufficientEnergy(stack)) {

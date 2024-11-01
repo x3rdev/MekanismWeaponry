@@ -5,6 +5,7 @@ import com.github.x3r.mekanism_weaponry.client.renderer.LaserRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRenderer;
 import com.github.x3r.mekanism_weaponry.client.screen.WeaponWorkbenchScreen;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
+import com.github.x3r.mekanism_weaponry.common.item.HeatGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
@@ -100,8 +101,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
-        event.register(ItemRegistry.PLASMA_RIFLE.get(), GunItem.decorator());
-        event.register(ItemRegistry.RAILGUN.get(), GunItem.decorator());
+        event.register(ItemRegistry.PLASMA_RIFLE.get(), HeatGunItem.decorator());
     }
 
     @SubscribeEvent
