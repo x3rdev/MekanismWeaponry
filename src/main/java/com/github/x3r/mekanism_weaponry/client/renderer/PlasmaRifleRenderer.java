@@ -12,7 +12,9 @@ import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.specialty.DynamicGeoItemRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -25,6 +27,8 @@ public class PlasmaRifleRenderer extends DynamicGeoItemRenderer<PlasmaRifleItem>
     public PlasmaRifleRenderer() {
         super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "plasma_rifle")));
     }
+
+
 
     @Override
     protected @Nullable ResourceLocation getTextureOverrideForBone(GeoBone bone, PlasmaRifleItem animatable, float partialTick) {

@@ -4,6 +4,7 @@ import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.item.GauntletItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
+import com.github.x3r.mekanism_weaponry.common.item.RailgunItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -18,17 +19,22 @@ public class ItemRegistry {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MekanismWeaponry.MOD_ID);
 
-    public static final DeferredHolder<Item, Item> GAUNTLET = ITEMS.register("gauntlet",
+    public static final DeferredHolder<Item, GauntletItem> GAUNTLET = ITEMS.register("gauntlet",
             () -> new GauntletItem(new Item.Properties()));
 
-    public static final DeferredHolder<Item, Item> PLASMA_RIFLE = ITEMS.register("plasma_rifle",
+    public static final DeferredHolder<Item, PlasmaRifleItem> PLASMA_RIFLE = ITEMS.register("plasma_rifle",
             () -> new PlasmaRifleItem(new Item.Properties()));
+
+    public static final DeferredHolder<Item, RailgunItem> RAILGUN = ITEMS.register("railgun",
+            () -> new RailgunItem(new Item.Properties()));
+
+    public static final DeferredHolder<Item, BlockItem> WEAPON_WORKBENCH = ITEMS.register("weapon_workbench",
+            () -> new BlockItem(BlockRegistry.WEAPON_WORKBENCH.get(), new Item.Properties()));
 
     public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP = ITEMS.register("fire_rate_chip",
             () -> new GunAddonItem(new Item.Properties(), GunAddonItem.AddonType.CHIP));
 
-    public static final DeferredHolder<Item, BlockItem> WEAPON_WORKBENCH = ITEMS.register("weapon_workbench",
-            () -> new BlockItem(BlockRegistry.WEAPON_WORKBENCH.get(), new Item.Properties()));
+
 
     public static class ModItemTab {
 

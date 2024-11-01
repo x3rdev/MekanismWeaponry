@@ -169,7 +169,9 @@ public class WeaponWorkbenchMenu extends AbstractContainerMenu {
         public boolean mayPlace(ItemStack stack) {
             return stack.getItem() instanceof GunAddonItem gunAddonItem &&
                     gunAddonItem.getAddonType().equals(this.addonType) &&
-                    !container.getItem(0).isEmpty();
+                    !container.getItem(0).isEmpty() &&
+                    container.getItem(0).getItem() instanceof GunItem gunItem &&
+                    gunItem.canInstallAddon(container.getItem(0), stack);
         }
     }
 

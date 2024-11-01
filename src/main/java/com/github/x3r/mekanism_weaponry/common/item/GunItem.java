@@ -30,7 +30,7 @@ public abstract class GunItem extends Item {
     protected final int cooldown;
     protected final int energyUsage;
 
-    protected GunItem(Properties pProperties, float heatPerShot, int cooldown, int energyUsage) {
+    public GunItem(Properties pProperties, float heatPerShot, int cooldown, int energyUsage) {
         super(pProperties.stacksTo(1).setNoRepair()
                 .component(DataComponentRegistry.LAST_SHOT_TICK.get(), 0L)
                 .component(DataComponentRegistry.HEAT.get(), 0F)
@@ -190,7 +190,7 @@ public abstract class GunItem extends Item {
 
     public abstract void clientReload(ItemStack stack, GunItem item, Player player);
 
-    public abstract boolean canInstallAddon(ItemStack gunStack, ItemStack chipStack);
+    public abstract boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack);
 
     public static class DataComponentAddons {
 

@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 public class PlasmaRifleItem extends GunItem implements GeoItem {
 
-    private static final RawAnimation IDLE = RawAnimation.begin().then("idle", Animation.LoopType.LOOP);
+    private static final RawAnimation IDLE = RawAnimation.begin().then("idle", Animation.LoopType.HOLD_ON_LAST_FRAME);
     private static final RawAnimation RELOAD = RawAnimation.begin().then("reload", Animation.LoopType.PLAY_ONCE);
     private static final RawAnimation SHOOT = RawAnimation.begin().then("shot", Animation.LoopType.PLAY_ONCE);
 
@@ -103,12 +103,8 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public boolean canInstallAddon(ItemStack gunStack, ItemStack chipStack) {
-//        GunChipItem.ChipType chipType = ((GunChipItem) chipStack.getItem()).getChipType();
-//        if(chipType.equals(GunChipItem.ChipType.FIRE_RATE_CHIP)) {
-//            return true;
-//        }
-        return false;
+    public boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack) {
+        return true;
     }
 
     @Override
@@ -130,10 +126,11 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 1, state -> {
             if(state.getData(DataTickets.ITEM_RENDER_PERSPECTIVE).firstPerson()) {
-                return PlayState.STOP;
+                return PlayState.CONTINUE;
             }
-            return state.setAndContinue(IDLE);
+            return PlayState.STOP;
         })
+                .receiveTriggeredAnimations()
                 .triggerableAnim("reload", RELOAD)
                 .triggerableAnim("shoot", SHOOT));
     }
