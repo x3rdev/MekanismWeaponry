@@ -2,6 +2,7 @@ package com.github.x3r.mekanism_weaponry.common.item;
 
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
+import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
@@ -117,7 +118,8 @@ public abstract class GunItem extends Item {
     }
 
     public int getCooldown(ItemStack stack) {
-        return ((GunItem) stack.getItem()).cooldown;
+        int cooldown = ((GunItem) stack.getItem()).cooldown - hasAddon(stack, ItemRegistry.FIRE_RATE_CHIP.get());
+        return Math.max(0, cooldown);
     }
 
     public long getLastShotTick(ItemStack stack) {
@@ -151,6 +153,17 @@ public abstract class GunItem extends Item {
     public ItemStack getAddon(ItemStack stack, int index) {
         DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
         return addons.getAddon(index);
+    }
+
+    public int hasAddon(ItemStack stack, Item addon) {
+        int count = 0;
+        DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
+        for (int i = 0; i < 5; i++) {
+            if(addons.getAddon(i).is(addon)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void setAddon(ItemStack stack, ItemStack chipStack, int index) {

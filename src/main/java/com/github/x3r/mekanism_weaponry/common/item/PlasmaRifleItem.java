@@ -40,16 +40,6 @@ public class PlasmaRifleItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public boolean isOffCooldown(ItemStack stack, long tick) {
-        return super.isOffCooldown(stack, tick);
-    }
-
-    @Override
-    public int getCooldown(ItemStack stack) {
-        return super.getCooldown(stack);
-    }
-
-    @Override
     public void serverShoot(ItemStack stack, GunItem item, ServerPlayer player) {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()

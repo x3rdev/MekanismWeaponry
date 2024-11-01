@@ -1,5 +1,5 @@
 {
-  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
   "texture_size": [
     256,
     256
@@ -89,8 +89,5 @@
         0.26
       ]
     }
-  },
-  "textures": {
-    "particle": "item/railgun1"
   }
 }

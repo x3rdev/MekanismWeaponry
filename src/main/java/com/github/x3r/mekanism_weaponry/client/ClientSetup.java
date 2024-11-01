@@ -22,6 +22,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -45,7 +46,7 @@ public class ClientSetup {
         if(player == null) return;
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
         while (RELOAD_MAPPING.get().consumeClick()) {
-            if(stack.getItem() instanceof GunItem item) {
+            if(stack.getItem() instanceof GunItem) {
                 PacketDistributor.sendToServer(new ReloadGunPayload());
             }
         }
@@ -64,7 +65,10 @@ public class ClientSetup {
             public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
                 return HumanoidModel.ArmPose.BOW_AND_ARROW;
             }
-        }, ItemRegistry.PLASMA_RIFLE.get()); // All guns?
+        },
+                ItemRegistry.PLASMA_RIFLE.get(),
+                ItemRegistry.RAILGUN.get()
+        ); // All guns?
     }
 
     // Neo Bus event, registered in mod class
@@ -97,6 +101,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
         event.register(ItemRegistry.PLASMA_RIFLE.get(), GunItem.decorator());
+        event.register(ItemRegistry.RAILGUN.get(), GunItem.decorator());
     }
 
     @SubscribeEvent
