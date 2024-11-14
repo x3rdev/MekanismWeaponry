@@ -17,7 +17,9 @@ public abstract class HeatGunItem extends GunItem {
     protected final float heatPerShot;
 
     public HeatGunItem(Properties pProperties, int cooldown, int energyUsage, float heatPerShot) {
-        super(pProperties, cooldown, energyUsage);
+        super(pProperties
+                        .component(DataComponentRegistry.HEAT.get(), 0F),
+                cooldown, energyUsage);
         this.heatPerShot = heatPerShot;
     }
 

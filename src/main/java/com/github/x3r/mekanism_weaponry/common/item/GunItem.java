@@ -32,7 +32,6 @@ public abstract class GunItem extends Item {
     public GunItem(Properties pProperties, int cooldown, int energyUsage) {
         super(pProperties.stacksTo(1).setNoRepair()
                 .component(DataComponentRegistry.LAST_SHOT_TICK.get(), 0L)
-                .component(DataComponentRegistry.HEAT.get(), 0F)
                 .component(DataComponentRegistry.RELOADING, false)
                 .component(DataComponentRegistry.ADDONS.get(), new DataComponentAddons()));
 
@@ -137,8 +136,6 @@ public abstract class GunItem extends Item {
         DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
         addons.setAddon(chipStack, index);
     }
-
-
 
     public abstract void serverShoot(ItemStack stack, GunItem item, ServerPlayer player);
 

@@ -27,24 +27,6 @@ public class DataComponentRegistry {
             ).apply(instance, GunItem.DataComponentAddons::new)
     );
 
-    private static final StreamCodec<RegistryFriendlyByteBuf, GunItem.DataComponentAddons> ADDONS_NETWORK_CODEC = new StreamCodec<>() {
-        @Override
-        public GunItem.DataComponentAddons decode(RegistryFriendlyByteBuf buffer) {
-            GunItem.DataComponentAddons addons = new GunItem.DataComponentAddons();
-            for (int i = 0; i < 4; i++) {
-                addons.setAddon(ItemStack.STREAM_CODEC.decode(buffer), i);
-            }
-            return addons;
-        }
-
-        @Override
-        public void encode(RegistryFriendlyByteBuf buffer, GunItem.DataComponentAddons value) {
-            for (int i = 0; i < 4; i++) {
-                ItemStack.STREAM_CODEC.encode(buffer, value.getAddon(i));
-            }
-        }
-    };
-
 
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MekanismWeaponry.MOD_ID);
 
@@ -55,7 +37,7 @@ public class DataComponentRegistry {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<GunItem.DataComponentAddons>> ADDONS = DATA_COMPONENTS.registerComponentType(
             "addons",
-            builder -> builder.persistent(ADDONS_CODEC).networkSynchronized(ADDONS_NETWORK_CODEC)
+            builder -> builder.persistent(ADDONS_CODEC)
     );
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ENERGY = DATA_COMPONENTS.registerComponentType(
@@ -63,14 +45,14 @@ public class DataComponentRegistry {
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT)
     );
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> HEAT = DATA_COMPONENTS.registerComponentType(
-            "heat",
-            builder -> builder.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT)
-    );
-
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> RELOADING = DATA_COMPONENTS.registerComponentType(
             "reloading",
             builder -> builder.persistent(Codec.BOOL)
+    );
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> HEAT = DATA_COMPONENTS.registerComponentType(
+            "heat",
+            builder -> builder.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT)
     );
 
 }
