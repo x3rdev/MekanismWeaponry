@@ -5,16 +5,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.IItemDecorator;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
-import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public abstract class AmmoGunItem extends GunItem {
@@ -44,14 +39,12 @@ public abstract class AmmoGunItem extends GunItem {
     public void loadAmmo(ItemStack gunStack, ServerPlayer player) {
         ItemStack ammoInGun = gunStack.get(DataComponentRegistry.LOADED_AMMO).getStack();
         ItemStack ammoStack = getFirstAmmoStack(gunStack, player);
-        int total = ammoInGun.getCount() + ammoStack.getCount();
-        if(total > maxAmmo) {
-            ammoInGun.setCount(maxAmmo);
-            ammoStack.setCount(total-maxAmmo);
-        } else {
-            ammoInGun.setCount(total);
-            ammoStack.copyAndClear();
-        }
+        int i = ammoInGun.getCount() + ammoStack.getCount() - maxAmmo;
+
+        gunStack.get(DataComponentRegistry.LOADED_AMMO).setStack(new ItemStack(ammoStack.getItem()));
+        ammoInGun.setCount(maxAmmo);
+        ammoStack.setCount(Math.max(0, i));
+
         if(ammoInGun.getCount() < maxAmmo && !getFirstAmmoStack(gunStack, player).isEmpty()) {
             loadAmmo(gunStack, player);
         }
@@ -89,10 +82,10 @@ public abstract class AmmoGunItem extends GunItem {
             public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
                 AmmoGunItem item = (AmmoGunItem) stack.getItem();
                 float f = Math.min(1F, (float) item.getLoadedAmmo(stack).getCount()/item.maxAmmo);
+                guiGraphics.fill(RenderType.guiOverlay(), xOffset+2, yOffset+13, xOffset+2+13, yOffset+13+2, 0xFF000000);
                 for (int i = 0; i < MAX_BAR_WIDTH * f; i++) {
                     guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+13, xOffset+2+i+1, yOffset+13+1, 0xFFFFFFFF);
                 }
-                guiGraphics.fill(RenderType.guiOverlay(), xOffset+2, yOffset+13, xOffset+2+13, yOffset+13+2, 0xFF000000);
 
                 return true;
             }

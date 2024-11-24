@@ -60,8 +60,8 @@ public class GunProjectileEntity extends Projectile {
             if(hitResult instanceof BlockHitResult blockHitResult) {
                 handleBlockCollision(blockHitResult);
             }
-            if(this.tickCount > 20*10) {
-                this.remove(Entity.RemovalReason.KILLED);
+            if(this.tickCount > 20*15) {
+                this.remove(RemovalReason.DISCARDED);
                 return;
             }
         }
@@ -69,7 +69,7 @@ public class GunProjectileEntity extends Projectile {
     private void handleEntityCollision(EntityHitResult hitResult) {
         if(!hitResult.getEntity().equals(getOwner())) {
             hitResult.getEntity().hurt(new DamageTypeRegistry(level().registryAccess()).laser(), (float) this.damage);
-            this.remove(Entity.RemovalReason.KILLED);
+
         }
     }
 
@@ -79,7 +79,7 @@ public class GunProjectileEntity extends Projectile {
                 state.getVisualShape(level(), hitResult.getBlockPos(), CollisionContext.empty()).isEmpty()) {
             return;
         }
-        this.remove(Entity.RemovalReason.KILLED);
+        this.remove(RemovalReason.DISCARDED);
     }
 
     public List<BlockHitResult> traceBlockCollisions(Vec3 startVec, Vec3 endVec) {
