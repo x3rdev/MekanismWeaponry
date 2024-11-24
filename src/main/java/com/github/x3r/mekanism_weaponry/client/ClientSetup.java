@@ -5,6 +5,7 @@ import com.github.x3r.mekanism_weaponry.client.renderer.LaserRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.RodRenderer;
 import com.github.x3r.mekanism_weaponry.client.screen.WeaponWorkbenchScreen;
+import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.HeatGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
@@ -13,6 +14,7 @@ import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.MenuTypeRegistry;
+import com.github.x3r.mekanism_weaponry.common.registry.ParticleRegistry;
 import com.github.x3r.mekanism_weaponry.mixin.MinecraftMixin;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.InputType;
@@ -20,7 +22,9 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ThreadingDetector;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -34,8 +38,11 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.event.server.ServerLifecycleEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.checkerframework.checker.units.qual.K;
+
+import javax.lang.model.element.ElementVisitor;
 
 @EventBusSubscriber(modid = MekanismWeaponry.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -50,6 +57,15 @@ public class ClientSetup {
         while (RELOAD_MAPPING.get().consumeClick()) {
             if(stack.getItem() instanceof GunItem) {
                 PacketDistributor.sendToServer(new ReloadGunPayload());
+            }
+        }
+
+        //recoil
+        recoilO = recoil;
+        if(recoil > 0) {
+            recoil = Mth.sqrt(recoil);
+            if (recoil < 0.01) {
+                recoil = 0;
             }
         }
     }
@@ -87,27 +103,30 @@ public class ClientSetup {
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(RELOAD_MAPPING.get());
     }
-
+    public static float recoilO;
     public static float recoil;
+
 
     // Neo Bus event, registered in mod class
     public static void cameraSetupEvent(ViewportEvent.ComputeCameraAngles event) {
         if(recoil > 0) {
-            event.setPitch(event.getPitch() - recoil/2);
-            recoil-=0.25F;
-            if (recoil < 0.05) {
-                recoil = 0;
-            }
+            event.setPitch((float) (event.getPitch() - Mth.lerp(event.getPartialTick(), recoilO, recoil)));
         }
     }
 
     @SubscribeEvent
     public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
         event.register(ItemRegistry.PLASMA_RIFLE.get(), HeatGunItem.decorator());
+        event.register(ItemRegistry.RAILGUN.get(), AmmoGunItem.decorator());
     }
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(MenuTypeRegistry.WEAPON_WORKBENCH.get(), WeaponWorkbenchScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(ParticleRegistry.ROD_TRAIL.get(), ParticleRegistry.RodTrailParticleProvider::new);
     }
 }

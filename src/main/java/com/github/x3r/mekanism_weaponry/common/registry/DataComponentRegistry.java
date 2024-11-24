@@ -1,16 +1,13 @@
 package com.github.x3r.mekanism_weaponry.common.registry;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
+import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -25,6 +22,12 @@ public class DataComponentRegistry {
                     ItemStack.CODEC.fieldOf("scope").forGetter(o -> o.getAddon(3)),
                     ItemStack.CODEC.fieldOf("chip3").forGetter(o -> o.getAddon(4))
             ).apply(instance, GunItem.DataComponentAddons::new)
+    );
+
+    private static final Codec<AmmoGunItem.DataComponentLoadedAmmo> LOADED_AMMO_CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                    ItemStack.CODEC.fieldOf("ammo").forGetter(AmmoGunItem.DataComponentLoadedAmmo::getStack)
+            ).apply(instance, AmmoGunItem.DataComponentLoadedAmmo::new)
     );
 
 
@@ -47,12 +50,22 @@ public class DataComponentRegistry {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> RELOADING = DATA_COMPONENTS.registerComponentType(
             "reloading",
-            builder -> builder.persistent(Codec.BOOL)
+            builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> HEAT = DATA_COMPONENTS.registerComponentType(
             "heat",
             builder -> builder.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT)
+    );
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> RAILGUN_SECONDARY_MODE = DATA_COMPONENTS.registerComponentType(
+            "railgun_secondary_mode",
+            builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<AmmoGunItem.DataComponentLoadedAmmo>> LOADED_AMMO = DATA_COMPONENTS.registerComponentType(
+            "loaded_ammo",
+            builder -> builder.persistent(LOADED_AMMO_CODEC)
     );
 
 }

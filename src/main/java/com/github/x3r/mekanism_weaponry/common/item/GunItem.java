@@ -3,9 +3,6 @@ package com.github.x3r.mekanism_weaponry.common.item;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -17,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.client.IItemDecorator;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -40,10 +36,14 @@ public abstract class GunItem extends Item {
     }
 
     public void tryStartReload(ItemStack stack, ServerPlayer player) {
-        if(stack.getItem() instanceof GunItem item) {
+        if(stack.getItem() instanceof GunItem item && canReload(stack, player)) {
             item.serverReload(stack, item, player);
             PacketDistributor.sendToPlayer(player, new ReloadGunPayload());
         }
+    }
+
+    public boolean canReload(ItemStack stack, ServerPlayer serverPlayer) {
+        return true;
     }
 
     @Override
@@ -92,7 +92,7 @@ public abstract class GunItem extends Item {
         return stack.get(DataComponentRegistry.LAST_SHOT_TICK.get()).longValue();
     }
 
-    public void setListShotTick(ItemStack stack, long tick) {
+    public void setLastShotTick(ItemStack stack, long tick) {
         stack.set(DataComponentRegistry.LAST_SHOT_TICK.get(), tick);
     }
 

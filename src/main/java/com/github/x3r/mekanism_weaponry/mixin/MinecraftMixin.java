@@ -44,7 +44,7 @@ public abstract class MinecraftMixin {
         if(stack.getItem() instanceof GunItem item) {
             if(item.isOffCooldown(stack, level.getGameTime())) {
                 PacketDistributor.sendToServer(new ActivateGunPayload());
-                item.setListShotTick(stack, level.getGameTime());
+                item.setLastShotTick(stack, level.getGameTime());
             }
         }
     }

@@ -6,7 +6,6 @@ import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -46,7 +45,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
                 .add(0, 0, -0.025)
                 .add(player.getLookAngle().normalize().scale(0.1));
         if(isReady(stack, level)) {
-            setListShotTick(stack, level.getGameTime());
+            setLastShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
 
             PlasmaEntity plasma = new PlasmaEntity(player, pos, 8.0F);

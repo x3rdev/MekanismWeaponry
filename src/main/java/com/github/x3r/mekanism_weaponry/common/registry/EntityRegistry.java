@@ -19,21 +19,21 @@ public class EntityRegistry {
 
     public static final DeferredHolder<EntityType<?>, EntityType<LaserEntity>> LASER = ENTITY_TYPES.register("laser",
             () -> EntityType.Builder.<LaserEntity>of(LaserEntity::new, MobCategory.MISC)
-                    .sized(0.125F, 0.125F)
+                    .sized(0.25F, 0.25F)
                     .clientTrackingRange(4)
                     .updateInterval(20)
                     .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "laser").toString()));
 
     public static final DeferredHolder<EntityType<?>, EntityType<PlasmaEntity>> PLASMA = ENTITY_TYPES.register("plasma",
             () -> EntityType.Builder.<PlasmaEntity>of(PlasmaEntity::new, MobCategory.MISC)
-                    .sized(0.125F, 0.125F)
+                    .sized(0.25F, 0.25F)
                     .clientTrackingRange(4)
                     .updateInterval(20)
                     .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "plasma").toString()));
 
     public static final DeferredHolder<EntityType<?>, EntityType<RodEntity>> ROD = ENTITY_TYPES.register("rod",
             () -> EntityType.Builder.<RodEntity>of(RodEntity::new, MobCategory.MISC)
-                    .sized(0.125F, 0.125F)
+                    .sized(0.5F, 0.5F)
                     .clientTrackingRange(4)
                     .updateInterval(20)
                     .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "rod").toString()));

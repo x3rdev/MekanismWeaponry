@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class GunProjectileEntity extends Projectile{
+public class GunProjectileEntity extends Projectile {
 
     protected double damage = 1.0F;
 

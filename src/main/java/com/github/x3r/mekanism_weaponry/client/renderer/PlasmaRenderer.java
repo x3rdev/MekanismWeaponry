@@ -30,7 +30,7 @@ public class PlasmaRenderer extends GeoEntityRenderer<PlasmaEntity> {
 
     @Override
     public boolean shouldRender(PlasmaEntity livingEntity, Frustum camera, double camX, double camY, double camZ) {
-        if(livingEntity.distanceToSqr(camX, camY, camZ) < 1.0F) { // Dont render if too close to camera
+        if(livingEntity.distanceToSqr(camX, camY, camZ) < 2.0F) { // Dont render if too close to camera
             return false;
         }
         return super.shouldRender(livingEntity, camera, camX, camY, camZ);
