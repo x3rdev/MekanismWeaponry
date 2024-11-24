@@ -22,6 +22,7 @@ public final class DataGenerators {
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
         generator.addProvider(event.includeServer(), new MWBlockTagsProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(event.includeClient(), new MWLangProvider(packOutput, "en_us"));
         generator.addProvider(event.includeClient(), new MWSoundDefProvider(packOutput, existingFileHelper));
     }
 }
