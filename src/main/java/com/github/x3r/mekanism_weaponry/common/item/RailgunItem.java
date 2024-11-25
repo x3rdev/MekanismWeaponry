@@ -78,7 +78,6 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
             }
             if(!hasAmmo(stack)) {
-                level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.COMPARATOR_CLICK, SoundSource.PLAYERS, 0.75F, 1.0F);
                 tryStartReload(stack, player);
             }
         }

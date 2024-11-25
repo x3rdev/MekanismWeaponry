@@ -41,6 +41,10 @@ public class CommonSetup {
                 ItemRegistry.RAILGUN.get());
         event.registerItem(
                 Capabilities.EnergyStorage.ITEM,
+                (stack, context) -> new ComponentEnergyStorage(stack, DataComponentRegistry.ENERGY.get(), 100000, 10000, 10000),
+                ItemRegistry.TESLA_MINIGUN.get());
+        event.registerItem(
+                Capabilities.EnergyStorage.ITEM,
                 (stack, context) -> new ComponentEnergyStorage(stack, DataComponentRegistry.ENERGY.get(), 10000, 1000, 1000),
                 ItemRegistry.GAUNTLET.get());
     }

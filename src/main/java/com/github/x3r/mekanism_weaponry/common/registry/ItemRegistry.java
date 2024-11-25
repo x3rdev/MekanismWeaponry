@@ -1,10 +1,7 @@
 package com.github.x3r.mekanism_weaponry.common.registry;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
-import com.github.x3r.mekanism_weaponry.common.item.GauntletItem;
-import com.github.x3r.mekanism_weaponry.common.item.GunAddonItem;
-import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
-import com.github.x3r.mekanism_weaponry.common.item.RailgunItem;
+import com.github.x3r.mekanism_weaponry.common.item.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -27,6 +24,9 @@ public class ItemRegistry {
 
     public static final DeferredHolder<Item, RailgunItem> RAILGUN = ITEMS.register("railgun",
             () -> new RailgunItem(new Item.Properties()));
+
+    public static final DeferredHolder<Item, TeslaMinigunItem> TESLA_MINIGUN = ITEMS.register("tesla_minigun",
+            () -> new TeslaMinigunItem(new Item.Properties()));
 
     public static final DeferredHolder<Item, BlockItem> WEAPON_WORKBENCH = ITEMS.register("weapon_workbench",
             () -> new BlockItem(BlockRegistry.WEAPON_WORKBENCH.get(), new Item.Properties()));

@@ -118,6 +118,7 @@ public class ClientSetup {
     public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
         event.register(ItemRegistry.PLASMA_RIFLE.get(), HeatGunItem.decorator());
         event.register(ItemRegistry.RAILGUN.get(), AmmoGunItem.decorator());
+        event.register(ItemRegistry.TESLA_MINIGUN.get(), HeatGunItem.decorator());
     }
 
     @SubscribeEvent
