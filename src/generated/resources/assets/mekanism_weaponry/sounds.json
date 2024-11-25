@@ -10,5 +10,17 @@
       "mekanism_weaponry:item/plasma_rifle_shoot"
     ],
     "subtitle": "mekanism_weaponry.subtitle.plasma_rifle_shoot"
+  },
+  "railgun_reload": {
+    "sounds": [
+      "mekanism_weaponry:item/railgun_reload"
+    ],
+    "subtitle": "mekanism_weaponry.subtitle.railgun_reload"
+  },
+  "railgun_shoot": {
+    "sounds": [
+      "mekanism_weaponry:item/railgun_shoot"
+    ],
+    "subtitle": "mekanism_weaponry.subtitle.railgun_shoot"
   }
 }

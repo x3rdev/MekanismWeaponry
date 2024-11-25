@@ -13,12 +13,15 @@ public class RodParticle extends TextureSheetParticle {
         super(level, x, y, z);
         this.spriteSet = spriteSet;
         this.gravity = 0;
+        this.setLifetime(40);
         this.setSpriteFromAge(spriteSet);
     }
 
     @Override
     public void tick() {
-        this.setSpriteFromAge(spriteSet);
+        if(age%2==0) {
+            this.setSpriteFromAge(spriteSet);
+        }
         super.tick();
     }
 

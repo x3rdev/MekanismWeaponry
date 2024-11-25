@@ -26,5 +26,15 @@ public class MWSoundDefProvider extends SoundDefinitionsProvider {
                 .with(SoundDefinition.Sound.sound(
                         ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/plasma_rifle_out_of_energy"),
                         SoundDefinition.SoundType.SOUND)));
+        add(SoundRegistry.RAILGUN_SHOOT.get(), definition()
+                .subtitle("mekanism_weaponry.subtitle.railgun_shoot")
+                .with(SoundDefinition.Sound.sound(
+                        ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/railgun_shoot"),
+                        SoundDefinition.SoundType.SOUND)));
+        add(SoundRegistry.RAILGUN_RELOAD.get(), definition()
+                .subtitle("mekanism_weaponry.subtitle.railgun_reload")
+                .with(SoundDefinition.Sound.sound(
+                        ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/railgun_reload"),
+                        SoundDefinition.SoundType.SOUND)));
     }
 }

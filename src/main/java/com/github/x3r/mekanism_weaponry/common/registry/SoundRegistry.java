@@ -13,6 +13,9 @@ public class SoundRegistry {
 
     public static final DeferredHolder<SoundEvent, SoundEvent> PLASMA_RIFLE_SHOOT = registerSound("plasma_rifle_shoot");
     public static final DeferredHolder<SoundEvent, SoundEvent> PLASMA_RIFLE_OUT_OF_ENERGY = registerSound("plasma_rifle_out_of_energy");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RAILGUN_SHOOT = registerSound("railgun_shoot");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RAILGUN_RELOAD = registerSound("railgun_reload");
+
 
     public static DeferredHolder<SoundEvent, SoundEvent> registerSound(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, name)));

@@ -65,9 +65,9 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
             float dmg = isSecondMode(stack) ? 24F : 16F;
             RodEntity rod = new RodEntity(player, pos, dmg, isSecondMode(stack));
-            rod.setDeltaMovement(player.getLookAngle().normalize().scale(3));
+            rod.setDeltaMovement(player.getLookAngle().normalize().scale(isSecondMode(stack) ? 3 : 5));
             level.addFreshEntity(rod);
-            level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_SHOOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.RAILGUN_SHOOT.get(), SoundSource.PLAYERS, 1.75F, 1.0F);
 
             getLoadedAmmo(stack).shrink(1);
 
@@ -78,7 +78,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
             }
             if(!hasAmmo(stack)) {
-                level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.COMPARATOR_CLICK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.COMPARATOR_CLICK, SoundSource.PLAYERS, 0.75F, 1.0F);
                 tryStartReload(stack, player);
             }
         }
@@ -97,13 +97,13 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     @Override
     public void serverReload(ItemStack stack, GunItem item, ServerPlayer player) {
         setReloading(stack, true);
+        player.serverLevel().playSound(null,
+                player.getX(), player.getY(), player.getZ(),
+                SoundRegistry.RAILGUN_RELOAD, SoundSource.PLAYERS, 1.0F, 1.0F);
         Scheduler.schedule(() -> {
             if(item.isReloading(stack)) {
                 setReloading(stack, false);
                 loadAmmo(stack, player);
-                player.serverLevel().playSound(null,
-                        player.getX(), player.getY(), player.getZ(),
-                        SoundEvents.CHEST_LOCKED, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
         }, 35);
     }

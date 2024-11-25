@@ -43,7 +43,7 @@ public abstract class GunItem extends Item {
     }
 
     public boolean canReload(ItemStack stack, ServerPlayer serverPlayer) {
-        return true;
+        return !isReloading(stack);
     }
 
     @Override
