@@ -4,45 +4,37 @@ import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.client.renderer.LaserRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.RodRenderer;
+import com.github.x3r.mekanism_weaponry.client.renderer.TeslaMinigunRenderer;
 import com.github.x3r.mekanism_weaponry.client.screen.WeaponWorkbenchScreen;
 import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.HeatGunItem;
-import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
-import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.MenuTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ParticleRegistry;
-import com.github.x3r.mekanism_weaponry.mixin.MinecraftMixin;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.InputType;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.minecraft.util.ThreadingDetector;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.asm.enumextension.EnumProxy;
+import net.neoforged.neoforge.client.IArmPoseTransformer;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.util.Lazy;
-import net.neoforged.neoforge.event.server.ServerLifecycleEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.checkerframework.checker.units.qual.K;
-
-import javax.lang.model.element.ElementVisitor;
+import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = MekanismWeaponry.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -77,6 +69,9 @@ public class ClientSetup {
         event.registerEntityRenderer(EntityRegistry.ROD.get(), RodRenderer::new);
     }
 
+
+
+
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerItem(new IClientItemExtensions() {
@@ -87,7 +82,14 @@ public class ClientSetup {
         },
                 ItemRegistry.PLASMA_RIFLE.get(),
                 ItemRegistry.RAILGUN.get()
-        ); // All guns?
+        );
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public HumanoidModel.@Nullable ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
+                return TeslaMinigunRenderer.MINIGUN_POSE.getValue();
+            }
+        },
+                ItemRegistry.TESLA_MINIGUN.get());
     }
 
     // Neo Bus event, registered in mod class

@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/client/model/HumanoidModel/ArmPose",
+      "name": "MEKANISM_WEAPONRY_MINIGUN",
+      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "parameters": {
+        "class": "com/github/x3r/mekanism_weaponry/client/renderer/TeslaMinigunRenderer",
+        "field": "MINIGUN_POSE"
+      }
+    }
+  ]
+}
