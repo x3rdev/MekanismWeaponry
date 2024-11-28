@@ -2,10 +2,19 @@ package com.github.x3r.mekanism_weaponry.common.item;
 
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRifleRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.TeslaMinigunRenderer;
+import com.github.x3r.mekanism_weaponry.common.entity.ElectricityEntity;
+import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
+import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
+import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
@@ -31,7 +40,27 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
 
     @Override
     public void serverShoot(ItemStack stack, GunItem item, ServerPlayer player) {
+        Level level = player.level();
+        Vec3 pos = player.getEyePosition()
+                .add(player.getLookAngle().normalize().scale(0.1));
+        if(isReady(stack, level)) {
+            setLastShotTick(stack, level.getGameTime());
+            PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
 
+            ElectricityEntity proj = new ElectricityEntity(player, player.getLookAngle().normalize().toVector3f(), 20);
+            level.addFreshEntity(proj);
+
+            getEnergyStorage(stack).extractEnergy(energyUsage, false);
+            ((HeatGunItem) item).setHeat(stack, ((HeatGunItem) item).getHeat(stack) + heatPerShot);
+            item.setReloading(stack, false);
+        } else {
+            if(!hasSufficientEnergy(stack)) {
+                level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            }
+            if(isOverheated(stack)) {
+                level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1.0F, 1.0F);
+            }
+        }
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.github.x3r.mekanism_weaponry.client;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
+import com.github.x3r.mekanism_weaponry.client.renderer.ElectricityRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.LaserRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.RodRenderer;
-import com.github.x3r.mekanism_weaponry.client.renderer.TeslaMinigunRenderer;
 import com.github.x3r.mekanism_weaponry.client.screen.WeaponWorkbenchScreen;
 import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
@@ -26,8 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.asm.enumextension.EnumProxy;
-import net.neoforged.neoforge.client.IArmPoseTransformer;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -67,6 +65,7 @@ public class ClientSetup {
         event.registerEntityRenderer(EntityRegistry.LASER.get(), LaserRenderer::new);
         event.registerEntityRenderer(EntityRegistry.PLASMA.get(), PlasmaRenderer::new);
         event.registerEntityRenderer(EntityRegistry.ROD.get(), RodRenderer::new);
+        event.registerEntityRenderer(EntityRegistry.ELECTRICITY.get(), ElectricityRenderer::new);
     }
 
 
@@ -86,7 +85,7 @@ public class ClientSetup {
         event.registerItem(new IClientItemExtensions() {
             @Override
             public HumanoidModel.@Nullable ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
-                return TeslaMinigunRenderer.MINIGUN_POSE.getValue();
+                return ArmPoses.MINIGUN_POSE.getValue();
             }
         },
                 ItemRegistry.TESLA_MINIGUN.get());

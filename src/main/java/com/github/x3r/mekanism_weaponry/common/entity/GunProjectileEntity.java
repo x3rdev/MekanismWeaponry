@@ -108,4 +108,9 @@ public class GunProjectileEntity extends Projectile {
         });
         return collisions;
     }
+
+    @Override
+    protected void applyGravity() {
+
+    }
 }

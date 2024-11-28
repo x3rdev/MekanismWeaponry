@@ -42,7 +42,6 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
     public void serverShoot(ItemStack stack, GunItem item, ServerPlayer player) {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
-                .add(0, 0, -0.025)
                 .add(player.getLookAngle().normalize().scale(0.1));
         if(isReady(stack, level)) {
             setLastShotTick(stack, level.getGameTime());
