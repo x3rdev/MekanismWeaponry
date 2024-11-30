@@ -47,11 +47,11 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
             setLastShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
 
-            ElectricityEntity proj = new ElectricityEntity(player, player.getLookAngle().normalize().toVector3f(), 20);
+            ElectricityEntity proj = new ElectricityEntity(player, player.getLookAngle().normalize().toVector3f(), 60);
             level.addFreshEntity(proj);
 
             getEnergyStorage(stack).extractEnergy(energyUsage, false);
-            ((HeatGunItem) item).setHeat(stack, ((HeatGunItem) item).getHeat(stack) + heatPerShot);
+//            ((HeatGunItem) item).setHeat(stack, ((HeatGunItem) item).getHeat(stack) + heatPerShot);
             item.setReloading(stack, false);
         } else {
             if(!hasSufficientEnergy(stack)) {

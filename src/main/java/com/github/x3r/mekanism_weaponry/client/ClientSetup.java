@@ -15,10 +15,15 @@ import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.MenuTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ParticleRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,8 +39,14 @@ import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.util.Objects;
+
 @EventBusSubscriber(modid = MekanismWeaponry.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
+
+    @Nullable
+    private static ShaderInstance rendertypeElectricityShader;
 
     public static final Lazy<KeyMapping> RELOAD_MAPPING = Lazy.of(() -> new KeyMapping("key.mekanism_weaponry.reload", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, InputConstants.KEY_R, "key.categories.mekanism_weaponry"));
 
@@ -67,8 +78,6 @@ public class ClientSetup {
         event.registerEntityRenderer(EntityRegistry.ROD.get(), RodRenderer::new);
         event.registerEntityRenderer(EntityRegistry.ELECTRICITY.get(), ElectricityRenderer::new);
     }
-
-
 
 
     @SubscribeEvent
@@ -130,5 +139,21 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ParticleRegistry.ROD_TRAIL.get(), ParticleRegistry.RodTrailParticleProvider::new);
+    }
+
+    @SubscribeEvent
+    public static void registerRenderTypes(RegisterShadersEvent event) {
+        ResourceProvider provider = event.getResourceProvider();
+        try {
+            event.registerShader(new ShaderInstance(provider, ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "electricity"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
+                rendertypeElectricityShader = shaderInstance;
+            });
+        } catch (IOException e) {
+            MekanismWeaponry.LOGGER.warn("Failed to load shader", e);
+        }
+    }
+
+    public static ShaderInstance getElectricityShader() {
+        return Objects.requireNonNull(rendertypeElectricityShader, "Attempted to call getHologramShader before shaders have finished loading.");
     }
 }
