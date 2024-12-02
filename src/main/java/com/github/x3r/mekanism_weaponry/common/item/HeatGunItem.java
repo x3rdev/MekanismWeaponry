@@ -28,7 +28,9 @@ public abstract class HeatGunItem extends GunItem {
         if(entity instanceof ServerPlayer player) {
             float heat = getHeat(stack);
             if (heat > 0) {
-                setHeat(stack, heat - 0.25F);
+                if(!stack.get(DataComponentRegistry.IS_SHOOTING)) {
+                    setHeat(stack, heat - 0.25F);
+                }
                 if (heat < 0.01) {
                     setHeat(stack, 0F);
                 }

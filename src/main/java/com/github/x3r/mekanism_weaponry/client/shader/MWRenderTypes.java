@@ -7,9 +7,6 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.sound.sampled.Line;
-import java.util.OptionalDouble;
-
 public class MWRenderTypes {
 
     public static RenderType electricity(ResourceLocation location) {
@@ -23,19 +20,18 @@ public class MWRenderTypes {
         }
 
         private static RenderType electricity(ResourceLocation location) {
-            var renderState = RenderType.CompositeState.builder()
-                    .setShaderState(new ShaderStateShard(ClientSetup::getElectricityShader))
-                    .setTextureState(new RenderStateShard.TextureStateShard(location, false, false))
-                    .setTransparencyState(ADDITIVE_TRANSPARENCY)
-                    .setWriteMaskState(COLOR_WRITE)
-                    .createCompositeState(false);
             return create("electricity",
                     DefaultVertexFormat.NEW_ENTITY,
                     VertexFormat.Mode.QUADS,
                     1536,
                     false,
                     true,
-                    renderState);
+                    RenderType.CompositeState.builder()
+                            .setShaderState(new ShaderStateShard(ClientSetup::getElectricityShader))
+                            .setTextureState(new RenderStateShard.TextureStateShard(location, false, false))
+                            .setTransparencyState(ADDITIVE_TRANSPARENCY)
+                            .setWriteMaskState(COLOR_WRITE)
+                            .createCompositeState(false));
         }
     }
 }

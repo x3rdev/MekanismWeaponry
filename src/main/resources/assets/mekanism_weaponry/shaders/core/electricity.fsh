@@ -11,12 +11,10 @@ uniform float FogEnd;
 in float vertexDistance;
 in vec4 vertexColor;
 in vec2 texCoord0;
-in vec2 screenSize;
 
 out vec4 fragColor;
 
 void main() {
     vec4 color = texture(Sampler0, texCoord0) * vertexColor;
     fragColor = color * ColorModulator * linear_fog_fade(vertexDistance, FogStart, FogEnd);
-
 }

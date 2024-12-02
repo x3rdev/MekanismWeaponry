@@ -9,6 +9,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -66,6 +67,11 @@ public class DataComponentRegistry {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<AmmoGunItem.DataComponentLoadedAmmo>> LOADED_AMMO = DATA_COMPONENTS.registerComponentType(
             "loaded_ammo",
             builder -> builder.persistent(LOADED_AMMO_CODEC)
+    );
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> IS_SHOOTING = DATA_COMPONENTS.registerComponentType(
+            "is_shooting",
+            builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
 }

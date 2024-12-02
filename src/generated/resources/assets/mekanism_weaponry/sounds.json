@@ -1,4 +1,10 @@
 {
+  "minigun_shoot": {
+    "sounds": [
+      "mekanism_weaponry:item/minigun_shoot"
+    ],
+    "subtitle": "mekanism_weaponry.subtitle.minigun_shoot"
+  },
   "plasma_rifle_out_of_energy": {
     "sounds": [
       "mekanism_weaponry:item/plasma_rifle_out_of_energy"

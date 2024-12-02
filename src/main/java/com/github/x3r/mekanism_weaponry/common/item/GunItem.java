@@ -29,7 +29,8 @@ public abstract class GunItem extends Item {
         super(pProperties.stacksTo(1).setNoRepair()
                 .component(DataComponentRegistry.LAST_SHOT_TICK.get(), 0L)
                 .component(DataComponentRegistry.RELOADING, false)
-                .component(DataComponentRegistry.ADDONS.get(), new DataComponentAddons()));
+                .component(DataComponentRegistry.ADDONS.get(), new DataComponentAddons())
+                .component(DataComponentRegistry.IS_SHOOTING, false));
 
         this.cooldown = cooldown;
         this.energyUsage = energyUsage;
@@ -144,6 +145,10 @@ public abstract class GunItem extends Item {
     public abstract void serverReload(ItemStack stack, GunItem item, ServerPlayer player);
 
     public abstract void clientReload(ItemStack stack, GunItem item, Player player);
+
+    public void serverStoppedShooting(ItemStack stack, GunItem item, Player player){
+        stack.set(DataComponentRegistry.IS_SHOOTING, false);
+    }
 
     public abstract boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack);
 

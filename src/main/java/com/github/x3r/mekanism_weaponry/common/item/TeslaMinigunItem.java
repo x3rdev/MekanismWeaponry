@@ -1,18 +1,23 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
-import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRifleRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.TeslaMinigunRenderer;
-import com.github.x3r.mekanism_weaponry.common.entity.ElectricityEntity;
-import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
+import com.github.x3r.mekanism_weaponry.client.sound.TeslaMinigunSoundInstance;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
+import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
+import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -44,15 +49,21 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
         Vec3 pos = player.getEyePosition()
                 .add(player.getLookAngle().normalize().scale(0.1));
         if(isReady(stack, level)) {
+            stack.set(DataComponentRegistry.IS_SHOOTING, true);
             setLastShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
-
-            ElectricityEntity proj = new ElectricityEntity(player, player.getLookAngle().normalize().toVector3f(), 60);
-            level.addFreshEntity(proj);
-
             getEnergyStorage(stack).extractEnergy(energyUsage, false);
-//            ((HeatGunItem) item).setHeat(stack, ((HeatGunItem) item).getHeat(stack) + heatPerShot);
+            ((HeatGunItem) item).setHeat(stack, ((HeatGunItem) item).getHeat(stack) + heatPerShot);
             item.setReloading(stack, false);
+
+            AABB hurtBox = new AABB(
+                    player.getEyePosition().add(player.getLookAngle().normalize()).subtract(0.5, 0.5, 0.5),
+                    player.getEyePosition().add(player.getLookAngle().normalize()).add(0.5, 0.5, 0.5)
+                    ).inflate(5);
+            level.getEntities(player, hurtBox).forEach(entity -> {
+                entity.hurt(new DamageTypeRegistry(player.level().registryAccess()).laser(), 10);
+            });
+
         } else {
             if(!hasSufficientEnergy(stack)) {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -60,12 +71,17 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
             if(isOverheated(stack)) {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
+            stack.set(DataComponentRegistry.IS_SHOOTING, false);
         }
     }
 
     @Override
     public void clientShoot(ItemStack stack, GunItem item, Player player) {
-
+        SoundManager manager = Minecraft.getInstance().getSoundManager();
+        SoundInstance instance = new TeslaMinigunSoundInstance(player);
+        if(stack.get(DataComponentRegistry.IS_SHOOTING) && !manager.isActive(instance)) {
+            manager.play(instance);
+        }
     }
 
     @Override

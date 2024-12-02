@@ -15,6 +15,7 @@ public class SoundRegistry {
     public static final DeferredHolder<SoundEvent, SoundEvent> PLASMA_RIFLE_OUT_OF_ENERGY = registerSound("plasma_rifle_out_of_energy");
     public static final DeferredHolder<SoundEvent, SoundEvent> RAILGUN_SHOOT = registerSound("railgun_shoot");
     public static final DeferredHolder<SoundEvent, SoundEvent> RAILGUN_RELOAD = registerSound("railgun_reload");
+    public static final DeferredHolder<SoundEvent, SoundEvent> MINIGUN_SHOOT = registerSound("minigun_shoot");
 
 
     public static DeferredHolder<SoundEvent, SoundEvent> registerSound(String name) {

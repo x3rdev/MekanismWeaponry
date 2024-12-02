@@ -29,5 +29,10 @@ public final class MekanismWeaponryPacketHandler {
                         ReloadGunPayload::handleServer
                 )
         );
+        registrar.playToServer(
+                DeactivateGunPayload.TYPE,
+                DeactivateGunPayload.STREAM_CODEC,
+                DeactivateGunPayload::handleServer
+        );
     }
 }

@@ -36,5 +36,10 @@ public class MWSoundDefProvider extends SoundDefinitionsProvider {
                 .with(SoundDefinition.Sound.sound(
                         ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/railgun_reload"),
                         SoundDefinition.SoundType.SOUND)));
+        add(SoundRegistry.MINIGUN_SHOOT.get(), definition()
+                .subtitle("mekanism_weaponry.subtitle.minigun_shoot")
+                .with(SoundDefinition.Sound.sound(
+                        ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/minigun_shoot"),
+                        SoundDefinition.SoundType.SOUND)));
     }
 }

@@ -41,8 +41,7 @@ public abstract class AmmoGunItem extends GunItem {
         ItemStack ammoStack = getFirstAmmoStack(gunStack, player);
         int i = ammoInGun.getCount() + ammoStack.getCount() - maxAmmo;
 
-        gunStack.get(DataComponentRegistry.LOADED_AMMO).setStack(new ItemStack(ammoStack.getItem()));
-        ammoInGun.setCount(maxAmmo);
+        gunStack.get(DataComponentRegistry.LOADED_AMMO).setStack(new ItemStack(ammoStack.getItem(), Math.min(ammoInGun.getCount() + ammoStack.getCount(), maxAmmo)));
         ammoStack.setCount(Math.max(0, i));
 
         if(ammoInGun.getCount() < maxAmmo && !getFirstAmmoStack(gunStack, player).isEmpty()) {

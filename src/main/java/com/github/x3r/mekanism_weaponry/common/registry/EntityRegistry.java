@@ -2,7 +2,6 @@ package com.github.x3r.mekanism_weaponry.common.registry;
 
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
-import com.github.x3r.mekanism_weaponry.common.entity.ElectricityEntity;
 import com.github.x3r.mekanism_weaponry.common.entity.LaserEntity;
 import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
 import com.github.x3r.mekanism_weaponry.common.entity.RodEntity;
@@ -38,14 +37,4 @@ public class EntityRegistry {
                     .clientTrackingRange(4)
                     .updateInterval(20)
                     .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "rod").toString()));
-
-    public static final DeferredHolder<EntityType<?>, EntityType<ElectricityEntity>> ELECTRICITY = ENTITY_TYPES.register("electricity",
-            () -> EntityType.Builder.<ElectricityEntity>of(ElectricityEntity::new, MobCategory.MISC)
-                    .sized(5F, 0.5F)
-                    .clientTrackingRange(4)
-                    .updateInterval(20)
-                    .noSave()
-                    .noSummon()
-                    .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "electricity").toString()));
-
 }

@@ -1,7 +1,6 @@
 package com.github.x3r.mekanism_weaponry.client;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
-import com.github.x3r.mekanism_weaponry.client.renderer.ElectricityRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.LaserRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.RodRenderer;
@@ -9,18 +8,15 @@ import com.github.x3r.mekanism_weaponry.client.screen.WeaponWorkbenchScreen;
 import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.HeatGunItem;
+import com.github.x3r.mekanism_weaponry.common.packet.DeactivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
-import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
-import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
-import com.github.x3r.mekanism_weaponry.common.registry.MenuTypeRegistry;
-import com.github.x3r.mekanism_weaponry.common.registry.ParticleRegistry;
+import com.github.x3r.mekanism_weaponry.common.registry.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceProvider;
@@ -52,6 +48,7 @@ public class ClientSetup {
 
     // Neo Bus event, registered in mod class
     public static void onClientTick(ClientTickEvent.Post event) {
+        Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = Minecraft.getInstance().player;
         if(player == null) return;
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
@@ -60,6 +57,12 @@ public class ClientSetup {
                 PacketDistributor.sendToServer(new ReloadGunPayload());
             }
         }
+        if(!mc.options.keyAttack.isDown()) {
+            if(stack.getItem() instanceof GunItem && stack.get(DataComponentRegistry.IS_SHOOTING)) {
+                PacketDistributor.sendToServer(new DeactivateGunPayload());
+            }
+        }
+
 
         //recoil
         recoilO = recoil;
@@ -69,6 +72,8 @@ public class ClientSetup {
                 recoil = 0;
             }
         }
+
+
     }
 
     @SubscribeEvent
@@ -76,7 +81,6 @@ public class ClientSetup {
         event.registerEntityRenderer(EntityRegistry.LASER.get(), LaserRenderer::new);
         event.registerEntityRenderer(EntityRegistry.PLASMA.get(), PlasmaRenderer::new);
         event.registerEntityRenderer(EntityRegistry.ROD.get(), RodRenderer::new);
-        event.registerEntityRenderer(EntityRegistry.ELECTRICITY.get(), ElectricityRenderer::new);
     }
 
 
@@ -145,7 +149,7 @@ public class ClientSetup {
     public static void registerRenderTypes(RegisterShadersEvent event) {
         ResourceProvider provider = event.getResourceProvider();
         try {
-            event.registerShader(new ShaderInstance(provider, ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "electricity"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
+            event.registerShader(new ShaderInstance(provider, ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "electricity"), DefaultVertexFormat.NEW_ENTITY), shaderInstance -> {
                 rendertypeElectricityShader = shaderInstance;
             });
         } catch (IOException e) {
@@ -154,6 +158,6 @@ public class ClientSetup {
     }
 
     public static ShaderInstance getElectricityShader() {
-        return Objects.requireNonNull(rendertypeElectricityShader, "Attempted to call getHologramShader before shaders have finished loading.");
+        return Objects.requireNonNull(rendertypeElectricityShader, "Attempted to get shader before they have finished loading.");
     }
 }

@@ -2,6 +2,7 @@ package com.github.x3r.mekanism_weaponry.common.packet;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
+import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.codec.StreamCodec;
