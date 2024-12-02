@@ -35,7 +35,7 @@ public class TeslaMinigunSoundInstance extends AbstractTickableSoundInstance {
             this.z = player.getZ();
         }
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if(stack.getItem() instanceof TeslaMinigunItem && stack.get(DataComponentRegistry.IS_SHOOTING)) {
+        if(stack.getItem() instanceof TeslaMinigunItem item && item.isShooting(stack)) {
             this.volume = 1.0F;
         } else {
             this.volume -= 0.1F;

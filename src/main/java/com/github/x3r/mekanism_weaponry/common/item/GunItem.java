@@ -138,6 +138,10 @@ public abstract class GunItem extends Item {
         addons.setAddon(chipStack, index);
     }
 
+    public boolean isShooting(ItemStack stack) {
+        return stack.get(DataComponentRegistry.IS_SHOOTING);
+    }
+
     public abstract void serverShoot(ItemStack stack, GunItem item, ServerPlayer player);
 
     public abstract void clientShoot(ItemStack stack, GunItem item, Player player);

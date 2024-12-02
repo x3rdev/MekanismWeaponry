@@ -79,7 +79,7 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
     public void clientShoot(ItemStack stack, GunItem item, Player player) {
         SoundManager manager = Minecraft.getInstance().getSoundManager();
         SoundInstance instance = new TeslaMinigunSoundInstance(player);
-        if(stack.get(DataComponentRegistry.IS_SHOOTING) && !manager.isActive(instance)) {
+        if(item.isShooting(stack) && !manager.isActive(instance)) {
             manager.play(instance);
         }
     }

@@ -40,7 +40,7 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        if(transformType != ItemDisplayContext.GUI && stack.get(DataComponentRegistry.IS_SHOOTING)) {
+        if(transformType != ItemDisplayContext.GUI && ((TeslaMinigunItem) stack.getItem()).isShooting(stack)) {
             poseStack.pushPose();
             poseStack.translate(0.5, 0.64, -0.25); // magic numbers for aligning lightning to barrel of gun
             poseStack.scale(5, 5, 5);

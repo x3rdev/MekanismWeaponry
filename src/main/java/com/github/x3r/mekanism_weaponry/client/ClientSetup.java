@@ -58,7 +58,7 @@ public class ClientSetup {
             }
         }
         if(!mc.options.keyAttack.isDown()) {
-            if(stack.getItem() instanceof GunItem && stack.get(DataComponentRegistry.IS_SHOOTING)) {
+            if(stack.getItem() instanceof GunItem item && item.isShooting(stack)) {
                 PacketDistributor.sendToServer(new DeactivateGunPayload());
             }
         }
