@@ -38,7 +38,7 @@ public abstract class GunItem extends Item {
 
     public void tryStartReload(ItemStack stack, ServerPlayer player) {
         if(stack.getItem() instanceof GunItem item && canReload(stack, player)) {
-            item.serverReload(stack, item, player);
+            item.serverReload(stack, player);
             PacketDistributor.sendToPlayer(player, new ReloadGunPayload());
         }
     }
@@ -142,15 +142,15 @@ public abstract class GunItem extends Item {
         return stack.get(DataComponentRegistry.IS_SHOOTING);
     }
 
-    public abstract void serverShoot(ItemStack stack, GunItem item, ServerPlayer player);
+    public abstract void serverShoot(ItemStack stack, ServerPlayer player);
 
-    public abstract void clientShoot(ItemStack stack, GunItem item, Player player);
+    public abstract void clientShoot(ItemStack stack, Player player);
 
-    public abstract void serverReload(ItemStack stack, GunItem item, ServerPlayer player);
+    public abstract void serverReload(ItemStack stack, ServerPlayer player);
 
-    public abstract void clientReload(ItemStack stack, GunItem item, Player player);
+    public abstract void clientReload(ItemStack stack, Player player);
 
-    public void serverStoppedShooting(ItemStack stack, GunItem item, Player player){
+    public void serverStoppedShooting(ItemStack stack, Player player){
         stack.set(DataComponentRegistry.IS_SHOOTING, false);
     }
 

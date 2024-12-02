@@ -27,6 +27,7 @@ public class GunProjectileEntity extends Projectile {
     public GunProjectileEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.noPhysics = true;
+        this.setNoGravity(true);
     }
 
     @Override
@@ -107,10 +108,5 @@ public class GunProjectileEntity extends Projectile {
             }
         });
         return collisions;
-    }
-
-    @Override
-    protected void applyGravity() {
-
     }
 }

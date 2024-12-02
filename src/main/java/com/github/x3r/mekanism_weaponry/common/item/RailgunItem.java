@@ -54,7 +54,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     }
 
     @Override
-    public void serverShoot(ItemStack stack, GunItem item, ServerPlayer player) {
+    public void serverShoot(ItemStack stack, ServerPlayer player) {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
                 .add(0, 0, -0.025)
@@ -72,7 +72,6 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
             getLoadedAmmo(stack).shrink(1);
 
             getEnergyStorage(stack).extractEnergy(isSecondMode(stack) ? energyUsage*2 : energyUsage, false);
-            item.setReloading(stack, false);
         } else {
             if(!hasSufficientEnergy(stack)) {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -84,7 +83,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     }
 
     @Override
-    public void clientShoot(ItemStack stack, GunItem item, Player player) {
+    public void clientShoot(ItemStack stack, Player player) {
         if(isSecondMode(stack)) {
             triggerAnim(player, GeoItem.getId(stack), "controller", "shot_second");
         } else {
@@ -94,13 +93,13 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     }
 
     @Override
-    public void serverReload(ItemStack stack, GunItem item, ServerPlayer player) {
+    public void serverReload(ItemStack stack, ServerPlayer player) {
         setReloading(stack, true);
         player.serverLevel().playSound(null,
                 player.getX(), player.getY(), player.getZ(),
                 SoundRegistry.RAILGUN_RELOAD, SoundSource.PLAYERS, 1.0F, 1.0F);
         Scheduler.schedule(() -> {
-            if(item.isReloading(stack)) {
+            if(stack.getItem() instanceof GunItem && isReloading(stack)) {
                 setReloading(stack, false);
                 loadAmmo(stack, player);
             }
@@ -108,7 +107,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     }
 
     @Override
-    public void clientReload(ItemStack stack, GunItem item, Player player) {
+    public void clientReload(ItemStack stack, Player player) {
         triggerAnim(player, GeoItem.getId(stack), "controller", "reload");
     }
 

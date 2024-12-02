@@ -44,7 +44,7 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
     }
 
     @Override
-    public void serverShoot(ItemStack stack, GunItem item, ServerPlayer player) {
+    public void serverShoot(ItemStack stack, ServerPlayer player) {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
                 .add(player.getLookAngle().normalize().scale(0.1));
@@ -53,8 +53,7 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
             setLastShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
             getEnergyStorage(stack).extractEnergy(energyUsage, false);
-            ((HeatGunItem) item).setHeat(stack, ((HeatGunItem) item).getHeat(stack) + heatPerShot);
-            item.setReloading(stack, false);
+            setHeat(stack, getHeat(stack) + heatPerShot);
 
             AABB hurtBox = new AABB(
                     player.getEyePosition().add(player.getLookAngle().normalize()).subtract(0.5, 0.5, 0.5),
@@ -76,21 +75,21 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
     }
 
     @Override
-    public void clientShoot(ItemStack stack, GunItem item, Player player) {
+    public void clientShoot(ItemStack stack, Player player) {
         SoundManager manager = Minecraft.getInstance().getSoundManager();
         SoundInstance instance = new TeslaMinigunSoundInstance(player);
-        if(item.isShooting(stack) && !manager.isActive(instance)) {
+        if(isShooting(stack) && !manager.isActive(instance)) {
             manager.play(instance);
         }
     }
 
     @Override
-    public void serverReload(ItemStack stack, GunItem item, ServerPlayer player) {
+    public void serverReload(ItemStack stack, ServerPlayer player) {
 
     }
 
     @Override
-    public void clientReload(ItemStack stack, GunItem item, Player player) {
+    public void clientReload(ItemStack stack, Player player) {
 
     }
 

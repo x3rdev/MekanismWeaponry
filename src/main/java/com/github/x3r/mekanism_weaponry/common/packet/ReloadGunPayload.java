@@ -27,7 +27,7 @@ public record ReloadGunPayload() implements CustomPacketPayload {
             Player player = context.player();
             ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
             if(stack.getItem() instanceof GunItem item) {
-                item.clientReload(stack, item, player);
+                item.clientReload(stack, player);
             }
         });
     }

@@ -39,7 +39,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
     }
 
     @Override
-    public void serverShoot(ItemStack stack, GunItem item, ServerPlayer player) {
+    public void serverShoot(ItemStack stack, ServerPlayer player) {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
                 .add(player.getLookAngle().normalize().scale(0.1));
@@ -53,8 +53,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_SHOOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
 
             getEnergyStorage(stack).extractEnergy(energyUsage, false);
-            ((HeatGunItem) item).setHeat(stack, ((HeatGunItem) item).getHeat(stack) + heatPerShot);
-            item.setReloading(stack, false);
+            setHeat(stack, getHeat(stack) + heatPerShot);
         } else {
             if(!hasSufficientEnergy(stack)) {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -66,16 +65,16 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
     }
 
     @Override
-    public void clientShoot(ItemStack stack, GunItem item, Player player) {
+    public void clientShoot(ItemStack stack, Player player) {
         triggerAnim(player, GeoItem.getId(stack), "controller", "shoot");
         ClientSetup.recoil += 5;
     }
 
     @Override
-    public void serverReload(ItemStack stack, GunItem item, ServerPlayer player) {
+    public void serverReload(ItemStack stack, ServerPlayer player) {
         setReloading(stack, true);
         Scheduler.schedule(() -> {
-            if(item.isReloading(stack)) {
+            if(stack.getItem() instanceof GunItem && isReloading(stack)) {
                 setHeat(stack, 0);
                 setReloading(stack, false);
                 player.serverLevel().playSound(null,
@@ -86,7 +85,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
     }
 
     @Override
-    public void clientReload(ItemStack stack, GunItem item, Player player) {
+    public void clientReload(ItemStack stack, Player player) {
         triggerAnim(player, GeoItem.getId(stack), "controller", "reload");
     }
 

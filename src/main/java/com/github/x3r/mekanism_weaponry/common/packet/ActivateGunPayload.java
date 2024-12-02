@@ -29,7 +29,7 @@ public record ActivateGunPayload() implements CustomPacketPayload {
             Player player = context.player();
             ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
             if(stack.getItem() instanceof GunItem item) {
-                item.clientShoot(stack, item, player);
+                item.clientShoot(stack, player);
             }
         });
     }
@@ -40,7 +40,7 @@ public record ActivateGunPayload() implements CustomPacketPayload {
             ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
             GeoItem.getOrAssignId(stack, player.serverLevel());
             if(stack.getItem() instanceof GunItem item) {
-                item.serverShoot(stack, item, player);
+                item.serverShoot(stack, player);
             }
         });
     }

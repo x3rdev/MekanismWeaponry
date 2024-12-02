@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.IItemDecorator;
+import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -29,19 +30,25 @@ public abstract class AmmoGunItem extends GunItem {
 
     @Override
     public boolean canReload(ItemStack stack, ServerPlayer serverPlayer) {
-        return !getFirstAmmoStack(stack, serverPlayer).isEmpty();
+        return super.canReload(stack, serverPlayer) &&
+                !getFirstAmmoStack(stack, serverPlayer).isEmpty();
     }
 
     public ItemStack getLoadedAmmo(ItemStack gunStack) {
         return gunStack.get(DataComponentRegistry.LOADED_AMMO).getStack();
     }
 
+    public void setLoadedAmmo(ItemStack gunStack, ItemStack ammoStack) {
+        gunStack.set(DataComponentRegistry.LOADED_AMMO, new DataComponentLoadedAmmo(ammoStack));
+    }
+
     public void loadAmmo(ItemStack gunStack, ServerPlayer player) {
-        ItemStack ammoInGun = gunStack.get(DataComponentRegistry.LOADED_AMMO).getStack();
+        ItemStack ammoInGun = getLoadedAmmo(gunStack);
         ItemStack ammoStack = getFirstAmmoStack(gunStack, player);
         int i = ammoInGun.getCount() + ammoStack.getCount() - maxAmmo;
 
-        gunStack.get(DataComponentRegistry.LOADED_AMMO).setStack(new ItemStack(ammoStack.getItem(), Math.min(ammoInGun.getCount() + ammoStack.getCount(), maxAmmo)));
+        setLoadedAmmo(gunStack, new ItemStack(ammoStack.getItem(),
+                Math.min(ammoInGun.getCount() + ammoStack.getCount(), maxAmmo)));
         ammoStack.setCount(Math.max(0, i));
 
         if(ammoInGun.getCount() < maxAmmo && !getFirstAmmoStack(gunStack, player).isEmpty()) {
@@ -52,7 +59,7 @@ public abstract class AmmoGunItem extends GunItem {
     public abstract Predicate<ItemStack> isValidAmmo(ItemStack gunStack);
 
     public boolean ammoFitsInGun(ItemStack gunStack, ItemStack ammoStack) {
-        ItemStack stackInGun = gunStack.get(DataComponentRegistry.LOADED_AMMO).getStack();
+        ItemStack stackInGun = getLoadedAmmo(gunStack);
         if(stackInGun.isEmpty()) return true;
         return stackInGun.getCount() < maxAmmo && ammoStack.is(stackInGun.getItem());
     }
@@ -107,16 +114,12 @@ public abstract class AmmoGunItem extends GunItem {
             return stack;
         }
 
-        public void setStack(ItemStack stack) {
-            this.stack = stack;
-        }
-
         @Override
         public boolean equals(Object obj) {
             if (obj == this) return true;
             if (obj == null || obj.getClass() != this.getClass()) return false;
             var that = (DataComponentLoadedAmmo) obj;
-            return Objects.equals(this.stack, that.stack);
+            return this.stack.equals(that.stack);
         }
 
         @Override

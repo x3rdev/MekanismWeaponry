@@ -5,9 +5,12 @@ import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -17,20 +20,19 @@ public class DataComponentRegistry {
 
     private static final Codec<GunItem.DataComponentAddons> ADDONS_CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    ItemStack.CODEC.fieldOf("chip1").forGetter(o -> o.getAddon(0)),
-                    ItemStack.CODEC.fieldOf("paint").forGetter(o -> o.getAddon(1)),
-                    ItemStack.CODEC.fieldOf("chip2").forGetter(o -> o.getAddon(2)),
-                    ItemStack.CODEC.fieldOf("scope").forGetter(o -> o.getAddon(3)),
-                    ItemStack.CODEC.fieldOf("chip3").forGetter(o -> o.getAddon(4))
+                    ItemStack.OPTIONAL_CODEC.fieldOf("chip1").forGetter(o -> o.getAddon(0)),
+                    ItemStack.OPTIONAL_CODEC.fieldOf("paint").forGetter(o -> o.getAddon(1)),
+                    ItemStack.OPTIONAL_CODEC.fieldOf("chip2").forGetter(o -> o.getAddon(2)),
+                    ItemStack.OPTIONAL_CODEC.fieldOf("scope").forGetter(o -> o.getAddon(3)),
+                    ItemStack.OPTIONAL_CODEC.fieldOf("chip3").forGetter(o -> o.getAddon(4))
             ).apply(instance, GunItem.DataComponentAddons::new)
     );
 
     private static final Codec<AmmoGunItem.DataComponentLoadedAmmo> LOADED_AMMO_CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    ItemStack.CODEC.fieldOf("ammo").forGetter(AmmoGunItem.DataComponentLoadedAmmo::getStack)
+                    ItemStack.OPTIONAL_CODEC.fieldOf("ammo").forGetter(AmmoGunItem.DataComponentLoadedAmmo::getStack)
             ).apply(instance, AmmoGunItem.DataComponentLoadedAmmo::new)
     );
-
 
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MekanismWeaponry.MOD_ID);
 
