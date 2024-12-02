@@ -1,5 +1,6 @@
 package com.github.x3r.mekanism_weaponry.client.sound;
 
+import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.TeslaMinigunItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
@@ -10,6 +11,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.Objects;
 
 public class TeslaMinigunSoundInstance extends AbstractTickableSoundInstance {
 
@@ -44,9 +47,9 @@ public class TeslaMinigunSoundInstance extends AbstractTickableSoundInstance {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof TeslaMinigunSoundInstance instance) {
-            return instance.player.equals(this.player);
-        }
-        return false;
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (TeslaMinigunSoundInstance) obj;
+        return Objects.equals(this.player, that.player);
     }
 }
