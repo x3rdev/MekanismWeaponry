@@ -1,6 +1,7 @@
 package com.github.x3r.mekanism_weaponry.common.entity;
 
 import com.github.x3r.mekanism_weaponry.common.particle.RodParticle;
+import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ParticleRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -28,9 +29,9 @@ public class RodEntity extends GunProjectileEntity implements GeoEntity {
     }
 
     public RodEntity(ServerPlayer player, Vec3 pos, double damage, boolean strongAttack) {
-        this(EntityRegistry.ROD.get(), player.level());
+        super(EntityRegistry.ROD.get(), player.level(), damage,
+                (entity) -> new DamageTypeRegistry(player.level().registryAccess()).rod(entity));
         this.setPos(pos);
-        this.damage = damage;
         this.strongAttack = strongAttack;
         setOwner(player);
     }

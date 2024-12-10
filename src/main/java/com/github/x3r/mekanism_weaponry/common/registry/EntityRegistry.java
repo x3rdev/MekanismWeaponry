@@ -2,7 +2,6 @@ package com.github.x3r.mekanism_weaponry.common.registry;
 
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
-import com.github.x3r.mekanism_weaponry.common.entity.LaserEntity;
 import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
 import com.github.x3r.mekanism_weaponry.common.entity.RodEntity;
 import net.minecraft.core.registries.BuiltInRegistries;

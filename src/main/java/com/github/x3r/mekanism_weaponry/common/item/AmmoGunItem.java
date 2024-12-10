@@ -35,7 +35,7 @@ public abstract class AmmoGunItem extends GunItem {
     }
 
     public ItemStack getLoadedAmmo(ItemStack gunStack) {
-        return gunStack.get(DataComponentRegistry.LOADED_AMMO).getStack();
+        return gunStack.get(DataComponentRegistry.LOADED_AMMO).stack();
     }
 
     public void setLoadedAmmo(ItemStack gunStack, ItemStack ammoStack) {
@@ -98,41 +98,9 @@ public abstract class AmmoGunItem extends GunItem {
         };
     }
 
-    public static final class DataComponentLoadedAmmo {
-
-        private ItemStack stack;
-
+    public record DataComponentLoadedAmmo(ItemStack stack) {
         public DataComponentLoadedAmmo() {
             this(ItemStack.EMPTY);
         }
-
-        public DataComponentLoadedAmmo(ItemStack stack) {
-            this.stack = stack;
-        }
-
-        public ItemStack getStack() {
-            return stack;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) return true;
-            if (obj == null || obj.getClass() != this.getClass()) return false;
-            var that = (DataComponentLoadedAmmo) obj;
-            return this.stack.equals(that.stack);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(stack);
-        }
-
-        @Override
-        public String toString() {
-            return "DataComponentLoadedAmmo[" +
-                    "stack=" + stack + ']';
-        }
-
-
     }
 }

@@ -20,17 +20,17 @@ public class DataComponentRegistry {
 
     private static final Codec<GunItem.DataComponentAddons> ADDONS_CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    ItemStack.OPTIONAL_CODEC.fieldOf("chip1").forGetter(o -> o.getAddon(0)),
-                    ItemStack.OPTIONAL_CODEC.fieldOf("paint").forGetter(o -> o.getAddon(1)),
-                    ItemStack.OPTIONAL_CODEC.fieldOf("chip2").forGetter(o -> o.getAddon(2)),
-                    ItemStack.OPTIONAL_CODEC.fieldOf("scope").forGetter(o -> o.getAddon(3)),
-                    ItemStack.OPTIONAL_CODEC.fieldOf("chip3").forGetter(o -> o.getAddon(4))
+                    ItemStack.OPTIONAL_CODEC.fieldOf("chip1").forGetter(GunItem.DataComponentAddons::chip1),
+                    ItemStack.OPTIONAL_CODEC.fieldOf("paint").forGetter(GunItem.DataComponentAddons::paint),
+                    ItemStack.OPTIONAL_CODEC.fieldOf("chip2").forGetter(GunItem.DataComponentAddons::chip2),
+                    ItemStack.OPTIONAL_CODEC.fieldOf("scope").forGetter(GunItem.DataComponentAddons::scope),
+                    ItemStack.OPTIONAL_CODEC.fieldOf("chip3").forGetter(GunItem.DataComponentAddons::chip3)
             ).apply(instance, GunItem.DataComponentAddons::new)
     );
 
     private static final Codec<AmmoGunItem.DataComponentLoadedAmmo> LOADED_AMMO_CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    ItemStack.OPTIONAL_CODEC.fieldOf("ammo").forGetter(AmmoGunItem.DataComponentLoadedAmmo::getStack)
+                    ItemStack.OPTIONAL_CODEC.fieldOf("ammo").forGetter(AmmoGunItem.DataComponentLoadedAmmo::stack)
             ).apply(instance, AmmoGunItem.DataComponentLoadedAmmo::new)
     );
 

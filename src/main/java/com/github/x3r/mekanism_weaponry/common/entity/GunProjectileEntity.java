@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,15 +20,26 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class GunProjectileEntity extends Projectile {
 
-    protected double damage = 1.0F;
+    protected final double damage;
+    protected final Function<Entity, DamageSource> damageSource;
 
-    public GunProjectileEntity(EntityType<? extends Projectile> pEntityType, Level pLevel) {
+    protected GunProjectileEntity(EntityType<? extends Projectile> entityType, Level level) {
+        super(entityType, level);
+        this.damage = 0;
+        this.damageSource = null;
+    }
+
+    public GunProjectileEntity(EntityType<? extends Projectile> pEntityType, Level pLevel, double damage, Function<Entity, DamageSource> damageSource) {
         super(pEntityType, pLevel);
         this.noPhysics = true;
         this.setNoGravity(true);
+        this.damage = damage;
+        this.damageSource = damageSource;
+
     }
 
     @Override
@@ -68,9 +80,9 @@ public class GunProjectileEntity extends Projectile {
         }
     }
     private void handleEntityCollision(EntityHitResult hitResult) {
-        if(!hitResult.getEntity().equals(getOwner())) {
-            hitResult.getEntity().hurt(new DamageTypeRegistry(level().registryAccess()).laser(), (float) this.damage);
-
+        Entity entity = hitResult.getEntity();
+        if(!entity.equals(getOwner())) {
+            entity.hurt(damageSource.apply(entity), (float) this.damage);
         }
     }
 

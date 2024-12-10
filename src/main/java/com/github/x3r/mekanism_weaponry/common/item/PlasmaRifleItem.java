@@ -4,6 +4,7 @@ import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRifleRenderer;
 import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
+import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -61,6 +62,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
             if(isOverheated(stack)) {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
+            stack.set(DataComponentRegistry.IS_SHOOTING, false);
         }
     }
 

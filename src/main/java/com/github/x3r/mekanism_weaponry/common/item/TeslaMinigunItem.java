@@ -6,10 +6,14 @@ import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
+import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -56,11 +60,12 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
             setHeat(stack, getHeat(stack) + heatPerShot);
 
             AABB hurtBox = new AABB(
-                    player.getEyePosition().add(player.getLookAngle().normalize()).subtract(0.5, 0.5, 0.5),
-                    player.getEyePosition().add(player.getLookAngle().normalize()).add(0.5, 0.5, 0.5)
-                    ).inflate(5);
+                    player.position().add(player.getLookAngle().normalize().scale(5)).subtract(0.5, 0.5, 0.5),
+                    player.position().add(player.getLookAngle().normalize().scale(5)).add(0.5, 1.5, 0.5)
+                    ).inflate(4);
+            ((ServerLevel) level).sendParticles(ParticleTypes.ANGRY_VILLAGER, hurtBox.getCenter().x, hurtBox.getCenter().y, hurtBox.getCenter().z, 1, 0, 0, 0, 0);
             level.getEntities(player, hurtBox).forEach(entity -> {
-                entity.hurt(new DamageTypeRegistry(player.level().registryAccess()).laser(), 10);
+                entity.hurt(new DamageTypeRegistry(player.level().registryAccess()).electricity(player), 10);
             });
 
         } else {
@@ -85,12 +90,27 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
 
     @Override
     public void serverReload(ItemStack stack, ServerPlayer player) {
-
+        setReloading(stack, true);
+        for (int i = 0; i < getHeat(stack); i++) {
+            Scheduler.schedule(() -> {
+                setHeat(stack, getHeat(stack) - 2);
+            }, 40+i);
+        }
+        Scheduler.schedule(() -> {
+            if(stack.getItem() instanceof GunItem && isReloading(stack)) {
+                player.serverLevel().playSound(null,
+                        player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
+            }
+        }, 40);
+        Scheduler.schedule(() -> {
+            setReloading(stack, false);
+        }, 100);
     }
 
     @Override
     public void clientReload(ItemStack stack, Player player) {
-
+        triggerAnim(player, GeoItem.getId(stack), "controller", "reload");
     }
 
     @Override
@@ -116,6 +136,9 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 1, state -> {
+            if(!state.getController().isPlayingTriggeredAnimation()) {
+                state.setAnimation(IDLE);
+            }
             if(state.getData(DataTickets.ITEM_RENDER_PERSPECTIVE).firstPerson()) {
                 return PlayState.CONTINUE;
             }

@@ -31,13 +31,11 @@ public class ItemRegistry {
     public static final DeferredHolder<Item, BlockItem> WEAPON_WORKBENCH = ITEMS.register("weapon_workbench",
             () -> new BlockItem(BlockRegistry.WEAPON_WORKBENCH.get(), new Item.Properties()));
 
-    public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP = ITEMS.register("fire_rate_chip",
-            () -> new GunAddonItem(new Item.Properties(), GunAddonItem.AddonType.CHIP));
-
     public static final DeferredHolder<Item, Item> STEEL_ROD = ITEMS.register("steel_rod",
             () -> new Item(new Item.Properties()));
 
-
+    public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP = ITEMS.register("fire_rate_chip",
+            () -> new GunAddonItem(new Item.Properties(), GunAddonItem.AddonType.CHIP));
 
     public static class ModItemTab {
 

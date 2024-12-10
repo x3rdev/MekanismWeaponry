@@ -135,7 +135,18 @@ public abstract class GunItem extends Item {
 
     public void setAddon(ItemStack stack, ItemStack chipStack, int index) {
         DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
-        addons.setAddon(chipStack, index);
+        ItemStack[] addonArr = new ItemStack[5];
+        for (int i = 0; i < addonArr.length; i++) {
+            addonArr[i] = addons.getAddon(i);
+        }
+        addonArr[index] = chipStack;
+        stack.set(DataComponentRegistry.ADDONS.get(), new DataComponentAddons(
+                addonArr[0],
+                addonArr[1],
+                addonArr[2],
+                addonArr[3],
+                addonArr[4]
+        ));
     }
 
     public boolean isShooting(ItemStack stack) {
@@ -156,91 +167,36 @@ public abstract class GunItem extends Item {
 
     public abstract boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack);
 
-    public static class DataComponentAddons {
-
-        private ItemStack chip1;
-        private ItemStack paint;
-        private ItemStack chip2;
-        private ItemStack scope;
-        private ItemStack chip3;
-
+    public record DataComponentAddons(ItemStack chip1, ItemStack paint, ItemStack chip2, ItemStack scope, ItemStack chip3) {
         public DataComponentAddons() {
-            this(ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
-        }
-
-        public DataComponentAddons(
-                ItemStack chip1,
-                ItemStack paint,
-                ItemStack chip2,
-                ItemStack scope,
-                ItemStack chip3
-        ) {
-            this.chip1 = chip1;
-            this.paint = paint;
-            this.chip2 = chip2;
-            this.scope = scope;
-            this.chip3 = chip3;
+            this(
+                    ItemStack.EMPTY,
+                    ItemStack.EMPTY,
+                    ItemStack.EMPTY,
+                    ItemStack.EMPTY,
+                    ItemStack.EMPTY
+            );
         }
 
         public ItemStack getAddon(int index) {
             switch (index) {
                 case 0 -> {
-                    return this.chip1;
+                    return chip1;
                 }
                 case 1 -> {
-                    return this.paint;
+                    return paint;
                 }
                 case 2 -> {
-                    return this.chip2;
+                    return chip2;
                 }
                 case 3 -> {
-                    return this.scope;
+                    return scope;
                 }
                 case 4 -> {
-                    return this.chip3;
+                    return chip3;
                 }
-                default -> throw new IndexOutOfBoundsException();
             }
-        }
-
-        public void setAddon(ItemStack addonStack, int index) {
-            switch (index) {
-                case 0 -> this.chip1 = addonStack;
-                case 1 -> this.paint = addonStack;
-                case 2 -> this.chip2 = addonStack;
-                case 3 -> this.scope = addonStack;
-                case 4 -> this.chip3 = addonStack;
-                default -> throw new IndexOutOfBoundsException();
-            }
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(chip1, paint, chip2, scope, chip3);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            } else {
-                return obj instanceof DataComponentAddons other
-                        && this.chip1.equals(other.chip1)
-                        && this.paint.equals(other.paint)
-                        && this.chip2.equals(other.chip2)
-                        && this.scope.equals(other.scope)
-                        && this.chip3.equals(other.chip3);
-            }
-        }
-
-        @Override
-        public String toString() { //mainly for debugging
-            return
-                    "Chip 1: " + chip1.toString() + " \n" +
-                    "Paint: " + paint.toString() + " \n" +
-                    "Chip 2: " + chip2.toString() + " \n" +
-                    "Scope: " + scope.toString() + " \n" +
-                    "Chip 3: " + chip3.toString();
+            throw new IllegalArgumentException();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.github.x3r.mekanism_weaponry.common.entity;
 
+import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -25,9 +26,9 @@ public class PlasmaEntity extends GunProjectileEntity implements GeoEntity {
     }
 
     public PlasmaEntity(ServerPlayer player, Vec3 pos, double damage) {
-        this(EntityRegistry.PLASMA.get(), player.level());
+        super(EntityRegistry.PLASMA.get(), player.level(), damage,
+                (entity) -> new DamageTypeRegistry(player.level().registryAccess()).plasma(entity));
         this.setPos(pos);
-        this.damage = damage;
         setOwner(player);
     }
 
