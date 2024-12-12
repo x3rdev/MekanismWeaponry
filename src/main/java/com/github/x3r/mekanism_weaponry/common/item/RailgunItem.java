@@ -57,7 +57,6 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     public void serverShoot(ItemStack stack, ServerPlayer player) {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
-                .add(0, 0, 0)
                 .add(player.getLookAngle().normalize().scale(0.1));
         if(isReady(stack, level)) {
             setLastShotTick(stack, level.getGameTime());
@@ -65,7 +64,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
             float dmg = isSecondMode(stack) ? 24F : 16F;
             RodEntity rod = new RodEntity(player, pos, dmg, isSecondMode(stack));
-            rod.setDeltaMovement(player.getLookAngle().normalize().scale(isSecondMode(stack) ? 3 : 5));
+            rod.setDeltaMovement(player.getLookAngle().normalize().scale(isSecondMode(stack) ? 4 : 3));
             level.addFreshEntity(rod);
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.RAILGUN_SHOOT.get(), SoundSource.PLAYERS, 4F, 1.0F);
 
@@ -100,7 +99,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
                 player.getX(), player.getY(), player.getZ(),
                 SoundRegistry.RAILGUN_RELOAD, SoundSource.PLAYERS, 1.0F, 1.0F);
         Scheduler.schedule(() -> {
-            if(stack.getItem() instanceof GunItem && isReloading(stack)) {
+            if(isReloading(stack)) {
                 setReloading(stack, false);
                 loadAmmo(stack, player);
             }

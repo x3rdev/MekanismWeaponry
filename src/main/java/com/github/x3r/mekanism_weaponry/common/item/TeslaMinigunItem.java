@@ -63,7 +63,6 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
                     player.position().add(player.getLookAngle().normalize().scale(5)).subtract(0.5, 0.5, 0.5),
                     player.position().add(player.getLookAngle().normalize().scale(5)).add(0.5, 1.5, 0.5)
                     ).inflate(4);
-            ((ServerLevel) level).sendParticles(ParticleTypes.ANGRY_VILLAGER, hurtBox.getCenter().x, hurtBox.getCenter().y, hurtBox.getCenter().z, 1, 0, 0, 0, 0);
             level.getEntities(player, hurtBox).forEach(entity -> {
                 entity.hurt(new DamageTypeRegistry(player.level().registryAccess()).electricity(player), 10);
             });
@@ -93,18 +92,22 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
         setReloading(stack, true);
         for (int i = 0; i < getHeat(stack); i++) {
             Scheduler.schedule(() -> {
-                setHeat(stack, getHeat(stack) - 2);
+                if(stack != null) {
+                    setHeat(stack, getHeat(stack) - 2);
+                }
             }, 40+i);
         }
         Scheduler.schedule(() -> {
-            if(stack.getItem() instanceof GunItem && isReloading(stack)) {
+            if(stack != null && isReloading(stack)) {
                 player.serverLevel().playSound(null,
                         player.getX(), player.getY(), player.getZ(),
                         SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
         }, 40);
         Scheduler.schedule(() -> {
-            setReloading(stack, false);
+            if(stack != null) {
+                setReloading(stack, false);
+            }
         }, 100);
     }
 

@@ -76,7 +76,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
     public void serverReload(ItemStack stack, ServerPlayer player) {
         setReloading(stack, true);
         Scheduler.schedule(() -> {
-            if(stack.getItem() instanceof GunItem && isReloading(stack)) {
+            if(isReloading(stack)) {
                 setHeat(stack, 0);
                 setReloading(stack, false);
                 player.serverLevel().playSound(null,

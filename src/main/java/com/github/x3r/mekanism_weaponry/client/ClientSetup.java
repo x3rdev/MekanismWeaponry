@@ -1,7 +1,6 @@
 package com.github.x3r.mekanism_weaponry.client;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
-import com.github.x3r.mekanism_weaponry.client.renderer.LaserRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.RodRenderer;
 import com.github.x3r.mekanism_weaponry.client.screen.WeaponWorkbenchScreen;
@@ -78,7 +77,6 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(EntityRegistry.LASER.get(), LaserRenderer::new);
         event.registerEntityRenderer(EntityRegistry.PLASMA.get(), PlasmaRenderer::new);
         event.registerEntityRenderer(EntityRegistry.ROD.get(), RodRenderer::new);
     }

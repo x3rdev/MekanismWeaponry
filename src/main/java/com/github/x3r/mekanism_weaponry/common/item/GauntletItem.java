@@ -20,18 +20,25 @@ import mekanism.common.item.gear.ItemAtomicDisassembler;
 import mekanism.common.registries.MekanismModules;
 import mekanism.common.tags.MekanismTags;
 import mekanism.common.util.StorageUtils;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
@@ -100,6 +107,11 @@ public class GauntletItem extends Item implements GeoItem {
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if(target.level().isClientSide()) {
+            target.knockback(1, attacker.getLookAngle().x, attacker.getLookAngle().z);
+            target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.PISTON_EXTEND, SoundSource.PLAYERS);
+            ((ServerLevel) target.level()).sendParticles(ParticleTypes.SMOKE, target.getX(), target.getY(), target.getZ(), 1, 0, 0, 0, 0);
+        }
         return super.hurtEnemy(stack, target, attacker);
     }
 

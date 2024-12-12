@@ -33,7 +33,7 @@ public class RodRenderer extends GeoEntityRenderer<RodEntity> {
 
     @Override
     public boolean shouldRender(RodEntity livingEntity, Frustum camera, double camX, double camY, double camZ) {
-        if(livingEntity.distanceToSqr(camX, camY, camZ) < 2F) { // Dont render if too close to camera
+        if(livingEntity.distanceToSqr(camX, camY, camZ) < 2.0F) { // Dont render if too close to camera
             return false;
         }
         return super.shouldRender(livingEntity, camera, camX, camY, camZ);
