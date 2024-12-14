@@ -17,15 +17,15 @@ public abstract class AmmoGunItem extends GunItem {
 
     protected final int maxAmmo;
 
-    public AmmoGunItem(Properties pProperties, int cooldown, int energyUsage, int maxAmmo) {
+    protected AmmoGunItem(Properties pProperties, int cooldown, int energyUsage, int reloadTime, int maxAmmo) {
         super(pProperties.component(DataComponentRegistry.LOADED_AMMO.get(),
-                new DataComponentLoadedAmmo()), cooldown, energyUsage);
+                new DataComponentLoadedAmmo()), cooldown, energyUsage, reloadTime);
         this.maxAmmo = maxAmmo;
     }
 
     @Override
-    public boolean isReady(ItemStack stack, Level level) {
-        return hasAmmo(stack) && super.isReady(stack, level);
+    public boolean isReady(ItemStack stack, ServerPlayer player, Level level) {
+        return hasAmmo(stack) && super.isReady(stack, player, level);
     }
 
     @Override

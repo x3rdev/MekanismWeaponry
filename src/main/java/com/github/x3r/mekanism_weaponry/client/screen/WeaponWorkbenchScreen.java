@@ -39,7 +39,6 @@ public class WeaponWorkbenchScreen extends AbstractContainerScreen<WeaponWorkben
         if(getMenu().getSlot(0).hasItem()) {
             renderItemPreview(guiGraphics, getMenu().getSlot(0).getItem(), mouseX, mouseY);
         }
-
     }
 
     private void renderItemPreview(GuiGraphics guiGraphics, ItemStack stack, int mouseX, int mouseY) {

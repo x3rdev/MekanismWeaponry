@@ -115,9 +115,9 @@ public class ClientSetup {
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(RELOAD_MAPPING.get());
     }
+
     public static float recoilO;
     public static float recoil;
-
 
     // Neo Bus event, registered in mod class
     public static void cameraSetupEvent(ViewportEvent.ComputeCameraAngles event) {

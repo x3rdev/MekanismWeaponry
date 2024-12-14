@@ -16,15 +16,15 @@ public abstract class HeatGunItem extends GunItem {
 
     protected final float heatPerShot;
 
-    public HeatGunItem(Properties pProperties, int cooldown, int energyUsage, float heatPerShot) {
-        super(pProperties
-                        .component(DataComponentRegistry.HEAT.get(), 0F),
-                cooldown, energyUsage);
+    public HeatGunItem(Properties pProperties, int cooldown, int energyUsage, int reloadTime, float heatPerShot) {
+        super(pProperties.component(DataComponentRegistry.HEAT.get(), 0F),
+                cooldown, energyUsage, reloadTime);
         this.heatPerShot = heatPerShot;
     }
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
         if(entity instanceof ServerPlayer player) {
             float heat = getHeat(stack);
             if (heat > 0) {
@@ -39,12 +39,11 @@ public abstract class HeatGunItem extends GunItem {
                 }
             }
         }
-        super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
     @Override
-    public boolean isReady(ItemStack stack, Level level) {
-        return super.isReady(stack, level) && !isOverheated(stack);
+    public boolean isReady(ItemStack stack, ServerPlayer player, Level level) {
+        return super.isReady(stack, player, level) && !isOverheated(stack);
     }
 
     public float getHeat(ItemStack stack) {

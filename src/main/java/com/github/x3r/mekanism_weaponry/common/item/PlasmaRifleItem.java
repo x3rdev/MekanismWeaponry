@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -35,7 +36,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public PlasmaRifleItem(Properties pProperties) {
-        super(pProperties, 6, 250, 30);
+        super(pProperties, 6, 250, 45, 20);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
@@ -44,7 +45,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
                 .add(player.getLookAngle().normalize().scale(0.1));
-        if(isReady(stack, level)) {
+        if(isReady(stack, player, level)) {
             setLastShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
 
@@ -74,11 +75,10 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
 
     @Override
     public void serverReload(ItemStack stack, ServerPlayer player) {
-        setReloading(stack, true);
+        player.getCooldowns().addCooldown(stack.getItem(), reloadTime);
         Scheduler.schedule(() -> {
-            if(isReloading(stack)) {
+            if(player.getInventory().contains(stack)) {
                 setHeat(stack, 0);
-                setReloading(stack, false);
                 player.serverLevel().playSound(null,
                         player.getX(), player.getY(), player.getZ(),
                         SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);

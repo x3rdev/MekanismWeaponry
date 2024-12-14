@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +44,7 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public TeslaMinigunItem(Properties pProperties) {
-        super(pProperties, 4, 100, 5);
+        super(pProperties, 4, 100, 100, 5);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
@@ -52,7 +53,7 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
                 .add(player.getLookAngle().normalize().scale(0.1));
-        if(isReady(stack, level)) {
+        if(isReady(stack, player, level)) {
             stack.set(DataComponentRegistry.IS_SHOOTING, true);
             setLastShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
@@ -82,33 +83,28 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
     public void clientShoot(ItemStack stack, Player player) {
         SoundManager manager = Minecraft.getInstance().getSoundManager();
         SoundInstance instance = new TeslaMinigunSoundInstance(player);
-        if(isShooting(stack) && !manager.isActive(instance)) {
+        if(!manager.isActive(instance)) {
             manager.play(instance);
         }
     }
 
     @Override
     public void serverReload(ItemStack stack, ServerPlayer player) {
-        setReloading(stack, true);
+        player.getCooldowns().addCooldown(stack.getItem(), reloadTime);
         for (int i = 0; i < getHeat(stack); i++) {
             Scheduler.schedule(() -> {
-                if(stack != null) {
+                if(player.getInventory().contains(stack)) {
                     setHeat(stack, getHeat(stack) - 2);
                 }
             }, 40+i);
         }
         Scheduler.schedule(() -> {
-            if(stack != null && isReloading(stack)) {
+            if(player.getInventory().contains(stack)) {
                 player.serverLevel().playSound(null,
                         player.getX(), player.getY(), player.getZ(),
                         SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
         }, 40);
-        Scheduler.schedule(() -> {
-            if(stack != null) {
-                setReloading(stack, false);
-            }
-        }, 100);
     }
 
     @Override

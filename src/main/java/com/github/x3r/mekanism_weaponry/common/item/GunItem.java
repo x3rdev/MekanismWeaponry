@@ -4,6 +4,7 @@ import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -11,12 +12,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
+import software.bernie.geckolib.animatable.GeoItem;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,16 +28,26 @@ public abstract class GunItem extends Item {
 
     protected final int cooldown;
     protected final int energyUsage;
+    protected final int reloadTime;
 
-    public GunItem(Properties pProperties, int cooldown, int energyUsage) {
+    protected GunItem(Properties pProperties, int cooldown, int energyUsage, int reloadTime) {
         super(pProperties.stacksTo(1).setNoRepair()
                 .component(DataComponentRegistry.LAST_SHOT_TICK.get(), 0L)
                 .component(DataComponentRegistry.RELOADING, false)
                 .component(DataComponentRegistry.ADDONS.get(), new DataComponentAddons())
-                .component(DataComponentRegistry.IS_SHOOTING, false));
+                .component(DataComponentRegistry.IS_SHOOTING, false)
+                .rarity(Rarity.UNCOMMON));
 
         this.cooldown = cooldown;
         this.energyUsage = energyUsage;
+        this.reloadTime = reloadTime;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if(!level.isClientSide() && !isSelected) {
+            serverStoppedShooting(stack);
+        }
     }
 
     public void tryStartReload(ItemStack stack, ServerPlayer player) {
@@ -44,22 +58,51 @@ public abstract class GunItem extends Item {
     }
 
     public boolean canReload(ItemStack stack, ServerPlayer serverPlayer) {
-        return !isReloading(stack);
+        return !serverPlayer.getCooldowns().isOnCooldown(stack.getItem());
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.literal(String.format("%d/%d FE", getEnergyStorage(stack).getEnergyStored(), getEnergyStorage(stack).getMaxEnergyStored())));
-//        if(!getChips(stack).isEmpty()) {
-//            tooltipComponents.add(Component.literal(String.format("%d chips installed [SHIFT]", getChips(stack).size())));
-//            if(tooltipFlag.hasShiftDown()) {
-//                tooltipComponents.removeLast();
-//                for (ItemStack chip : getChips(stack)) {
-//                    GunChipItem gunChipItem = (GunChipItem) chip.getItem();
-//                    tooltipComponents.add(Component.literal(gunChipItem.getChipType().getId()));
-//                }
-//            }
-//        }
+        tooltipComponents.add(
+                Component.literal("Energy: ").withColor(0x2fb2d6).append(
+                        Component.literal(String.format("%d/%d FE", getEnergyStorage(stack).getEnergyStored(), getEnergyStorage(stack).getMaxEnergyStored())).withColor(0xFFFFFF)
+                )
+        );
+        if(!tooltipFlag.hasShiftDown()) {
+            tooltipComponents.add(Component.literal("Gun Stats [SHIFT] ").withColor(0x5c5c5c));
+        } else {
+            tooltipComponents.add(Component.literal("Gun Stats ").withColor(0x5c5c5c));
+            tooltipComponents.add(
+                    Component.literal(" Cooldown: ").withColor(0x89c98d).append(
+                            Component.literal(String.format("%d ticks", cooldown)).withColor(0xFFFFFF)
+                    )
+            );
+            tooltipComponents.add(
+                    Component.literal(" Energy Usage: ").withColor(0x89c98d).append(
+                            Component.literal(String.format("%d / shot", energyUsage)).withColor(0xFFFFFF)
+                    )
+            );
+            tooltipComponents.add(
+                    Component.literal(" Reload Time: ").withColor(0x89c98d).append(
+                            Component.literal(String.format("%d ticks", reloadTime)).withColor(0xFFFFFF)
+                    )
+            );
+        }
+        if(!tooltipFlag.hasControlDown()) {
+            tooltipComponents.add(Component.literal("Gun Addons [CTRL] ").withColor(0x5c5c5c));
+        } else {
+            tooltipComponents.add(Component.literal("Gun Addons").withColor(0x5c5c5c));
+            DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
+            if(Arrays.stream(addons.getAddons()).allMatch(s -> s.equals(ItemStack.EMPTY))) {
+                tooltipComponents.add(Component.literal(" none :("));
+            } else {
+                for (ItemStack addon : addons.getAddons()) {
+                    if(!addon.equals(ItemStack.EMPTY)) {
+                        tooltipComponents.add(Component.literal(" ").append(addon.getHoverName()));
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -77,9 +120,9 @@ public abstract class GunItem extends Item {
         return !oldStack.getItem().equals(newStack.getItem());
     }
 
-    public boolean isReady(ItemStack stack, Level level) {
+    public boolean isReady(ItemStack stack, ServerPlayer player, Level level) {
         long tick = level.getGameTime();
-        return !isReloading(stack) &&
+        return !player.getCooldowns().isOnCooldown(stack.getItem()) &&
                 isOffCooldown(stack, tick) &&
                 hasSufficientEnergy(stack);
     }
@@ -107,14 +150,6 @@ public abstract class GunItem extends Item {
 
     public boolean hasSufficientEnergy(ItemStack stack) {
         return getEnergyStorage(stack).getEnergyStored() >= energyUsage;
-    }
-
-    public void setReloading(ItemStack stack, boolean b) {
-        stack.set(DataComponentRegistry.RELOADING.get(), b);
-    }
-
-    public boolean isReloading(ItemStack stack) {
-        return stack.get(DataComponentRegistry.RELOADING.get()).booleanValue();
     }
 
     public ItemStack getAddon(ItemStack stack, int index) {
@@ -161,7 +196,7 @@ public abstract class GunItem extends Item {
 
     public abstract void clientReload(ItemStack stack, Player player);
 
-    public void serverStoppedShooting(ItemStack stack, Player player){
+    public void serverStoppedShooting(ItemStack stack){
         stack.set(DataComponentRegistry.IS_SHOOTING, false);
     }
 
@@ -176,6 +211,10 @@ public abstract class GunItem extends Item {
                     ItemStack.EMPTY,
                     ItemStack.EMPTY
             );
+        }
+
+        public ItemStack[] getAddons() {
+            return new ItemStack[]{chip1, paint, chip2, scope, chip3};
         }
 
         public ItemStack getAddon(int index) {

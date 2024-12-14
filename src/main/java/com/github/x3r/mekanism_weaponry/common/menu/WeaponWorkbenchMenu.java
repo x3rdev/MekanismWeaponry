@@ -57,7 +57,7 @@ public class WeaponWorkbenchMenu extends AbstractContainerMenu {
         if(index == 0) {
             if(itemStack.getItem() instanceof GunItem gunItem) {
                 for (int i = 1; i < 6; i++) {
-                    this.container.setItem(i, gunItem.getAddon(itemStack, i-1).copy());
+                    this.container.setItem(i, gunItem.getAddon(itemStack, i-1));
                 }
             } else {
                 for (int i = 1; i < 6; i++) {

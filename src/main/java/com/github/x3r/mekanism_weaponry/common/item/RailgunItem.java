@@ -44,7 +44,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
     public RailgunItem(Properties pProperties) {
         super(pProperties.component(DataComponentRegistry.RAILGUN_SECONDARY_MODE, false),
-                20, 1000, 1);
+                20, 1000, 35, 1);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
@@ -58,7 +58,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
                 .add(player.getLookAngle().normalize().scale(0.1));
-        if(isReady(stack, level)) {
+        if(isReady(stack, player, level)) {
             setLastShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
 
@@ -94,13 +94,12 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
     @Override
     public void serverReload(ItemStack stack, ServerPlayer player) {
-        setReloading(stack, true);
+        player.getCooldowns().addCooldown(stack.getItem(), reloadTime);
         player.serverLevel().playSound(null,
                 player.getX(), player.getY(), player.getZ(),
                 SoundRegistry.RAILGUN_RELOAD, SoundSource.PLAYERS, 1.0F, 1.0F);
         Scheduler.schedule(() -> {
-            if(isReloading(stack)) {
-                setReloading(stack, false);
+            if(player.getInventory().contains(stack)) {
                 loadAmmo(stack, player);
             }
         }, 35);
@@ -132,6 +131,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
                 triggerAnim(player, GeoItem.getId(stack), "controller", "switch_to_default");
                 stack.set(DataComponentRegistry.RAILGUN_SECONDARY_MODE.get(), false);
             }
+            player.getCooldowns().addCooldown(stack.getItem(), 20);
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
         }
         return super.use(level, player, usedHand);

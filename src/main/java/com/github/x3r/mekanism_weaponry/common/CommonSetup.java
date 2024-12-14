@@ -48,4 +48,5 @@ public class CommonSetup {
                 (stack, context) -> new ComponentEnergyStorage(stack, DataComponentRegistry.ENERGY.get(), 10000, 1000, 1000),
                 ItemRegistry.GAUNTLET.get());
     }
+
 }

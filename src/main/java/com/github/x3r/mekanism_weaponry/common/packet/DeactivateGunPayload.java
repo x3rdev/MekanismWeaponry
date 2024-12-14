@@ -25,7 +25,7 @@ public record DeactivateGunPayload() implements CustomPacketPayload {
             ServerPlayer player = (ServerPlayer) context.player();
             ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
             if(stack.getItem() instanceof GunItem item) {
-                item.serverStoppedShooting(stack, player);
+                item.serverStoppedShooting(stack);
             }
         });
     }
