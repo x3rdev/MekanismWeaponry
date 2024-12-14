@@ -43,6 +43,8 @@ public class MekanismWeaponry {
         neoEventBus.addListener(ClientSetup::pressKey);
         neoEventBus.addListener(ClientSetup::onClientTick);
         neoEventBus.addListener(ClientSetup::cameraSetupEvent);
+        neoEventBus.addListener(ClientSetup::renderGui);
+        neoEventBus.addListener(ClientSetup::computeFov);
 
         runVerification();
     }

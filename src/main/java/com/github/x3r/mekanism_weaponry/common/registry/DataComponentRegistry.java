@@ -76,4 +76,9 @@ public class DataComponentRegistry {
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> IS_SCOPING = DATA_COMPONENTS.registerComponentType(
+            "is_scoping",
+            builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
 }

@@ -37,6 +37,9 @@ public class ItemRegistry {
     public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP = ITEMS.register("fire_rate_chip",
             () -> new GunAddonItem(new Item.Properties(), GunAddonItem.AddonType.CHIP));
 
+    public static final DeferredHolder<Item, Item> SCOPE = ITEMS.register("scope",
+            () -> new GunAddonItem(new Item.Properties(), GunAddonItem.AddonType.SCOPE));
+
     public static class ModItemTab {
 
         public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MekanismWeaponry.MOD_ID);

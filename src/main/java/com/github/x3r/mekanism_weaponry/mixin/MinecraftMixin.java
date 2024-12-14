@@ -38,9 +38,11 @@ public abstract class MinecraftMixin {
     private void handleKeybinds(CallbackInfo ci) {
         if(player == null) return;
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if(stack.getItem() instanceof GunItem && this.options.keyAttack.isDown() && this.mouseHandler.isMouseGrabbed()) {
-            leftClickGun(stack);
-            ci.cancel();
+        if(stack.getItem() instanceof GunItem && this.mouseHandler.isMouseGrabbed()) {
+            if(this.options.keyAttack.isDown()) {
+                leftClickGun(stack);
+                ci.cancel();
+            }
         }
 
     }

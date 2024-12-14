@@ -11,18 +11,23 @@ import com.github.x3r.mekanism_weaponry.common.packet.DeactivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.*;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -44,6 +49,8 @@ public class ClientSetup {
     private static ShaderInstance rendertypeElectricityShader;
 
     public static final Lazy<KeyMapping> RELOAD_MAPPING = Lazy.of(() -> new KeyMapping("key.mekanism_weaponry.reload", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, InputConstants.KEY_R, "key.categories.mekanism_weaponry"));
+
+    private static final ResourceLocation SCOPE_LOCATION = ResourceLocation.withDefaultNamespace("textures/misc/spyglass_scope.png");
 
     // Neo Bus event, registered in mod class
     public static void onClientTick(ClientTickEvent.Post event) {
@@ -157,5 +164,54 @@ public class ClientSetup {
 
     public static ShaderInstance getElectricityShader() {
         return Objects.requireNonNull(rendertypeElectricityShader, "Attempted to get shader before they have finished loading.");
+    }
+
+    private static float scopeScale;
+
+    public static void renderGui(RenderGuiEvent.Post event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.options.getCameraType().isFirstPerson()) {
+            Player player = minecraft.player;
+            if(player != null) {
+                ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
+                scopeScale = Mth.lerp(0.5F * event.getPartialTick().getGameTimeDeltaTicks(), scopeScale, 1.125F);
+                if(stack.getItem() instanceof GunItem gunItem && stack.get(DataComponentRegistry.IS_SCOPING)) {
+                    renderScopeOverlay(event.getGuiGraphics(), scopeScale);
+                } else {
+                    scopeScale = 0.5F;
+                }
+            }
+        }
+    }
+
+    private static void renderScopeOverlay(GuiGraphics guiGraphics, float scopeScale) {
+        float f = (float)Math.min(guiGraphics.guiWidth(), guiGraphics.guiHeight());
+        float f1 = Math.min((float)guiGraphics.guiWidth() / f, (float)guiGraphics.guiHeight() / f) * scopeScale;
+        int i = Mth.floor(f * f1);
+        int j = Mth.floor(f * f1);
+        int k = (guiGraphics.guiWidth() - i) / 2;
+        int l = (guiGraphics.guiHeight() - j) / 2;
+        int i1 = k + i;
+        int j1 = l + j;
+        RenderSystem.enableBlend();
+        guiGraphics.blit(SCOPE_LOCATION, k, l, -90, 0.0F, 0.0F, i, j, i, j);
+        RenderSystem.disableBlend();
+        guiGraphics.fill(RenderType.guiOverlay(), 0, j1, guiGraphics.guiWidth(), guiGraphics.guiHeight(), -90, -16777216);
+        guiGraphics.fill(RenderType.guiOverlay(), 0, 0, guiGraphics.guiWidth(), l, -90, -16777216);
+        guiGraphics.fill(RenderType.guiOverlay(), 0, l, k, j1, -90, -16777216);
+        guiGraphics.fill(RenderType.guiOverlay(), i1, l, guiGraphics.guiWidth(), j1, -90, -16777216);
+    }
+
+    public static void computeFov(ComputeFovModifierEvent event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.options.getCameraType().isFirstPerson()) {
+            Player player = minecraft.player;
+            if(player != null) {
+                ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
+                if(stack.getItem() instanceof GunItem gunItem && stack.get(DataComponentRegistry.IS_SCOPING)) {
+                    event.setNewFovModifier(0.2F);
+                }
+            }
+        }
     }
 }

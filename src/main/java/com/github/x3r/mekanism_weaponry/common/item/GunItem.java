@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -36,11 +37,23 @@ public abstract class GunItem extends Item {
                 .component(DataComponentRegistry.RELOADING, false)
                 .component(DataComponentRegistry.ADDONS.get(), new DataComponentAddons())
                 .component(DataComponentRegistry.IS_SHOOTING, false)
+                .component(DataComponentRegistry.IS_SCOPING, false)
                 .rarity(Rarity.UNCOMMON));
 
         this.cooldown = cooldown;
         this.energyUsage = energyUsage;
         this.reloadTime = reloadTime;
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        ItemStack stack = player.getItemInHand(usedHand);
+        if (!getAddon(stack, 3).isEmpty()) {
+            stack.set(DataComponentRegistry.IS_SCOPING, !stack.get(DataComponentRegistry.IS_SCOPING));
+            player.getCooldowns().addCooldown(stack.getItem(), 5);
+            return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
+        }
+        return super.use(level, player, usedHand);
     }
 
     @Override
