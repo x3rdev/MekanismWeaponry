@@ -87,22 +87,7 @@ public abstract class GunItem extends Item {
         if(!tooltipFlag.hasShiftDown()) {
             tooltipComponents.add(Component.literal("Gun Stats [SHIFT] ").withColor(0x5c5c5c));
         } else {
-            tooltipComponents.add(Component.literal("Gun Stats ").withColor(0x5c5c5c));
-            tooltipComponents.add(
-                    Component.literal(" Cooldown: ").withColor(0x89c98d).append(
-                            Component.literal(String.format("%d ticks", getCooldown(stack))).withColor(0xFFFFFF)
-                    )
-            );
-            tooltipComponents.add(
-                    Component.literal(" Energy Usage: ").withColor(0x89c98d).append(
-                            Component.literal(String.format("%d / shot", getEnergyUsage(stack))).withColor(0xFFFFFF)
-                    )
-            );
-            tooltipComponents.add(
-                    Component.literal(" Reload Time: ").withColor(0x89c98d).append(
-                            Component.literal(String.format("%d ticks", reloadTime)).withColor(0xFFFFFF)
-                    )
-            );
+            addGunStats(stack, tooltipComponents);
         }
         if(!tooltipFlag.hasControlDown()) {
             tooltipComponents.add(Component.literal("Gun Addons [CTRL] ").withColor(0x5c5c5c));
@@ -119,6 +104,25 @@ public abstract class GunItem extends Item {
                 }
             }
         }
+    }
+
+    public void addGunStats(ItemStack stack, List<Component> tooltipComponents) {
+        tooltipComponents.add(Component.literal("Gun Stats ").withColor(0x5c5c5c));
+        tooltipComponents.add(
+                Component.literal(" Cooldown: ").withColor(0x89c98d).append(
+                        Component.literal(String.format("%d ticks", getCooldown(stack))).withColor(0xFFFFFF)
+                )
+        );
+        tooltipComponents.add(
+                Component.literal(" Energy Usage: ").withColor(0x89c98d).append(
+                        Component.literal(String.format("%d / shot", getEnergyUsage(stack))).withColor(0xFFFFFF)
+                )
+        );
+        tooltipComponents.add(
+                Component.literal(" Reload Time: ").withColor(0x89c98d).append(
+                        Component.literal(String.format("%d ticks", reloadTime)).withColor(0xFFFFFF)
+                )
+        );
     }
 
     @Override

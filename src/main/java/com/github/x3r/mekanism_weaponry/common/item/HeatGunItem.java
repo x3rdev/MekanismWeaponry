@@ -6,11 +6,14 @@ import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.IItemDecorator;
+
+import java.util.List;
 
 public abstract class HeatGunItem extends GunItem {
 
@@ -41,6 +44,16 @@ public abstract class HeatGunItem extends GunItem {
                 }
             }
         }
+    }
+
+    @Override
+    public void addGunStats(ItemStack stack, List<Component> tooltipComponents) {
+        super.addGunStats(stack, tooltipComponents);
+        tooltipComponents.add(
+                Component.literal(" Heat Per Shot: ").withColor(0x89c98d).append(
+                        Component.literal(String.format("%f heat", getHeatPerShot(stack))).withColor(0xFFFFFF)
+                )
+        );
     }
 
     @Override
