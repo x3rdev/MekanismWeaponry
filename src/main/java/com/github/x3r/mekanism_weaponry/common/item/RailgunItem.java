@@ -70,7 +70,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
             getLoadedAmmo(stack).shrink(1);
 
-            getEnergyStorage(stack).extractEnergy(isSecondMode(stack) ? energyUsage*2 : energyUsage, false);
+            getEnergyStorage(stack).extractEnergy(isSecondMode(stack) ? getEnergyUsage(stack)*2 : getEnergyUsage(stack), false);
         } else {
             if(!hasSufficientEnergy(stack)) {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -94,7 +94,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
     @Override
     public void serverReload(ItemStack stack, ServerPlayer player) {
-        player.getCooldowns().addCooldown(stack.getItem(), reloadTime);
+        player.getCooldowns().addCooldown(stack.getItem(), getReloadTime(stack));
         player.serverLevel().playSound(null,
                 player.getX(), player.getY(), player.getZ(),
                 SoundRegistry.RAILGUN_RELOAD, SoundSource.PLAYERS, 1.0F, 1.0F);

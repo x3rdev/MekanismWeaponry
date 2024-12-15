@@ -1,6 +1,6 @@
 package com.github.x3r.mekanism_weaponry.common.menu;
 
-import com.github.x3r.mekanism_weaponry.common.item.GunAddonItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.registry.BlockRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.MenuTypeRegistry;

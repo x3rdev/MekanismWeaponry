@@ -54,8 +54,8 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
             level.addFreshEntity(plasma);
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_SHOOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
 
-            getEnergyStorage(stack).extractEnergy(energyUsage, false);
-            setHeat(stack, getHeat(stack) + heatPerShot);
+            getEnergyStorage(stack).extractEnergy(getEnergyUsage(stack), false);
+            setHeat(stack, getHeat(stack) + getHeatPerShot(stack));
         } else {
             if(!hasSufficientEnergy(stack)) {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -75,7 +75,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
 
     @Override
     public void serverReload(ItemStack stack, ServerPlayer player) {
-        player.getCooldowns().addCooldown(stack.getItem(), reloadTime);
+        player.getCooldowns().addCooldown(stack.getItem(), getReloadTime(stack));
         Scheduler.schedule(() -> {
             if(player.getInventory().contains(stack)) {
                 setHeat(stack, 0);

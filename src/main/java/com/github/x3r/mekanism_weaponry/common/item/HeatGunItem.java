@@ -1,5 +1,7 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
+import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.HeatPerShotChipItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,7 +16,7 @@ public abstract class HeatGunItem extends GunItem {
 
     public static final float MAX_HEAT = 100;
 
-    protected final float heatPerShot;
+    private final float heatPerShot;
 
     public HeatGunItem(Properties pProperties, int cooldown, int energyUsage, int reloadTime, float heatPerShot) {
         super(pProperties.component(DataComponentRegistry.HEAT.get(), 0F),
@@ -44,6 +46,10 @@ public abstract class HeatGunItem extends GunItem {
     @Override
     public boolean isReady(ItemStack stack, ServerPlayer player, Level level) {
         return super.isReady(stack, player, level) && !isOverheated(stack);
+    }
+
+    public float getHeatPerShot(ItemStack stack) {
+        return Math.max(0, this.heatPerShot - hasAddon(stack, HeatPerShotChipItem.class));
     }
 
     public float getHeat(ItemStack stack) {

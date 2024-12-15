@@ -1,5 +1,8 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
+import com.github.x3r.mekanism_weaponry.common.item.addon.EnergyUsageChipItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
@@ -27,9 +30,9 @@ import java.util.Objects;
 
 public abstract class GunItem extends Item {
 
-    protected final int cooldown;
-    protected final int energyUsage;
-    protected final int reloadTime;
+    private final int cooldown;
+    private final int energyUsage;
+    private final int reloadTime;
 
     protected GunItem(Properties pProperties, int cooldown, int energyUsage, int reloadTime) {
         super(pProperties.stacksTo(1).setNoRepair()
@@ -87,12 +90,12 @@ public abstract class GunItem extends Item {
             tooltipComponents.add(Component.literal("Gun Stats ").withColor(0x5c5c5c));
             tooltipComponents.add(
                     Component.literal(" Cooldown: ").withColor(0x89c98d).append(
-                            Component.literal(String.format("%d ticks", cooldown)).withColor(0xFFFFFF)
+                            Component.literal(String.format("%d ticks", getCooldown(stack))).withColor(0xFFFFFF)
                     )
             );
             tooltipComponents.add(
                     Component.literal(" Energy Usage: ").withColor(0x89c98d).append(
-                            Component.literal(String.format("%d / shot", energyUsage)).withColor(0xFFFFFF)
+                            Component.literal(String.format("%d / shot", getEnergyUsage(stack))).withColor(0xFFFFFF)
                     )
             );
             tooltipComponents.add(
@@ -141,8 +144,15 @@ public abstract class GunItem extends Item {
     }
 
     public int getCooldown(ItemStack stack) {
-        int cooldown = ((GunItem) stack.getItem()).cooldown - hasAddon(stack, ItemRegistry.FIRE_RATE_CHIP.get());
-        return Math.max(0, cooldown);
+        return (int) Math.max(0, this.cooldown - hasAddon(stack, FireRateChipItem.class));
+    }
+
+    public int getEnergyUsage(ItemStack stack) {
+        return (int) Math.max(0, this.energyUsage - 10*hasAddon(stack, EnergyUsageChipItem.class));
+    }
+
+    public int getReloadTime(ItemStack stack) {
+        return reloadTime;
     }
 
     public long getLastShotTick(ItemStack stack) {
@@ -170,12 +180,12 @@ public abstract class GunItem extends Item {
         return addons.getAddon(index);
     }
 
-    public int hasAddon(ItemStack stack, Item addon) {
-        int count = 0;
+    public float hasAddon(ItemStack stack, Class<? extends GunAddonItem> addon) {
+        float count = 0;
         DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
         for (int i = 0; i < 5; i++) {
-            if(addons.getAddon(i).is(addon)) {
-                count++;
+            if(addon.isInstance(addons.getAddon(i).getItem())) {
+                count+=((GunAddonItem) addons.getAddon(i).getItem()).mul();
             }
         }
         return count;

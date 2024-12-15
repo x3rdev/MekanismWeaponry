@@ -2,6 +2,7 @@ package com.github.x3r.mekanism_weaponry.common.registry;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.item.*;
+import com.github.x3r.mekanism_weaponry.common.item.addon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -34,11 +35,35 @@ public class ItemRegistry {
     public static final DeferredHolder<Item, Item> STEEL_ROD = ITEMS.register("steel_rod",
             () -> new Item(new Item.Properties()));
 
-    public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP = ITEMS.register("fire_rate_chip",
-            () -> new GunAddonItem(new Item.Properties(), GunAddonItem.AddonType.CHIP));
+    public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP_1 = ITEMS.register("fire_rate_chip_1",
+            () -> new FireRateChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 1.0F));
+    public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP_2 = ITEMS.register("fire_rate_chip_2",
+            () -> new FireRateChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 2.0F));
+    public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP_3 = ITEMS.register("fire_rate_chip_3",
+            () -> new FireRateChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 3.0F));
+    public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP_4 = ITEMS.register("fire_rate_chip_4",
+            () -> new FireRateChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 4.0F));
+
+    public static final DeferredHolder<Item, Item> ENERGY_USAGE_CHIP_1 = ITEMS.register("energy_usage_chip_1",
+            () -> new EnergyUsageChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 1.0F));
+    public static final DeferredHolder<Item, Item> ENERGY_USAGE_CHIP_2 = ITEMS.register("energy_usage_chip_2",
+            () -> new EnergyUsageChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 2.0F));
+    public static final DeferredHolder<Item, Item> ENERGY_USAGE_CHIP_3 = ITEMS.register("energy_usage_chip_3",
+            () -> new EnergyUsageChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 3.0F));
+    public static final DeferredHolder<Item, Item> ENERGY_USAGE_CHIP_4 = ITEMS.register("energy_usage_chip_4",
+            () -> new EnergyUsageChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 4.0F));
+
+    public static final DeferredHolder<Item, Item> HEAT_PER_SHOT_CHIP_1 = ITEMS.register("heat_per_shot_chip_1",
+            () -> new HeatPerShotChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 1.0F));
+    public static final DeferredHolder<Item, Item> HEAT_PER_SHOT_CHIP_2 = ITEMS.register("heat_per_shot_chip_2",
+            () -> new HeatPerShotChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 2.0F));
+    public static final DeferredHolder<Item, Item> HEAT_PER_SHOT_CHIP_3 = ITEMS.register("heat_per_shot_chip_3",
+            () -> new HeatPerShotChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 3.0F));
+    public static final DeferredHolder<Item, Item> HEAT_PER_SHOT_CHIP_4 = ITEMS.register("heat_per_shot_chip_4",
+            () -> new HeatPerShotChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 4.0F));
 
     public static final DeferredHolder<Item, Item> SCOPE = ITEMS.register("scope",
-            () -> new GunAddonItem(new Item.Properties(), GunAddonItem.AddonType.SCOPE));
+            () -> new ScopeAddonItem(new Item.Properties(), GunAddonItem.AddonType.SCOPE, 1.0F));
 
     public static class ModItemTab {
 

@@ -57,8 +57,8 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
             stack.set(DataComponentRegistry.IS_SHOOTING, true);
             setLastShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
-            getEnergyStorage(stack).extractEnergy(energyUsage, false);
-            setHeat(stack, getHeat(stack) + heatPerShot);
+            getEnergyStorage(stack).extractEnergy(getEnergyUsage(stack), false);
+            setHeat(stack, getHeat(stack) + getHeatPerShot(stack));
 
             AABB hurtBox = new AABB(
                     player.position().add(player.getLookAngle().normalize().scale(5)).subtract(0.5, 0.5, 0.5),
@@ -90,7 +90,7 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
 
     @Override
     public void serverReload(ItemStack stack, ServerPlayer player) {
-        player.getCooldowns().addCooldown(stack.getItem(), reloadTime);
+        player.getCooldowns().addCooldown(stack.getItem(), getReloadTime(stack));
         for (int i = 0; i < getHeat(stack); i++) {
             Scheduler.schedule(() -> {
                 if(player.getInventory().contains(stack)) {

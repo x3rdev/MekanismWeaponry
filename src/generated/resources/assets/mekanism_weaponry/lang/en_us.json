@@ -1,9 +1,21 @@
 {
   "block.mekanism_weaponry.weapon_workbench": "Weapon Workbench",
-  "item.mekanism_weaponry.fire_rate_chip": "Fire Rate Chip",
+  "item.mekanism_weaponry.energy_usage_chip_1": "Energy Usage Chip 1",
+  "item.mekanism_weaponry.energy_usage_chip_2": "Energy Usage Chip 2",
+  "item.mekanism_weaponry.energy_usage_chip_3": "Energy Usage Chip 3",
+  "item.mekanism_weaponry.energy_usage_chip_4": "Energy Usage Chip 4",
+  "item.mekanism_weaponry.fire_rate_chip_1": "Fire Rate Chip 1",
+  "item.mekanism_weaponry.fire_rate_chip_2": "Fire Rate Chip 2",
+  "item.mekanism_weaponry.fire_rate_chip_3": "Fire Rate Chip 3",
+  "item.mekanism_weaponry.fire_rate_chip_4": "Fire Rate Chip 4",
   "item.mekanism_weaponry.gauntlet": "Gauntlet",
+  "item.mekanism_weaponry.heat_per_shot_chip_1": "Heat Per Shot Chip 1",
+  "item.mekanism_weaponry.heat_per_shot_chip_2": "Heat Per Shot Chip 2",
+  "item.mekanism_weaponry.heat_per_shot_chip_3": "Heat Per Shot Chip 3",
+  "item.mekanism_weaponry.heat_per_shot_chip_4": "Heat Per Shot Chip 4",
   "item.mekanism_weaponry.plasma_rifle": "Plasma Rifle",
   "item.mekanism_weaponry.railgun": "Railgun",
+  "item.mekanism_weaponry.scope": "Scope",
   "item.mekanism_weaponry.steel_rod": "Steel Rod",
   "item.mekanism_weaponry.tesla_minigun": "Tesla Minigun"
 }
