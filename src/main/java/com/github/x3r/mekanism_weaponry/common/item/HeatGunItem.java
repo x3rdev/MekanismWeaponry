@@ -21,7 +21,7 @@ public abstract class HeatGunItem extends GunItem {
 
     private final float heatPerShot;
 
-    public HeatGunItem(Properties pProperties, int cooldown, int energyUsage, int reloadTime, float heatPerShot) {
+    protected HeatGunItem(Properties pProperties, int cooldown, int energyUsage, int reloadTime, float heatPerShot) {
         super(pProperties.component(DataComponentRegistry.HEAT.get(), 0F),
                 cooldown, energyUsage, reloadTime);
         this.heatPerShot = heatPerShot;
@@ -95,7 +95,6 @@ public abstract class HeatGunItem extends GunItem {
                     guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+13, xOffset+2+i+1, yOffset+13+1, COLORS[i]);
                     guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+14, xOffset+2+i+1, yOffset+14+1, 0xFF000000);
                 }
-
                 return true;
             }
         };
