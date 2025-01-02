@@ -17,5 +17,11 @@
   "item.mekanism_weaponry.railgun": "Railgun",
   "item.mekanism_weaponry.scope": "Scope",
   "item.mekanism_weaponry.steel_rod": "Steel Rod",
-  "item.mekanism_weaponry.tesla_minigun": "Tesla Minigun"
+  "item.mekanism_weaponry.tesla_minigun": "Tesla Minigun",
+  "item_group.mekanism_weaponry": "Mekanism Weaponry",
+  "mekanism_weaponry.subtitle.minigun_shoot": "Minigun shot",
+  "mekanism_weaponry.subtitle.plasma_rifle_out_of_energy": "Plasma rifle out of energy",
+  "mekanism_weaponry.subtitle.plasma_rifle_shoot": "Plasma rifle shot",
+  "mekanism_weaponry.subtitle.railgun_reload": "Railgun reloading",
+  "mekanism_weaponry.subtitle.railgun_shoot": "Railgun shot"
 }

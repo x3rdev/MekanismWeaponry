@@ -43,6 +43,11 @@ public class GunProjectileEntity extends Projectile {
     }
 
     @Override
+    public boolean shouldRender(double x, double y, double z) {
+        return true;
+    }
+
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
 
     }
@@ -51,6 +56,10 @@ public class GunProjectileEntity extends Projectile {
     public void tick() {
         super.tick();
         if(!level().isClientSide()) {
+            if(this.tickCount > 20*15) {
+                this.remove(RemovalReason.DISCARDED);
+                return;
+            }
             handleCollisions();
         }
         this.setPos(this.position().add(this.getDeltaMovement()));
@@ -72,10 +81,6 @@ public class GunProjectileEntity extends Projectile {
             }
             if(hitResult instanceof BlockHitResult blockHitResult) {
                 handleBlockCollision(blockHitResult);
-            }
-            if(this.tickCount > 20*15) {
-                this.remove(RemovalReason.DISCARDED);
-                return;
             }
         }
     }
