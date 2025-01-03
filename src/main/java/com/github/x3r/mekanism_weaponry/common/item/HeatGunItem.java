@@ -1,6 +1,5 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
-import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.HeatPerShotChipItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import net.minecraft.client.gui.Font;
@@ -47,10 +46,10 @@ public abstract class HeatGunItem extends GunItem {
     }
 
     @Override
-    public void addGunStats(ItemStack stack, List<Component> tooltipComponents) {
-        super.addGunStats(stack, tooltipComponents);
+    public void addStatsTooltip(ItemStack stack, List<Component> tooltipComponents) {
+        super.addStatsTooltip(stack, tooltipComponents);
         tooltipComponents.add(
-                Component.literal(" Heat Per Shot: ").withColor(0x89c98d).append(
+                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_heat_per_shot")).append(": ").withColor(0x89c98d).append(
                         Component.literal(String.format("%f heat", getHeatPerShot(stack))).withColor(0xFFFFFF)
                 )
         );

@@ -23,5 +23,14 @@
   "mekanism_weaponry.subtitle.plasma_rifle_out_of_energy": "Plasma rifle out of energy",
   "mekanism_weaponry.subtitle.plasma_rifle_shoot": "Plasma rifle shot",
   "mekanism_weaponry.subtitle.railgun_reload": "Railgun reloading",
-  "mekanism_weaponry.subtitle.railgun_shoot": "Railgun shot"
+  "mekanism_weaponry.subtitle.railgun_shoot": "Railgun shot",
+  "mekanism_weaponry.tooltip.addon_effect_multiplier": "Effect multiplier",
+  "mekanism_weaponry.tooltip.gun_addons": "Gun Addons",
+  "mekanism_weaponry.tooltip.gun_cooldown": "Cooldown",
+  "mekanism_weaponry.tooltip.gun_energy": "Energy: ",
+  "mekanism_weaponry.tooltip.gun_energy_usage": "Energy Usage",
+  "mekanism_weaponry.tooltip.gun_heat_per_shot": "Heat Per Shot",
+  "mekanism_weaponry.tooltip.gun_no_addons": "No Addons Installed",
+  "mekanism_weaponry.tooltip.gun_reload_time": "Reload Time",
+  "mekanism_weaponry.tooltip.gun_stats": "Gun Stats"
 }

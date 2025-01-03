@@ -5,9 +5,7 @@ import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
-import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -22,11 +20,9 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
-import software.bernie.geckolib.animatable.GeoItem;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class GunItem extends Item {
 
@@ -80,49 +76,57 @@ public abstract class GunItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(
-                Component.literal("Energy: ").withColor(0x2fb2d6).append(
+                Component.translatable("mekanism_weaponry.tooltip.gun_energy").withColor(0x2fb2d6).append(
                         Component.literal(String.format("%d/%d FE", getEnergyStorage(stack).getEnergyStored(), getEnergyStorage(stack).getMaxEnergyStored())).withColor(0xFFFFFF)
                 )
         );
         if(!tooltipFlag.hasShiftDown()) {
-            tooltipComponents.add(Component.literal("Gun Stats [SHIFT] ").withColor(0x5c5c5c));
+            tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_stats")
+                    .append(" [SHIFT] ").withColor(0x5c5c5c)
+            );
         } else {
-            addGunStats(stack, tooltipComponents);
+            addStatsTooltip(stack, tooltipComponents);
         }
         if(!tooltipFlag.hasControlDown()) {
-            tooltipComponents.add(Component.literal("Gun Addons [CTRL] ").withColor(0x5c5c5c));
+            tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_addons")
+                    .append(" [CTRL] ").withColor(0x5c5c5c)
+            );
         } else {
-            tooltipComponents.add(Component.literal("Gun Addons").withColor(0x5c5c5c));
-            DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
-            if(Arrays.stream(addons.getAddons()).allMatch(s -> s.equals(ItemStack.EMPTY))) {
-                tooltipComponents.add(Component.literal(" none :("));
-            } else {
-                for (ItemStack addon : addons.getAddons()) {
-                    if(!addon.equals(ItemStack.EMPTY)) {
-                        tooltipComponents.add(Component.literal(" ").append(addon.getHoverName()));
-                    }
-                }
-            }
+            addAddonsTooltip(stack, tooltipComponents);
         }
     }
 
-    public void addGunStats(ItemStack stack, List<Component> tooltipComponents) {
-        tooltipComponents.add(Component.literal("Gun Stats ").withColor(0x5c5c5c));
+    public void addStatsTooltip(ItemStack stack, List<Component> tooltipComponents) {
+        tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_stats").withColor(0x5c5c5c));
         tooltipComponents.add(
-                Component.literal(" Cooldown: ").withColor(0x89c98d).append(
+                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_cooldown")).append(": ").withColor(0x89c98d).append(
                         Component.literal(String.format("%d ticks", getCooldown(stack))).withColor(0xFFFFFF)
                 )
         );
         tooltipComponents.add(
-                Component.literal(" Energy Usage: ").withColor(0x89c98d).append(
+                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_energy_usage")).append(": ").withColor(0x89c98d).append(
                         Component.literal(String.format("%d / shot", getEnergyUsage(stack))).withColor(0xFFFFFF)
                 )
         );
         tooltipComponents.add(
-                Component.literal(" Reload Time: ").withColor(0x89c98d).append(
+                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_reload_time")).append(": ").withColor(0x89c98d).append(
                         Component.literal(String.format("%d ticks", reloadTime)).withColor(0xFFFFFF)
                 )
         );
+    }
+
+    public void addAddonsTooltip(ItemStack stack, List<Component> tooltipComponents) {
+        tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_addons").withColor(0x5c5c5c));
+        DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
+        if(Arrays.stream(addons.getAddons()).allMatch(s -> s.equals(ItemStack.EMPTY))) {
+            tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_no_addons"));
+        } else {
+            for (ItemStack addon : addons.getAddons()) {
+                if(!addon.equals(ItemStack.EMPTY)) {
+                    tooltipComponents.add(Component.literal(" ").append(addon.getHoverName()));
+                }
+            }
+        }
     }
 
     @Override

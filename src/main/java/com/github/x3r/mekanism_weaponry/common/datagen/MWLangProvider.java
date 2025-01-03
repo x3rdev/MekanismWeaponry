@@ -30,6 +30,21 @@ public class MWLangProvider extends LanguageProvider {
         add("mekanism_weaponry.subtitle.railgun_reload", "Railgun reloading");
         add("mekanism_weaponry.subtitle.minigun_shoot", "Minigun shot");
         add("item_group.mekanism_weaponry", "Mekanism Weaponry");
+
+        add("mekanism_weaponry.tooltip.gun_energy", "Energy: ");
+        add("mekanism_weaponry.tooltip.gun_stats", "Gun Stats");
+        add("mekanism_weaponry.tooltip.gun_cooldown", "Cooldown");
+        add("mekanism_weaponry.tooltip.gun_energy_usage", "Energy Usage");
+        add("mekanism_weaponry.tooltip.gun_reload_time", "Reload Time");
+        add("mekanism_weaponry.tooltip.gun_heat_per_shot", "Heat Per Shot");
+
+        add("mekanism_weaponry.tooltip.gun_addons", "Gun Addons");
+        add("mekanism_weaponry.tooltip.gun_no_addons", "No Addons Installed");
+
+
+
+        add("mekanism_weaponry.tooltip.addon_effect_multiplier", "Effect multiplier");
+
     }
 
     private String idToName(ResourceLocation location) {
