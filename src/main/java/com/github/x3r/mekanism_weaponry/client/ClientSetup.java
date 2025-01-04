@@ -214,4 +214,8 @@ public class ClientSetup {
             }
         }
     }
+
+    public static void registerSpawnEggColors(RegisterColorHandlersEvent.Item event) {
+        event.register((stack, tintIndex) -> 1);
+    }
 }

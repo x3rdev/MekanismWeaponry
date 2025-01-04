@@ -193,7 +193,7 @@ public abstract class GunItem extends Item {
         DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
         for (int i = 0; i < 5; i++) {
             if(addon.isInstance(addons.getAddon(i).getItem())) {
-                count+=((GunAddonItem) addons.getAddon(i).getItem()).mul();
+                count += ((GunAddonItem) addons.getAddon(i).getItem()).mul();
             }
         }
         return count;

@@ -23,7 +23,6 @@ public abstract class GunAddonItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-
         tooltipComponents.add(
                 Component.translatable("mekanism_weaponry.tooltip.addon_effect_multiplier").append(": ").withColor(0x2fb2d6).append(
                         Component.literal(DF.format(mul)+"x").withColor(0xFFFFFF)
