@@ -7,6 +7,7 @@ import com.github.x3r.mekanism_weaponry.client.screen.WeaponWorkbenchScreen;
 import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.HeatGunItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
 import com.github.x3r.mekanism_weaponry.common.packet.DeactivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.*;
@@ -215,7 +216,12 @@ public class ClientSetup {
         }
     }
 
+    @SubscribeEvent
     public static void registerPaintColors(RegisterColorHandlersEvent.Item event) {
-        event.register((stack, tintIndex) -> 1);
+        ItemRegistry.PAINTS.getEntries().forEach(itemDeferredHolder -> {
+            if(itemDeferredHolder.get() instanceof PaintBucketItem item) {
+                event.register((stack, tintIndex) -> item.getColor(tintIndex), item);
+            }
+        });
     }
 }

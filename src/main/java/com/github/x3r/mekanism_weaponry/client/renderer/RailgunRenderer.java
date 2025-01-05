@@ -11,8 +11,14 @@ import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 
 public class RailgunRenderer extends GunRenderer<RailgunItem> {
+
     public RailgunRenderer() {
-        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "railgun")));
+        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "railgun")){
+            @Override
+            public ResourceLocation getTextureResource(RailgunItem animatable) {
+                return ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "textures/item/railgun_paint_0.png");
+            }
+        });
     }
 
     @Override

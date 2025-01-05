@@ -66,7 +66,8 @@ public class ItemRegistry {
     public static final DeferredHolder<Item, Item> SCOPE = ITEMS.register("scope",
             () -> new ScopeAddonItem(new Item.Properties(), GunAddonItem.AddonType.SCOPE, 1.0F));
 
-//    public static final DeferredHolder<Item, Item>
+    public static final DeferredHolder<Item, PaintBucketItem> PAINT_0 = PAINTS.register("paint_0",
+            () -> new PaintBucketItem(new Item.Properties(), Component.literal("nimbus"), 0xFF2b9fe8, 0xFF817a99));
 
     public static class ModItemTab {
 
@@ -77,6 +78,7 @@ public class ItemRegistry {
                 .title(Component.translatable("item_group." + MekanismWeaponry.MOD_ID))
                 .displayItems((displayParameters, output) -> {
                     ItemRegistry.ITEMS.getEntries().forEach(itemRegistryObject -> output.accept(itemRegistryObject.get()));
+                    ItemRegistry.PAINTS.getEntries().forEach(itemRegistryObject -> output.accept(itemRegistryObject.get()));
                     BlockRegistry.BLOCKS.getEntries().forEach(iBlockProvider -> output.accept(iBlockProvider.get().asItem()));
                 })
                 .build());
