@@ -61,7 +61,7 @@ public abstract class HeatGunItem extends GunItem {
     }
 
     public float getHeatPerShot(ItemStack stack) {
-        return Math.max(0, this.heatPerShot - hasAddon(stack, HeatPerShotChipItem.class));
+        return Math.max(0, this.heatPerShot - getAddonMultiplier(stack, HeatPerShotChipItem.class));
     }
 
     public float getHeat(ItemStack stack) {

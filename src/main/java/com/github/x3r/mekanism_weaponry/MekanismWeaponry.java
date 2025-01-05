@@ -32,6 +32,7 @@ public class MekanismWeaponry {
         DataComponentRegistry.DATA_COMPONENTS.register(modEventBus);
         EntityRegistry.ENTITY_TYPES.register(modEventBus);
         ItemRegistry.ITEMS.register(modEventBus);
+        ItemRegistry.PAINTS.register(modEventBus);
         ItemRegistry.ModItemTab.CREATIVE_MODE_TABS.register(modEventBus);
         MenuTypeRegistry.MENU_TYPES.register(modEventBus);
         ParticleRegistry.PARTICLE_TYPES.register(modEventBus);

@@ -152,11 +152,11 @@ public abstract class GunItem extends Item {
     }
 
     public int getCooldown(ItemStack stack) {
-        return (int) Math.max(0, this.cooldown - hasAddon(stack, FireRateChipItem.class));
+        return (int) Math.max(0, this.cooldown - getAddonMultiplier(stack, FireRateChipItem.class));
     }
 
     public int getEnergyUsage(ItemStack stack) {
-        return (int) Math.max(0, this.energyUsage - 10*hasAddon(stack, EnergyUsageChipItem.class));
+        return (int) Math.max(0, this.energyUsage - 10* getAddonMultiplier(stack, EnergyUsageChipItem.class));
     }
 
     public int getReloadTime(ItemStack stack) {
@@ -188,7 +188,17 @@ public abstract class GunItem extends Item {
         return addons.getAddon(index);
     }
 
-    public float hasAddon(ItemStack stack, Class<? extends GunAddonItem> addon) {
+    public boolean hasAddon(ItemStack stack, Class<? extends GunAddonItem> addon) {
+        DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
+        for (int i = 0; i < 5; i++) {
+            if(addon.isInstance(addons.getAddon(i).getItem())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public float getAddonMultiplier(ItemStack stack, Class<? extends GunAddonItem> addon) {
         float count = 0;
         DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
         for (int i = 0; i < 5; i++) {

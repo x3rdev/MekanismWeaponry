@@ -16,6 +16,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ItemRegistry {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MekanismWeaponry.MOD_ID);
+    public static final DeferredRegister<Item> PAINTS = DeferredRegister.create(BuiltInRegistries.ITEM, MekanismWeaponry.MOD_ID);
 
     public static final DeferredHolder<Item, GauntletItem> GAUNTLET = ITEMS.register("gauntlet",
             () -> new GauntletItem(new Item.Properties()));
@@ -64,6 +65,8 @@ public class ItemRegistry {
 
     public static final DeferredHolder<Item, Item> SCOPE = ITEMS.register("scope",
             () -> new ScopeAddonItem(new Item.Properties(), GunAddonItem.AddonType.SCOPE, 1.0F));
+
+//    public static final DeferredHolder<Item, Item>
 
     public static class ModItemTab {
 
