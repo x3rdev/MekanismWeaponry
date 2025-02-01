@@ -2,6 +2,7 @@ package com.github.x3r.mekanism_weaponry.common.item;
 
 import com.github.x3r.mekanism_weaponry.client.renderer.TeslaMinigunRenderer;
 import com.github.x3r.mekanism_weaponry.client.sound.TeslaMinigunSoundInstance;
+import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
@@ -19,6 +20,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -59,15 +61,18 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
             getEnergyStorage(stack).extractEnergy(getEnergyUsage(stack), false);
             setHeat(stack, getHeat(stack) + getHeatPerShot(stack));
-
-            AABB hurtBox = new AABB(
-                    player.position().add(player.getLookAngle().normalize().scale(5)).subtract(0.5, 0.5, 0.5),
-                    player.position().add(player.getLookAngle().normalize().scale(5)).add(0.5, 1.5, 0.5)
-                    ).inflate(4);
-            level.getEntities(player, hurtBox).forEach(entity -> {
-                entity.hurt(new DamageTypeRegistry(player.level().registryAccess()).electricity(player), 10);
-            });
-
+            for (int i = 0; i < 6; i++) {
+                Vec3 hurtVolumeCenter = player.position().add(player.getLookAngle().normalize().scale(i));
+                AABB hurtBox = new AABB(
+                        hurtVolumeCenter.subtract(0.5, 0.5, 0.5),
+                        hurtVolumeCenter.add(0.5, 0.5, 0.5)
+                ).inflate(1);
+                level.getEntities(player, hurtBox).forEach(entity -> {
+                    if(entity instanceof LivingEntity) {
+                        entity.hurt(new DamageTypeRegistry(player.level().registryAccess()).electricity(player), 4);
+                    }
+                });
+            }
         } else {
             if(!hasSufficientEnergy(stack)) {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -114,7 +119,7 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
 
     @Override
     public boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack) {
-        return false;
+        return !((GunAddonItem) addonStack.getItem()).getAddonType().equals(GunAddonItem.AddonType.SCOPE);
     }
 
     @Override

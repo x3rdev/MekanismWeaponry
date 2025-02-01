@@ -66,7 +66,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
             RodEntity rod = new RodEntity(player, pos, dmg, isSecondMode(stack));
             rod.setDeltaMovement(player.getLookAngle().normalize().scale(isSecondMode(stack) ? 4 : 3));
             level.addFreshEntity(rod);
-            level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.RAILGUN_SHOOT.get(), SoundSource.PLAYERS, 4F, 1.0F);
+            level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.RAILGUN_SHOOT.get(), SoundSource.PLAYERS, 3F, 1.0F);
 
             getLoadedAmmo(stack).shrink(1);
 

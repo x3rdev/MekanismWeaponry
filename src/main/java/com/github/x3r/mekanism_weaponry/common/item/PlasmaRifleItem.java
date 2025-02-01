@@ -3,6 +3,7 @@ package com.github.x3r.mekanism_weaponry.common.item;
 import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRifleRenderer;
 import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
+import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
@@ -93,7 +94,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
 
     @Override
     public boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack) {
-        return true;
+        return !((GunAddonItem) addonStack.getItem()).getAddonType().equals(GunAddonItem.AddonType.SCOPE);
     }
 
     @Override
