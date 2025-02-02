@@ -11,12 +11,14 @@ public class PaintBucketItem extends GunAddonItem {
     private final Component colorschemeName;
     private final int color0;
     private final int color1;
+    private final int index;
 
-    public PaintBucketItem(Properties properties, Component colorschemeName, int color0, int color1) {
+    public PaintBucketItem(Properties properties, Component colorschemeName, int color0, int color1, int index) {
         super(properties, AddonType.PAINT, 0.0F);
         this.colorschemeName = colorschemeName;
         this.color0 = color0;
         this.color1 = color1;
+        this.index = index;
     }
 
     public int getColor(int tintIndex) {
@@ -31,6 +33,10 @@ public class PaintBucketItem extends GunAddonItem {
                 return -1;
             }
         }
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.github.x3r.mekanism_weaponry.client.renderer;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.item.RailgunItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.ScopeAddonItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -12,13 +13,14 @@ import software.bernie.geckolib.model.DefaultedItemGeoModel;
 
 public class RailgunRenderer extends GunRenderer<RailgunItem> {
 
+
     public RailgunRenderer() {
-        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "railgun")){
-            @Override
-            public ResourceLocation getTextureResource(RailgunItem animatable) {
-                return ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "textures/item/railgun_paint_0.png");
-            }
-        });
+        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "railgun")));
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(RailgunItem animatable) {
+        return ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, String.format("textures/item/railgun/railgun_%d.png", getTextureIndex()));
     }
 
     @Override

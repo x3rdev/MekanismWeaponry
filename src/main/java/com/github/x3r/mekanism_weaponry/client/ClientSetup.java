@@ -218,7 +218,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerPaintColors(RegisterColorHandlersEvent.Item event) {
-        ItemRegistry.PAINTS.getEntries().forEach(itemDeferredHolder -> {
+        ItemRegistry.ITEMS.getEntries().forEach(itemDeferredHolder -> {
             if(itemDeferredHolder.get() instanceof PaintBucketItem item) {
                 event.register((stack, tintIndex) -> item.getColor(tintIndex), item);
             }

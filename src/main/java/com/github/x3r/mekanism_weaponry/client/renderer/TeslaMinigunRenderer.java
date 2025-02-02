@@ -2,6 +2,7 @@ package com.github.x3r.mekanism_weaponry.client.renderer;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.client.shader.MWRenderTypes;
+import com.github.x3r.mekanism_weaponry.common.item.RailgunItem;
 import com.github.x3r.mekanism_weaponry.common.item.TeslaMinigunItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -36,6 +37,12 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
     public TeslaMinigunRenderer() {
         super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "tesla_minigun")));
         source = Minecraft.getInstance().player.getRandom();
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(TeslaMinigunItem animatable) {
+        return ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, String.format("textures/item/tesla_minigun/tesla_minigun_%d.png", getTextureIndex()));
+
     }
 
     @Override

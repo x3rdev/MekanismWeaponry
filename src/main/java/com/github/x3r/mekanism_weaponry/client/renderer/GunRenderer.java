@@ -1,6 +1,8 @@
 package com.github.x3r.mekanism_weaponry.client.renderer;
 
+import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -20,7 +22,7 @@ import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.specialty.DynamicGeoItemRenderer;
 import software.bernie.geckolib.util.RenderUtil;
 
-public abstract class GunRenderer<T extends Item & GeoAnimatable> extends DynamicGeoItemRenderer<T> {
+public abstract class GunRenderer<T extends GunItem & GeoAnimatable> extends DynamicGeoItemRenderer<T> {
 
     protected GunRenderer(GeoModel<T> model) {
         super(model);
@@ -59,5 +61,12 @@ public abstract class GunRenderer<T extends Item & GeoAnimatable> extends Dynami
     @Override
     protected IntIntPair computeTextureSize(ResourceLocation texture) {
         return TEXTURE_DIMENSIONS_CACHE.computeIfAbsent(getTextureLocation(this.animatable), RenderUtil::getTextureDimensions);
+    }
+
+    protected int getTextureIndex() {
+        if(animatable.hasAddon(currentItemStack, PaintBucketItem.class)) {
+            return ((PaintBucketItem) animatable.getAddon(currentItemStack, 1).getItem()).getIndex();
+        }
+        return 0;
     }
 }

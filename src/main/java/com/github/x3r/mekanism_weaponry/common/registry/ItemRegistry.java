@@ -16,7 +16,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ItemRegistry {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MekanismWeaponry.MOD_ID);
-    public static final DeferredRegister<Item> PAINTS = DeferredRegister.create(BuiltInRegistries.ITEM, MekanismWeaponry.MOD_ID);
 
     public static final DeferredHolder<Item, GauntletItem> GAUNTLET = ITEMS.register("gauntlet",
             () -> new GauntletItem(new Item.Properties()));
@@ -66,8 +65,18 @@ public class ItemRegistry {
     public static final DeferredHolder<Item, Item> SCOPE = ITEMS.register("scope",
             () -> new ScopeAddonItem(new Item.Properties(), GunAddonItem.AddonType.SCOPE, 1.0F));
 
-    public static final DeferredHolder<Item, PaintBucketItem> PAINT_0 = PAINTS.register("paint_0",
-            () -> new PaintBucketItem(new Item.Properties(), Component.literal("nimbus"), 0xFF2b9fe8, 0xFF817a99));
+    public static final DeferredHolder<Item, PaintBucketItem> NIMBUS_PAINT_BUCKET = ITEMS.register("nimbus_paint_bucket",
+            () -> new PaintBucketItem(new Item.Properties(), Component.literal("nimbus"), 0xFF2b9fe8, 0xFF817a99, 0));
+    public static final DeferredHolder<Item, PaintBucketItem> ALIEN_PAINT_BUCKET = ITEMS.register("alien_paint_bucket",
+            () -> new PaintBucketItem(new Item.Properties(), Component.literal("alien"), 0xFFbe54e0, 0xFF00f23f, 1));
+    public static final DeferredHolder<Item, PaintBucketItem> COTTON_CANDY_PAINT_BUCKET = ITEMS.register("cotton_candy_paint_bucket",
+            () -> new PaintBucketItem(new Item.Properties(), Component.literal("cotton_candy"), 0xFF0088c1, 0xFFb139b6, 2));
+    public static final DeferredHolder<Item, PaintBucketItem> EVA_PAINT_BUCKET = ITEMS.register("eva_paint_bucket",
+            () -> new PaintBucketItem(new Item.Properties(), Component.literal("eva"), 0xFF00f23f, 0xFFbe54e0, 3));
+    public static final DeferredHolder<Item, PaintBucketItem> BUMBLEBEE_PAINT_BUCKET = ITEMS.register("bumblebee_paint_bucket",
+            () -> new PaintBucketItem(new Item.Properties(), Component.literal("bumblebee"), 0xFFfa7900, 0xFFffd833, 4));
+    public static final DeferredHolder<Item, PaintBucketItem> CRIMSON_PAINT_BUCKET = ITEMS.register("crimson_paint_bucket",
+            () -> new PaintBucketItem(new Item.Properties(), Component.literal("crimson"), 0xFF86121f, 0xFF400a16, 5));
 
     public static class ModItemTab {
 
@@ -78,7 +87,6 @@ public class ItemRegistry {
                 .title(Component.translatable("item_group." + MekanismWeaponry.MOD_ID))
                 .displayItems((displayParameters, output) -> {
                     ItemRegistry.ITEMS.getEntries().forEach(itemRegistryObject -> output.accept(itemRegistryObject.get()));
-                    ItemRegistry.PAINTS.getEntries().forEach(itemRegistryObject -> output.accept(itemRegistryObject.get()));
                     BlockRegistry.BLOCKS.getEntries().forEach(iBlockProvider -> output.accept(iBlockProvider.get().asItem()));
                 })
                 .build());
