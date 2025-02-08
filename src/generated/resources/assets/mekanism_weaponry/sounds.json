@@ -1,15 +1,21 @@
 {
+  "gun_out_of_ammo": {
+    "sounds": [
+      "mekanism_weaponry:item/gun_out_of_ammo"
+    ],
+    "subtitle": "mekanism_weaponry.subtitle.gun_out_of_ammo"
+  },
+  "gun_out_of_energy": {
+    "sounds": [
+      "mekanism_weaponry:item/gun_out_of_energy"
+    ],
+    "subtitle": "mekanism_weaponry.subtitle.gun_out_of_energy"
+  },
   "minigun_shoot": {
     "sounds": [
       "mekanism_weaponry:item/minigun_shoot"
     ],
     "subtitle": "mekanism_weaponry.subtitle.minigun_shoot"
-  },
-  "plasma_rifle_out_of_energy": {
-    "sounds": [
-      "mekanism_weaponry:item/plasma_rifle_out_of_energy"
-    ],
-    "subtitle": "mekanism_weaponry.subtitle.plasma_rifle_out_of_energy"
   },
   "plasma_rifle_shoot": {
     "sounds": [

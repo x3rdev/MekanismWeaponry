@@ -66,17 +66,17 @@ public class ItemRegistry {
             () -> new ScopeAddonItem(new Item.Properties(), GunAddonItem.AddonType.SCOPE, 1.0F));
 
     public static final DeferredHolder<Item, PaintBucketItem> NIMBUS_PAINT_BUCKET = ITEMS.register("nimbus_paint_bucket",
-            () -> new PaintBucketItem(new Item.Properties(), Component.literal("nimbus"), 0xFF2b9fe8, 0xFF817a99, 0));
+            () -> new PaintBucketItem(new Item.Properties(), "nimbus", 0xFF2b9fe8, 0xFF817a99, 0));
     public static final DeferredHolder<Item, PaintBucketItem> ALIEN_PAINT_BUCKET = ITEMS.register("alien_paint_bucket",
-            () -> new PaintBucketItem(new Item.Properties(), Component.literal("alien"), 0xFFbe54e0, 0xFF00f23f, 1));
+            () -> new PaintBucketItem(new Item.Properties(), "alien", 0xFFbe54e0, 0xFF00f23f, 1));
     public static final DeferredHolder<Item, PaintBucketItem> COTTON_CANDY_PAINT_BUCKET = ITEMS.register("cotton_candy_paint_bucket",
-            () -> new PaintBucketItem(new Item.Properties(), Component.literal("cotton_candy"), 0xFF0088c1, 0xFFb139b6, 2));
+            () -> new PaintBucketItem(new Item.Properties(), "cotton_candy", 0xFF0088c1, 0xFFb139b6, 2));
     public static final DeferredHolder<Item, PaintBucketItem> EVA_PAINT_BUCKET = ITEMS.register("eva_paint_bucket",
-            () -> new PaintBucketItem(new Item.Properties(), Component.literal("eva"), 0xFF00f23f, 0xFFbe54e0, 3));
+            () -> new PaintBucketItem(new Item.Properties(), "eva", 0xFF00f23f, 0xFFbe54e0, 3));
     public static final DeferredHolder<Item, PaintBucketItem> BUMBLEBEE_PAINT_BUCKET = ITEMS.register("bumblebee_paint_bucket",
-            () -> new PaintBucketItem(new Item.Properties(), Component.literal("bumblebee"), 0xFFfa7900, 0xFFffd833, 4));
+            () -> new PaintBucketItem(new Item.Properties(), "bumblebee", 0xFFfa7900, 0xFFffd833, 4));
     public static final DeferredHolder<Item, PaintBucketItem> CRIMSON_PAINT_BUCKET = ITEMS.register("crimson_paint_bucket",
-            () -> new PaintBucketItem(new Item.Properties(), Component.literal("crimson"), 0xFF86121f, 0xFF400a16, 5));
+            () -> new PaintBucketItem(new Item.Properties(), "crimson", 0xFF86121f, 0xFF400a16, 5));
 
     public static class ModItemTab {
 

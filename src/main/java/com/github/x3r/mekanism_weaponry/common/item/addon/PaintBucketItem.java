@@ -8,12 +8,12 @@ import java.util.List;
 
 public class PaintBucketItem extends GunAddonItem {
 
-    private final Component colorschemeName;
+    private final String colorschemeName;
     private final int color0;
     private final int color1;
     private final int index;
 
-    public PaintBucketItem(Properties properties, Component colorschemeName, int color0, int color1, int index) {
+    public PaintBucketItem(Properties properties, String colorschemeName, int color0, int color1, int index) {
         super(properties, AddonType.PAINT, 0.0F);
         this.colorschemeName = colorschemeName;
         this.color0 = color0;
@@ -42,9 +42,7 @@ public class PaintBucketItem extends GunAddonItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(
-                Component.translatable("mekanism_weaponry.tooltip.addon_colorscheme_name").append(": ").withColor(0x2fb2d6).append(
-                        colorschemeName
-                ).withColor(0xFFFFFF)
+                Component.translatable("mekanism_weaponry.tooltip.color_desc."+colorschemeName).withColor(0x2fb2d6)
         );
     }
 }

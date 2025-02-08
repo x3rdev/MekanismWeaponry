@@ -5,8 +5,10 @@ import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
+import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -63,9 +65,14 @@ public abstract class GunItem extends Item {
     }
 
     public void tryStartReload(ItemStack stack, ServerPlayer player) {
-        if(stack.getItem() instanceof GunItem item && canReload(stack, player)) {
-            item.serverReload(stack, player);
-            PacketDistributor.sendToPlayer(player, new ReloadGunPayload());
+        if(stack.getItem() instanceof GunItem item) {
+            if(canReload(stack, player)) {
+                item.serverReload(stack, player);
+                PacketDistributor.sendToPlayer(player, new ReloadGunPayload());
+            } else {
+                player.serverLevel().playSound(null, player.getEyePosition().x, player.getEyePosition().y, player.getEyePosition().z, SoundRegistry.GUN_OUT_OF_AMMO.get(), SoundSource.PLAYERS, 1.5F, 1.0F);
+
+            }
         }
     }
 

@@ -25,10 +25,12 @@ public class MWLangProvider extends LanguageProvider {
             add(itemDeferredHolder.get(), idToName(itemDeferredHolder.getId()));
         });
         add("mekanism_weaponry.subtitle.plasma_rifle_shoot", "Plasma rifle shot");
-        add("mekanism_weaponry.subtitle.plasma_rifle_out_of_energy", "Plasma rifle out of energy");
+        add("mekanism_weaponry.subtitle.gun_out_of_energy", "Gun out of energy");
         add("mekanism_weaponry.subtitle.railgun_shoot", "Railgun shot");
         add("mekanism_weaponry.subtitle.railgun_reload", "Railgun reloading");
         add("mekanism_weaponry.subtitle.minigun_shoot", "Minigun shot");
+        add("mekanism_weaponry.subtitle.gun_out_of_ammo", "Gun out of ammo");
+
         add("item_group.mekanism_weaponry", "Mekanism Weaponry");
 
         add("mekanism_weaponry.tooltip.gun_energy", "Energy: ");
@@ -41,9 +43,14 @@ public class MWLangProvider extends LanguageProvider {
         add("mekanism_weaponry.tooltip.gun_addons", "Gun Addons");
         add("mekanism_weaponry.tooltip.gun_no_addons", "No Addons Installed");
 
-
-
         add("mekanism_weaponry.tooltip.addon_effect_multiplier", "Effect multiplier");
+
+        add("mekanism_weaponry.tooltip.color_desc.nimbus", "Classic blue and white");
+        add("mekanism_weaponry.tooltip.color_desc.alien", "Out of this world");
+        add("mekanism_weaponry.tooltip.color_desc.cotton_candy", "Sugar tooth");
+        add("mekanism_weaponry.tooltip.color_desc.eva", "It's not a robot");
+        add("mekanism_weaponry.tooltip.color_desc.bumblebee", "Float like a butterfly");
+        add("mekanism_weaponry.tooltip.color_desc.crimson", "Blood red");
 
     }
 

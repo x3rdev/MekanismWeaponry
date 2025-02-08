@@ -10,7 +10,6 @@ import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -73,7 +72,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
             getEnergyStorage(stack).extractEnergy(isSecondMode(stack) ? getEnergyUsage(stack)*2 : getEnergyUsage(stack), false);
         } else {
             if(!hasSufficientEnergy(stack)) {
-                level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+                player.serverLevel().playSound(null, player.getEyePosition().x, player.getEyePosition().y, player.getEyePosition().z, SoundRegistry.GUN_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
             }
             if(!hasAmmo(stack)) {
                 tryStartReload(stack, player);

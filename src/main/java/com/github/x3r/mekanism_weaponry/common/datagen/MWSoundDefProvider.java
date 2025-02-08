@@ -21,10 +21,10 @@ public class MWSoundDefProvider extends SoundDefinitionsProvider {
                 .with(SoundDefinition.Sound.sound(
                         ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/plasma_rifle_shoot"),
                         SoundDefinition.SoundType.SOUND)));
-        add(SoundRegistry.PLASMA_RIFLE_OUT_OF_ENERGY.get(), definition()
-                .subtitle("mekanism_weaponry.subtitle.plasma_rifle_out_of_energy")
+        add(SoundRegistry.GUN_OUT_OF_ENERGY.get(), definition()
+                .subtitle("mekanism_weaponry.subtitle.gun_out_of_energy")
                 .with(SoundDefinition.Sound.sound(
-                        ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/plasma_rifle_out_of_energy"),
+                        ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/gun_out_of_energy"),
                         SoundDefinition.SoundType.SOUND)));
         add(SoundRegistry.RAILGUN_SHOOT.get(), definition()
                 .subtitle("mekanism_weaponry.subtitle.railgun_shoot")
@@ -40,6 +40,11 @@ public class MWSoundDefProvider extends SoundDefinitionsProvider {
                 .subtitle("mekanism_weaponry.subtitle.minigun_shoot")
                 .with(SoundDefinition.Sound.sound(
                         ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/minigun_shoot"),
+                        SoundDefinition.SoundType.SOUND)));
+        add(SoundRegistry.GUN_OUT_OF_AMMO.get(), definition()
+                .subtitle("mekanism_weaponry.subtitle.gun_out_of_ammo")
+                .with(SoundDefinition.Sound.sound(
+                        ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "item/gun_out_of_ammo"),
                         SoundDefinition.SoundType.SOUND)));
     }
 }
