@@ -44,7 +44,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
     public RailgunItem(Properties pProperties) {
         super(pProperties.component(DataComponentRegistry.RAILGUN_SECONDARY_MODE, false),
-                20, 1000, 35, 1);
+                20, 1000, 35, 5);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
@@ -68,7 +68,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
             level.addFreshEntity(rod);
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.RAILGUN_SHOOT.get(), SoundSource.PLAYERS, 3F, 1.0F);
 
-            getLoadedAmmo(stack).shrink(1);
+            getLoadedAmmo(stack).shrink(isSecondMode(stack) ? 5 : 1);
 
             getEnergyStorage(stack).extractEnergy(isSecondMode(stack) ? getEnergyUsage(stack)*2 : getEnergyUsage(stack), false);
         } else {

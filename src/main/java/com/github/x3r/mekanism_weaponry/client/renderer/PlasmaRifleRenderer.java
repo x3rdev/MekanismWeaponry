@@ -2,6 +2,7 @@ package com.github.x3r.mekanism_weaponry.client.renderer;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
+import com.github.x3r.mekanism_weaponry.common.item.RailgunItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
@@ -26,4 +27,8 @@ public class PlasmaRifleRenderer extends GunRenderer<PlasmaRifleItem> {
         super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "plasma_rifle")));
     }
 
+    @Override
+    public ResourceLocation getTextureLocation(PlasmaRifleItem animatable) {
+        return ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, String.format("textures/item/plasma_rifle/plasma_rifle_%d.png", getTextureIndex()));
+    }
 }

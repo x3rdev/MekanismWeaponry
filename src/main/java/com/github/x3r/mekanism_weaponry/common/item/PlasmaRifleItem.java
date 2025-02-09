@@ -49,6 +49,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
         Vec3 pos = player.getEyePosition()
                 .add(player.getLookAngle().normalize().scale(0.1));
         if(isReady(stack, player, level)) {
+            stack.set(DataComponentRegistry.IS_SHOOTING, true);
             setLastShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
 

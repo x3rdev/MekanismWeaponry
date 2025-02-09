@@ -97,7 +97,7 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
         for (int i = 0; i < getHeat(stack); i++) {
             Scheduler.schedule(() -> {
                 if(player.getInventory().contains(stack)) {
-                    setHeat(stack, getHeat(stack) - 2);
+                    setHeat(stack, Math.max(0, getHeat(stack) - 2));
                 }
             }, 40+i);
         }
