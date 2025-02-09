@@ -69,9 +69,9 @@ public abstract class GunItem extends Item {
             if(canReload(stack, player)) {
                 item.serverReload(stack, player);
                 PacketDistributor.sendToPlayer(player, new ReloadGunPayload());
-            } else {
+            }
+            if(!player.getCooldowns().isOnCooldown(stack.getItem())) {
                 player.serverLevel().playSound(null, player.getEyePosition().x, player.getEyePosition().y, player.getEyePosition().z, SoundRegistry.GUN_OUT_OF_AMMO.get(), SoundSource.PLAYERS, 1.5F, 1.0F);
-
             }
         }
     }
