@@ -2,9 +2,14 @@ package com.github.x3r.mekanism_weaponry.common.entity;
 
 import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -12,6 +17,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -88,6 +94,9 @@ public class GunProjectileEntity extends Projectile {
         Entity entity = hitResult.getEntity();
         if(!entity.equals(getOwner())) {
             entity.hurt(damageSource.apply(entity), (float) this.damage);
+            Vec3 pos = hitResult.getLocation();
+            ((ServerLevel) level()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()),
+                    pos.x, pos.y, pos.z, 15, 0, 0, 0, 0);
         }
     }
 
@@ -97,6 +106,9 @@ public class GunProjectileEntity extends Projectile {
                 state.getVisualShape(level(), hitResult.getBlockPos(), CollisionContext.empty()).isEmpty()) {
             return;
         }
+        Vec3 pos = hitResult.getLocation();
+        ((ServerLevel) level()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, level().getBlockState(hitResult.getBlockPos())),
+                pos.x, pos.y, pos.z, 15, 0, 0, 0, 1);
         this.remove(RemovalReason.DISCARDED);
     }
 
