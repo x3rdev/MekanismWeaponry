@@ -5,6 +5,7 @@ import com.github.x3r.mekanism_weaponry.client.renderer.RailgunRenderer;
 import com.github.x3r.mekanism_weaponry.common.entity.RodEntity;
 import com.github.x3r.mekanism_weaponry.common.item.addon.*;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
+import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
@@ -14,6 +15,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -56,21 +62,28 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     @Override
     public void serverShoot(ItemStack stack, ServerPlayer player) {
         Level level = player.level();
+        Vec3 lookAngle = player.getLookAngle();
         Vec3 pos = player.getEyePosition()
-                .add(player.getLookAngle().normalize().scale(0.1));
+                .add(lookAngle.normalize().scale(0.1));
         if(isReady(stack, player, level)) {
             setLastShotTick(stack, level.getGameTime());
             PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
 
             float dmg = isSecondMode(stack) ? 24F : 16F;
             RodEntity rod = new RodEntity(player, pos, dmg, isSecondMode(stack));
-            rod.setDeltaMovement(player.getLookAngle().add(0, 0.015, 0).normalize().scale(isSecondMode(stack) ? 4 : 3));
+            rod.setDeltaMovement(lookAngle.add(0, 0.015, 0).normalize().scale(isSecondMode(stack) ? 4 : 3));
             level.addFreshEntity(rod);
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.RAILGUN_SHOOT.get(), SoundSource.PLAYERS, 3F, 1.0F);
 
-            getLoadedAmmo(stack).shrink(isSecondMode(stack) ? 5 : 1);
+            getLoadedAmmo(stack).shrink(1);
 
             getEnergyStorage(stack).extractEnergy(isSecondMode(stack) ? getEnergyUsage(stack)*2 : getEnergyUsage(stack), false);
+
+            if(isSecondMode(stack)) {
+                player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 0));
+                player.setRemainingFireTicks(player.getRemainingFireTicks() + 40);
+            }
+
         } else {
             if(!hasSufficientEnergy(stack)) {
                 player.serverLevel().playSound(null, player.getEyePosition().x, player.getEyePosition().y, player.getEyePosition().z, SoundRegistry.GUN_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -86,6 +99,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     public void clientShoot(ItemStack stack, Player player) {
         if(isSecondMode(stack)) {
             triggerAnim(player, GeoItem.getId(stack), "controller", "shot_second");
+            player.push(player.getLookAngle().scale(-1).scale(1.5F));
         } else {
             triggerAnim(player, GeoItem.getId(stack), "controller", "shot_default");
         }
