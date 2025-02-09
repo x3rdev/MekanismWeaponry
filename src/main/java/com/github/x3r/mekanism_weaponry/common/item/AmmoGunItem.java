@@ -1,5 +1,6 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
+import com.github.x3r.mekanism_weaponry.common.item.addon.HeatPerShotChipItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

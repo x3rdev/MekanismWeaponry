@@ -119,7 +119,7 @@ public class GunProjectileEntity extends Projectile {
         List<EntityHitResult> collisions = new ArrayList<>();
         candidates.forEach(entity -> {
             if(entity instanceof LivingEntity livingEntity) {
-                AABB box = livingEntity.getBoundingBox();
+                AABB box = livingEntity.getBoundingBox().inflate(0.1F);
                 Optional<Vec3> hitPos = box.clip(startVec, endVec);
                 hitPos.ifPresent(vec3 -> collisions.add(new EntityHitResult(livingEntity, vec3)));
             }

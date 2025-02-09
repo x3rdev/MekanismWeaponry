@@ -3,6 +3,7 @@ package com.github.x3r.mekanism_weaponry.common.item;
 import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.client.renderer.RailgunRenderer;
 import com.github.x3r.mekanism_weaponry.common.entity.RodEntity;
+import com.github.x3r.mekanism_weaponry.common.item.addon.*;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
@@ -63,7 +64,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
             float dmg = isSecondMode(stack) ? 24F : 16F;
             RodEntity rod = new RodEntity(player, pos, dmg, isSecondMode(stack));
-            rod.setDeltaMovement(player.getLookAngle().normalize().scale(isSecondMode(stack) ? 4 : 3));
+            rod.setDeltaMovement(player.getLookAngle().add(0, 0.015, 0).normalize().scale(isSecondMode(stack) ? 4 : 3));
             level.addFreshEntity(rod);
             level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.RAILGUN_SHOOT.get(), SoundSource.PLAYERS, 3F, 1.0F);
 
@@ -111,7 +112,19 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
     @Override
     public boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack) {
-        return true;
+        if(addonStack.getItem().getClass().equals(EnergyUsageChipItem.class)) {
+            return true;
+        }
+        if(addonStack.getItem().getClass().equals(FireRateChipItem.class)) {
+            return true;
+        }
+        if(addonStack.getItem().getClass().equals(PaintBucketItem.class)) {
+            return true;
+        }
+        if(addonStack.getItem().getClass().equals(ScopeAddonItem.class)) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isSecondMode(ItemStack stack) {

@@ -1,13 +1,16 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
+import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.HeatPerShotChipItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
+import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.IItemDecorator;
@@ -24,6 +27,14 @@ public abstract class HeatGunItem extends GunItem {
         super(pProperties.component(DataComponentRegistry.HEAT.get(), 0F),
                 cooldown, energyUsage, reloadTime);
         this.heatPerShot = heatPerShot;
+    }
+
+    @Override
+    public boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack) {
+        if(addonStack.getItem().getClass().equals(HeatPerShotChipItem.class)) {
+            return true;
+        }
+        return false;
     }
 
     @Override

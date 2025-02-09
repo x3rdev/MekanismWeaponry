@@ -2,7 +2,10 @@ package com.github.x3r.mekanism_weaponry.common.item;
 
 import com.github.x3r.mekanism_weaponry.client.renderer.TeslaMinigunRenderer;
 import com.github.x3r.mekanism_weaponry.client.sound.TeslaMinigunSoundInstance;
+import com.github.x3r.mekanism_weaponry.common.item.addon.EnergyUsageChipItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
@@ -114,7 +117,16 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
 
     @Override
     public boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack) {
-        return !((GunAddonItem) addonStack.getItem()).getAddonType().equals(GunAddonItem.AddonType.SCOPE);
+        if(addonStack.getItem().getClass().equals(EnergyUsageChipItem.class)) {
+            return true;
+        }
+        if(addonStack.getItem().getClass().equals(FireRateChipItem.class)) {
+            return true;
+        }
+        if(addonStack.getItem().getClass().equals(PaintBucketItem.class)) {
+            return true;
+        }
+        return super.canInstallAddon(gunStack, addonStack);
     }
 
     @Override

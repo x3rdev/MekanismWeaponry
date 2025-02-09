@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class GunAddonItem extends Item {
 
-    public static DecimalFormat DF = new DecimalFormat("0.#");
+    public static final DecimalFormat DF = new DecimalFormat("0.#");
 
     private final AddonType addonType;
     private final float mul;
