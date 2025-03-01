@@ -51,7 +51,7 @@ public class ClientSetup {
 
     public static final Lazy<KeyMapping> RELOAD_MAPPING = Lazy.of(() -> new KeyMapping("key.mekanism_weaponry.reload", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, InputConstants.KEY_R, "key.categories.mekanism_weaponry"));
 
-    private static final ResourceLocation SCOPE_LOCATION = ResourceLocation.withDefaultNamespace("textures/misc/spyglass_scope.png");
+    private static final ResourceLocation SCOPE_LOCATION = ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "textures/misc/scope_overlay.png");
 
     // Neo Bus event, registered in mod class
     public static void onClientTick(ClientTickEvent.Post event) {
@@ -175,7 +175,7 @@ public class ClientSetup {
             Player player = minecraft.player;
             if(player != null) {
                 ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-                scopeScale = Mth.lerp(0.5F * event.getPartialTick().getGameTimeDeltaTicks(), scopeScale, 1.125F);
+                scopeScale = Mth.lerp(0.5F * event.getPartialTick().getGameTimeDeltaTicks(), scopeScale, 1F);
                 if(stack.getItem() instanceof GunItem gunItem && stack.get(DataComponentRegistry.IS_SCOPING)) {
                     renderScopeOverlay(event.getGuiGraphics(), scopeScale);
                 } else {
@@ -197,10 +197,6 @@ public class ClientSetup {
         RenderSystem.enableBlend();
         guiGraphics.blit(SCOPE_LOCATION, k, l, -90, 0.0F, 0.0F, i, j, i, j);
         RenderSystem.disableBlend();
-        guiGraphics.fill(RenderType.guiOverlay(), 0, j1, guiGraphics.guiWidth(), guiGraphics.guiHeight(), -90, -16777216);
-        guiGraphics.fill(RenderType.guiOverlay(), 0, 0, guiGraphics.guiWidth(), l, -90, -16777216);
-        guiGraphics.fill(RenderType.guiOverlay(), 0, l, k, j1, -90, -16777216);
-        guiGraphics.fill(RenderType.guiOverlay(), i1, l, guiGraphics.guiWidth(), j1, -90, -16777216);
     }
 
     public static void computeFov(ComputeFovModifierEvent event) {
