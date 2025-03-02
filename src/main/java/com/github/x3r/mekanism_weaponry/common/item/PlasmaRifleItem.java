@@ -1,5 +1,6 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
+import com.github.x3r.mekanism_weaponry.MekanismWeaponryConfig;
 import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRifleRenderer;
 import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
@@ -39,7 +40,11 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public PlasmaRifleItem(Properties pProperties) {
-        super(pProperties, 6, 250, 45, 20);
+        super(pProperties,
+                MekanismWeaponryConfig.CONFIG.getPlasmaRifleCooldown(),
+                MekanismWeaponryConfig.CONFIG.getPlasmaRifleEnergyUsage(),
+                MekanismWeaponryConfig.CONFIG.getPlasmaRifleReloadTime(),
+                MekanismWeaponryConfig.CONFIG.getPlasmaRifleHeatPerShot());
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 

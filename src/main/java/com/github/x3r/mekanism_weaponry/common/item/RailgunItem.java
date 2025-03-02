@@ -1,5 +1,6 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
+import com.github.x3r.mekanism_weaponry.MekanismWeaponryConfig;
 import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.client.renderer.RailgunRenderer;
 import com.github.x3r.mekanism_weaponry.common.entity.RodEntity;
@@ -50,7 +51,10 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
     public RailgunItem(Properties pProperties) {
         super(pProperties.component(DataComponentRegistry.RAILGUN_SECONDARY_MODE, false),
-                20, 1000, 35, 5);
+                MekanismWeaponryConfig.CONFIG.getRailgunCooldown(),
+                MekanismWeaponryConfig.CONFIG.getRailgunEnergyUsage(),
+                MekanismWeaponryConfig.CONFIG.getRailgunReloadTime(),
+                MekanismWeaponryConfig.CONFIG.getRailgunMaxAmmo());
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 

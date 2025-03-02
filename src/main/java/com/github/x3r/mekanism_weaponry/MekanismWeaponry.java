@@ -8,6 +8,8 @@ import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ConfigTracker;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.http.HttpConnection;
 import org.jline.utils.Log;
@@ -27,6 +29,8 @@ public class MekanismWeaponry {
 
     public MekanismWeaponry(IEventBus modEventBus, ModContainer modContainer) {
         IEventBus neoEventBus = NeoForge.EVENT_BUS;
+
+        modContainer.registerConfig(ModConfig.Type.COMMON, MekanismWeaponryConfig.CONFIG_SPEC);
 
         BlockRegistry.BLOCKS.register(modEventBus);
         DataComponentRegistry.DATA_COMPONENTS.register(modEventBus);

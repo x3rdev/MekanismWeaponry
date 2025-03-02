@@ -72,12 +72,12 @@ public abstract class AmmoGunItem extends GunItem {
     public ItemStack getFirstAmmoStack(ItemStack gunStack, ServerPlayer player) {
         ItemStack offHandStack = player.getOffhandItem();
         if(isValidAmmo(gunStack).test(offHandStack) && ammoFitsInGun(gunStack, offHandStack)) {
-            return offHandStack;
+                return offHandStack;
         }
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
-            if(isValidAmmo(gunStack).test(stack) && ammoFitsInGun(gunStack, offHandStack)) {
-                return stack;
+            if(isValidAmmo(gunStack).test(stack) && ammoFitsInGun(gunStack, stack)) {
+                    return stack;
             }
         }
         return ItemStack.EMPTY;

@@ -1,5 +1,6 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
+import com.github.x3r.mekanism_weaponry.MekanismWeaponryConfig;
 import com.github.x3r.mekanism_weaponry.client.renderer.TeslaMinigunRenderer;
 import com.github.x3r.mekanism_weaponry.client.sound.TeslaMinigunSoundInstance;
 import com.github.x3r.mekanism_weaponry.common.item.addon.EnergyUsageChipItem;
@@ -44,7 +45,11 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public TeslaMinigunItem(Properties pProperties) {
-        super(pProperties, 4, 100, 100, 5);
+        super(pProperties,
+                MekanismWeaponryConfig.CONFIG.getTeslaMinigunCooldown(),
+                MekanismWeaponryConfig.CONFIG.getTeslaMinigunEnergyUsage(),
+                MekanismWeaponryConfig.CONFIG.getTeslaMinigunReloadTime(),
+                MekanismWeaponryConfig.CONFIG.getTeslaMinigunHeatPerShot());
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
