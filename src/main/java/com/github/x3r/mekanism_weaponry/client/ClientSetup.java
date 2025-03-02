@@ -176,27 +176,32 @@ public class ClientSetup {
             if(player != null) {
                 ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
                 scopeScale = Mth.lerp(0.5F * event.getPartialTick().getGameTimeDeltaTicks(), scopeScale, 1F);
-                if(stack.getItem() instanceof GunItem gunItem && stack.get(DataComponentRegistry.IS_SCOPING)) {
-                    renderScopeOverlay(event.getGuiGraphics(), scopeScale);
+                if(stack.getItem() instanceof GunItem gunItem) {
+                    if(stack.get(DataComponentRegistry.IS_SCOPING)) {
+                        renderScopeOverlay(event.getGuiGraphics(), scopeScale, event.getPartialTick().getGameTimeDeltaTicks());
+                    } else {
+                        Minecraft.getInstance().gameRenderer.shutdownEffect();
+
+                    }
                 } else {
                     scopeScale = 0.5F;
                 }
+
             }
         }
     }
 
-    private static void renderScopeOverlay(GuiGraphics guiGraphics, float scopeScale) {
+    private static void renderScopeOverlay(GuiGraphics guiGraphics, float scopeScale, float partialTick) {
         float f = (float)Math.min(guiGraphics.guiWidth(), guiGraphics.guiHeight());
         float f1 = Math.min((float)guiGraphics.guiWidth() / f, (float)guiGraphics.guiHeight() / f) * scopeScale;
         int i = Mth.floor(f * f1);
         int j = Mth.floor(f * f1);
         int k = (guiGraphics.guiWidth() - i) / 2;
         int l = (guiGraphics.guiHeight() - j) / 2;
-        int i1 = k + i;
-        int j1 = l + j;
         RenderSystem.enableBlend();
         guiGraphics.blit(SCOPE_LOCATION, k, l, -90, 0.0F, 0.0F, i, j, i, j);
         RenderSystem.disableBlend();
+        Minecraft.getInstance().gameRenderer.loadEffect(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, ("shaders/post/scope_blur.json")));
     }
 
     public static void computeFov(ComputeFovModifierEvent event) {
