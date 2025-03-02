@@ -1,6 +1,8 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
+import com.github.x3r.mekanism_weaponry.MekanismWeaponryConfig;
 import com.github.x3r.mekanism_weaponry.client.renderer.GauntletRenderer;
+import mekanism.common.Mekanism;
 import mekanism.common.tags.MekanismTags;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.component.DataComponents;
@@ -43,15 +45,17 @@ public class GauntletItem extends Item implements GeoItem {
             ItemAbilities.SWORD_DIG, ItemAbilities.SWORD_SWEEP);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final int energyUsage;
 
     public GauntletItem(Properties properties) {
         super(properties.setNoRepair().stacksTo(1)
                 .component(DataComponents.TOOL, new Tool(List.of(
                         Tool.Rule.deniesDrops(MekanismTags.Blocks.INCORRECT_FOR_MEKA_TOOL),
                         new Tool.Rule(new AnyHolderSet<>(BuiltInRegistries.BLOCK.asLookup()), Optional.empty(), Optional.of(true))
-                ), 1, 0))
+                ), -0.5F, 0))
                 .attributes(createAttributes())
         );
+        energyUsage = MekanismWeaponryConfig.CONFIG.getGauntletEnergyUsage();
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
@@ -72,13 +76,22 @@ public class GauntletItem extends Item implements GeoItem {
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if(!target.level().isClientSide()) {
-            target.knockback(0.25, -attacker.getLookAngle().x, -attacker.getLookAngle().z);
-            target.addDeltaMovement(new Vec3(0, 0.45, 0));
-            target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.PISTON_CONTRACT, SoundSource.PLAYERS);
-            ((ServerLevel) target.level()).sendParticles(ParticleTypes.SMOKE, target.getX(), target.getY(), target.getZ(), 1, 0, 0, 0, 0);
+        if(hasSufficientEnergy(stack)) {
+            if(!target.level().isClientSide()) {
+                getEnergyStorage(stack).extractEnergy(energyUsage, false);
+                target.knockback(0.55, -attacker.getLookAngle().x, -attacker.getLookAngle().z);
+                target.addDeltaMovement(new Vec3(0, 0.35, 0));
+                target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.PISTON_CONTRACT, SoundSource.PLAYERS);
+                ((ServerLevel) target.level()).sendParticles(ParticleTypes.SMOKE, target.getX(), target.getY(), target.getZ(), 1, 0, 0, 0, 0);
+            }
+        } else {
+            target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.CRAFTER_FAIL, SoundSource.PLAYERS);
         }
         return super.hurtEnemy(stack, target, attacker);
+    }
+
+    public boolean hasSufficientEnergy(ItemStack stack) {
+        return getEnergyStorage(stack).getEnergyStored() >= energyUsage;
     }
 
     @Override

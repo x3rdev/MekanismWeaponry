@@ -103,7 +103,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     public void clientShoot(ItemStack stack, Player player) {
         if(isSecondMode(stack)) {
             triggerAnim(player, GeoItem.getId(stack), "controller", "shot_second");
-            player.push(player.getLookAngle().scale(-1).scale(1.5F));
+            player.push(player.getLookAngle().scale(-0.75F));
         } else {
             triggerAnim(player, GeoItem.getId(stack), "controller", "shot_default");
         }

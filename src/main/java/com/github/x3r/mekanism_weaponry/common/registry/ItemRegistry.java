@@ -35,6 +35,12 @@ public class ItemRegistry {
     public static final DeferredHolder<Item, Item> STEEL_ROD = ITEMS.register("steel_rod",
             () -> new Item(new Item.Properties()));
 
+    public static final DeferredHolder<Item, Item> PLASMA_CIRCUIT = ITEMS.register("plasma_circuit",
+            () -> new Item(new Item.Properties()));
+
+    public static final DeferredHolder<Item, Item> MAGNETIC_CIRCUIT = ITEMS.register("magnetic_circuit",
+            () -> new Item(new Item.Properties()));
+
     public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP_1 = ITEMS.register("fire_rate_chip_1",
             () -> new FireRateChipItem(new Item.Properties(), GunAddonItem.AddonType.CHIP, 1.0F));
     public static final DeferredHolder<Item, Item> FIRE_RATE_CHIP_2 = ITEMS.register("fire_rate_chip_2",

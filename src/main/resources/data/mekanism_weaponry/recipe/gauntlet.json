@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "0 0",
+    "121",
+    " 1 "
+  ],
+  "key": {
+    "0": {"tag":"c:ingots/osmium"},
+    "1": {"item":"mekanism:hdpe_sheet"},
+    "2": {"item":"mekanism:energy_tablet"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:gauntlet",
+    "count": 1
+  }
+}
