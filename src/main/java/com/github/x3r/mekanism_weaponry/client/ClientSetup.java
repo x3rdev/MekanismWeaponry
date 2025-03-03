@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.PostChain;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
@@ -179,14 +180,14 @@ public class ClientSetup {
                 if(stack.getItem() instanceof GunItem gunItem) {
                     if(stack.get(DataComponentRegistry.IS_SCOPING)) {
                         renderScopeOverlay(event.getGuiGraphics(), scopeScale, event.getPartialTick().getGameTimeDeltaTicks());
-                    } else {
-                        Minecraft.getInstance().gameRenderer.shutdownEffect();
-
                     }
                 } else {
                     scopeScale = 0.5F;
+                    PostChain postEffect = Minecraft.getInstance().gameRenderer.postEffect;
+                    if(postEffect != null && postEffect.getName().equals("mekanism_weaponry:shaders/post/scope_blur.json")) {
+                        Minecraft.getInstance().gameRenderer.shutdownEffect();
+                    }
                 }
-
             }
         }
     }

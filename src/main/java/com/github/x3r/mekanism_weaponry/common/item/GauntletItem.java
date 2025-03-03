@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
@@ -54,6 +55,7 @@ public class GauntletItem extends Item implements GeoItem {
                         new Tool.Rule(new AnyHolderSet<>(BuiltInRegistries.BLOCK.asLookup()), Optional.empty(), Optional.of(true))
                 ), -0.5F, 0))
                 .attributes(createAttributes())
+                .rarity(Rarity.UNCOMMON)
         );
         energyUsage = MekanismWeaponryConfig.CONFIG.getGauntletEnergyUsage();
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
@@ -96,7 +98,11 @@ public class GauntletItem extends Item implements GeoItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.literal(String.format("%d/%d FE", getEnergyStorage(stack).getEnergyStored(), getEnergyStorage(stack).getMaxEnergyStored())));
+        tooltipComponents.add(
+                Component.translatable("mekanism_weaponry.tooltip.gun_energy").withColor(0x2fb2d6).append(
+                        Component.literal(String.format("%d/%d FE", getEnergyStorage(stack).getEnergyStored(), getEnergyStorage(stack).getMaxEnergyStored())).withColor(0xFFFFFF)
+                )
+        );
     }
 
     public IEnergyStorage getEnergyStorage(ItemStack stack) {

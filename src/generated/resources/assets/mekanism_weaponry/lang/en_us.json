@@ -39,6 +39,8 @@
   "mekanism_weaponry.tooltip.color_desc.crimson": "Blood red",
   "mekanism_weaponry.tooltip.color_desc.eva": "It's not a robot",
   "mekanism_weaponry.tooltip.color_desc.nimbus": "Classic blue and white",
+  "mekanism_weaponry.tooltip.energy_usage_chip": "Reduces the energy cost of the weapon",
+  "mekanism_weaponry.tooltip.fire_rate_chip": "Reduces the time between shot of the weapon",
   "mekanism_weaponry.tooltip.gun_addons": "Gun Addons",
   "mekanism_weaponry.tooltip.gun_cooldown": "Cooldown",
   "mekanism_weaponry.tooltip.gun_energy": "Energy: ",
@@ -46,5 +48,6 @@
   "mekanism_weaponry.tooltip.gun_heat_per_shot": "Heat Per Shot",
   "mekanism_weaponry.tooltip.gun_no_addons": "No Addons Installed",
   "mekanism_weaponry.tooltip.gun_reload_time": "Reload Time",
-  "mekanism_weaponry.tooltip.gun_stats": "Gun Stats"
+  "mekanism_weaponry.tooltip.gun_stats": "Gun Stats",
+  "mekanism_weaponry.tooltip.heat_per_shot_chip": "Reduces the heat accumulated when the weapon is shot"
 }

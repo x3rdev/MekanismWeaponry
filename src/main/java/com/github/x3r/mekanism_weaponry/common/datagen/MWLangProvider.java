@@ -52,6 +52,9 @@ public class MWLangProvider extends LanguageProvider {
         add("mekanism_weaponry.tooltip.color_desc.bumblebee", "Float like a butterfly");
         add("mekanism_weaponry.tooltip.color_desc.crimson", "Blood red");
 
+        add("mekanism_weaponry.tooltip.energy_usage_chip", "Reduces the energy cost of the weapon");
+        add("mekanism_weaponry.tooltip.fire_rate_chip", "Reduces the time between shot of the weapon");
+        add("mekanism_weaponry.tooltip.heat_per_shot_chip", "Reduces the heat accumulated when the weapon is shot");
     }
 
     private String idToName(ResourceLocation location) {
