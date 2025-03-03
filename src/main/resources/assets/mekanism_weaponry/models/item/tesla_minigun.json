@@ -100,8 +100,5 @@
         0.21
       ]
     }
-  },
-  "textures": {
-    "particle": "mekanism_weaponry:item/tesla_minigun"
   }
 }

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "123",
+    " 4 ",
+    "   "
+  ],
+  "key": {
+    "1": {"item":"minecraft:purple_dye"},
+    "2": {"item":"minecraft:ender_pearl"},
+    "3": {"item":"minecraft:lime_dye"},
+    "4": {"item":"minecraft:bucket"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:alien_paint_bucket",
+    "count": 1
+  }
+}

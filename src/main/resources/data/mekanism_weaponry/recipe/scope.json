@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 12",
+    "131",
+    "41 "
+  ],
+  "key": {
+    "1": {"item":"mekanism:hdpe_sheet"},
+    "2": {"item":"minecraft:glass_pane"},
+    "3": {"item":"minecraft:spyglass"},
+    "4": {"item":"mekanism:basic_control_circuit"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:scope",
+    "count": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "121",
+    "343"
+  ],
+  "key": {
+    "0": {"item":"minecraft:clock"},
+    "1": {"item":"mekanism:basic_control_circuit"},
+    "2": {"item":"minecraft:green_dye"},
+    "3": {"tag":"c:ingots/copper"},
+    "4": {"tag":"c:ingots/gold"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:fire_rate_chip_1",
+    "count": 1
+  }
+}

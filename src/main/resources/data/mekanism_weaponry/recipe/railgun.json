@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 12",
+    "23 ",
+    "45 "
+  ],
+  "key": {
+    "1": {"item":"minecraft:anvil"},
+    "2": {"item":"mekanism:ingot_refined_obsidian"},
+    "3": {"item":"mekanism_weaponry:plasma_circuit"},
+    "4": {"item":"minecraft:breeze_rod"},
+    "5": {"tag":"c:ingots/steel"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:railgun",
+    "count": 1
+  }
+}

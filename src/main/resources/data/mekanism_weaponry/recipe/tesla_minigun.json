@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 12",
+    "341",
+    "52 "
+  ],
+  "key": {
+    "1": {"item":"mekanism:supercharged_coil"},
+    "2": {"item":"mekanism:hdpe_sheet"},
+    "3": {"item":"mekanism:ultimate_control_circuit"},
+    "4": {"item":"mekanism_weaponry:plasma_circuit"},
+    "5": {"item":"mekanism:energy_tablet"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:tesla_minigun",
+    "count": 1
+  }
+}

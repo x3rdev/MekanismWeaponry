@@ -110,8 +110,5 @@
         0.26
       ]
     }
-  },
-  "textures": {
-    "particle": "item/railgun1"
   }
 }

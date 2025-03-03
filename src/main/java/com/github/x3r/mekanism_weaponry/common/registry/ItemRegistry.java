@@ -71,8 +71,8 @@ public class ItemRegistry {
     public static final DeferredHolder<Item, Item> SCOPE = ITEMS.register("scope",
             () -> new ScopeAddonItem(new Item.Properties(), GunAddonItem.AddonType.SCOPE, 1.0F));
 
-    public static final DeferredHolder<Item, PaintBucketItem> NIMBUS_PAINT_BUCKET = ITEMS.register("nimbus_paint_bucket",
-            () -> new PaintBucketItem(new Item.Properties(), "nimbus", 0xFF2b9fe8, 0xFF817a99, 0));
+//    public static final DeferredHolder<Item, PaintBucketItem> NIMBUS_PAINT_BUCKET = ITEMS.register("nimbus_paint_bucket",
+//            () -> new PaintBucketItem(new Item.Properties(), "nimbus", 0xFF2b9fe8, 0xFF817a99, 0));
     public static final DeferredHolder<Item, PaintBucketItem> ALIEN_PAINT_BUCKET = ITEMS.register("alien_paint_bucket",
             () -> new PaintBucketItem(new Item.Properties(), "alien", 0xFFbe54e0, 0xFF00f23f, 1));
     public static final DeferredHolder<Item, PaintBucketItem> COTTON_CANDY_PAINT_BUCKET = ITEMS.register("cotton_candy_paint_bucket",

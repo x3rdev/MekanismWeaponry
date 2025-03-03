@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "123",
+    " 4 ",
+    "   "
+  ],
+  "key": {
+    "1": {"item":"minecraft:red_dye"},
+    "2": {"item":"minecraft:iron_nugget"},
+    "3": {"item":"minecraft:redstone"},
+    "4": {"item":"minecraft:bucket"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:crimson_paint_bucket",
+    "count": 1
+  }
+}

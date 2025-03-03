@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "121",
+    "010"
+  ],
+  "key": {
+    "0": {"tag":"c:ingots/bronze"},
+    "1": {"tag":"c:ingots/steel"},
+    "2": {"item":"mekanism:elite_control_circuit"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:plasma_circuit",
+    "count": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "232",
+    "454"
+  ],
+  "key": {
+    "0": {"item":"minecraft:redstone_torch"},
+    "1": {"item":"minecraft:redstone"},
+    "2": {"tag":"c:ingots/iron"},
+    "3": {"item":"mekanism:steel_casing"},
+    "4": {"item":"mekanism:alloy_reinforced"},
+    "5": {"item":"mekanism:advanced_control_circuit"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:weapon_workbench",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "121",
+    "010"
+  ],
+  "key": {
+    "0": {"item":"minecraft:redstone"},
+    "1": {"tag":"c:ingots/osmium"},
+    "2": {"item":"mekanism:elite_control_circuit"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:magnetic_circuit",
+    "count": 1
+  }
+}

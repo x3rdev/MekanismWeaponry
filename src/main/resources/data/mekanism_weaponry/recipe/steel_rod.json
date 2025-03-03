@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "i",
+    "i"
+  ],
+  "key": {
+    "i": {"tag":"c:ingots/steel"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:steel_rod",
+    "count": 4
+  }
+}

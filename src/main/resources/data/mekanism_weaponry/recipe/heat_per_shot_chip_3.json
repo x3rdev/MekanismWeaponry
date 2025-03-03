@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "101",
+    "   "
+  ],
+  "key": {
+    "0": {"item":"mekanism_weaponry:heat_per_shot_chip_2"},
+    "1": {"item":"mekanism:elite_control_circuit"}
+  },
+  "result": {
+    "id": "mekanism_weaponry:heat_per_shot_chip_3",
+    "count": 1
+  }
+}
