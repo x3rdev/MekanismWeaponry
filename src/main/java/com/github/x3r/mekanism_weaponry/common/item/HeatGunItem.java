@@ -68,7 +68,7 @@ public abstract class HeatGunItem extends GunItem {
     }
 
     public float getHeat(ItemStack stack) {
-        return stack.get(DataComponentRegistry.HEAT.get()).floatValue();
+        return stack.get(DataComponentRegistry.HEAT.get());
     }
 
     public void setHeat(ItemStack stack, float heat) {

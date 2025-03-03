@@ -137,11 +137,6 @@ public abstract class GunItem extends Item {
     }
 
     @Override
-    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        return false;
-    }
-
-    @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity, InteractionHand hand) {
         return true;
     }
@@ -171,7 +166,7 @@ public abstract class GunItem extends Item {
     }
 
     public long getLastShotTick(ItemStack stack) {
-        return stack.get(DataComponentRegistry.LAST_SHOT_TICK.get()).longValue();
+        return stack.get(DataComponentRegistry.LAST_SHOT_TICK.get());
     }
 
     public void setLastShotTick(ItemStack stack, long tick) {

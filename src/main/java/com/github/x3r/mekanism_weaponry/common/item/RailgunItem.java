@@ -142,14 +142,14 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     }
 
     public boolean isSecondMode(ItemStack stack) {
-        return stack.get(DataComponentRegistry.RAILGUN_SECONDARY_MODE.get()).booleanValue();
+        return stack.get(DataComponentRegistry.RAILGUN_SECONDARY_MODE.get());
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
         if(player.isCrouching()) {
-            boolean secondMode = stack.get(DataComponentRegistry.RAILGUN_SECONDARY_MODE.get()).booleanValue();
+            boolean secondMode = stack.get(DataComponentRegistry.RAILGUN_SECONDARY_MODE.get());
             if(!secondMode) {
                 triggerAnim(player, GeoItem.getId(stack), "controller", "switch_to_second");
                 stack.set(DataComponentRegistry.RAILGUN_SECONDARY_MODE.get(), true);
