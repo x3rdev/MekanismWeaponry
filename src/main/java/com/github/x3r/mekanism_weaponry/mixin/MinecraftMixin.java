@@ -2,8 +2,6 @@ package com.github.x3r.mekanism_weaponry.mixin;
 
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
-import com.github.x3r.mekanism_weaponry.common.packet.DeactivateGunPayload;
-import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.Options;
@@ -31,8 +29,6 @@ public abstract class MinecraftMixin {
     @Shadow @Final public MouseHandler mouseHandler;
 
     @Shadow @Nullable public ClientLevel level;
-
-    private long lastPacketTick = 0;
 
     @Inject(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"), cancellable = true)
     private void handleKeybinds(CallbackInfo ci) {

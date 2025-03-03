@@ -1,17 +1,12 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
-import com.github.x3r.mekanism_weaponry.common.item.addon.HeatPerShotChipItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.IItemDecorator;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 
-import java.util.Objects;
 import java.util.function.Predicate;
 
 public abstract class AmmoGunItem extends GunItem {
@@ -84,18 +79,15 @@ public abstract class AmmoGunItem extends GunItem {
     }
 
     public static IItemDecorator decorator() {
-        return new IItemDecorator() {
-            @Override
-            public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
-                AmmoGunItem item = (AmmoGunItem) stack.getItem();
-                float f = Math.min(1F, (float) item.getLoadedAmmo(stack).getCount()/item.maxAmmo);
-                guiGraphics.fill(RenderType.guiOverlay(), xOffset+2, yOffset+13, xOffset+2+13, yOffset+13+2, 0xFF000000);
-                for (int i = 0; i < MAX_BAR_WIDTH * f; i++) {
-                    guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+13, xOffset+2+i+1, yOffset+13+1, 0xFFFFFFFF);
-                }
-
-                return true;
+        return (guiGraphics, font, stack, xOffset, yOffset) -> {
+            AmmoGunItem item = (AmmoGunItem) stack.getItem();
+            float f = Math.min(1F, (float) item.getLoadedAmmo(stack).getCount()/item.maxAmmo);
+            guiGraphics.fill(RenderType.guiOverlay(), xOffset+2, yOffset+13, xOffset+2+13, yOffset+13+2, 0xFF000000);
+            for (int i = 0; i < MAX_BAR_WIDTH * f; i++) {
+                guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+13, xOffset+2+i+1, yOffset+13+1, 0xFFFFFFFF);
             }
+
+            return true;
         };
     }
 

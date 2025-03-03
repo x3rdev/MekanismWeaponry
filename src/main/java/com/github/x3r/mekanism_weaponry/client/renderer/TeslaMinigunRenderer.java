@@ -2,24 +2,19 @@ package com.github.x3r.mekanism_weaponry.client.renderer;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.client.shader.MWRenderTypes;
-import com.github.x3r.mekanism_weaponry.common.item.RailgunItem;
 import com.github.x3r.mekanism_weaponry.common.item.TeslaMinigunItem;
-import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 
 import java.util.HashSet;
@@ -27,7 +22,7 @@ import java.util.Set;
 
 public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
 
-    public static ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "textures/entity/electricity.png");
+    private static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "textures/entity/electricity.png");
 
     private final RandomSource source;
 
@@ -73,13 +68,13 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
         if(depth < maxDepth) {
             Vector3f dir = new Vector3f(0, -0.01F,-4);
             for (int i = 0; i < source.nextInt(4); i++) {
-                ElectricityNode node = new ElectricityNode(new Vec3(
+                ElectricityNode newNode = new ElectricityNode(new Vec3(
                         (float) (curr.pos.x + (dir.x*1/(depth+1))+(source.nextGaussian()* Mth.sqrt(depth+0.1F)/3)),
                         (float) (curr.pos.y + (dir.y*1/(depth+1))+(source.nextGaussian()*Mth.sqrt(depth+0.1F)/4)),
                         (float) (curr.pos.z + (dir.z*1/(depth+1))+(source.nextGaussian()*Mth.sqrt(depth+0.1F)/3))
                 ));
-                buildNodes(node, depth+1, maxDepth);
-                curr.children.add(node);
+                buildNodes(newNode, depth+1, maxDepth);
+                curr.children.add(newNode);
             }
         }
         return curr;
@@ -128,8 +123,8 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
     }
 
     public static class ElectricityNode {
-        public Set<ElectricityNode> children;
-        public Vec3 pos;
+        private final Set<ElectricityNode> children;
+        private final Vec3 pos;
 
         public ElectricityNode(Vec3 pos) {
             this.children = new HashSet<>();

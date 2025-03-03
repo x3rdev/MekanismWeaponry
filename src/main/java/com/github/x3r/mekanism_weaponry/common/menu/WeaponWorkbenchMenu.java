@@ -1,7 +1,7 @@
 package com.github.x3r.mekanism_weaponry.common.menu;
 
-import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.registry.BlockRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.MenuTypeRegistry;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 
 public class WeaponWorkbenchMenu extends AbstractContainerMenu {
 
-    private final Inventory playerInventory;
     private final ContainerLevelAccess access;
     private final Container container;
 
@@ -25,7 +24,6 @@ public class WeaponWorkbenchMenu extends AbstractContainerMenu {
     }
     public WeaponWorkbenchMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
         super(MenuTypeRegistry.WEAPON_WORKBENCH.get(), containerId);
-        this.playerInventory = playerInventory;
         this.access = access;
         this.container = createContainer();
         this.addSlot(new GunSlot(container, 0, 8, 16));
@@ -42,14 +40,6 @@ public class WeaponWorkbenchMenu extends AbstractContainerMenu {
 
         for (int i = 0; i < 9; i++) {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
-        }
-    }
-
-    @Override
-    public void slotsChanged(Container container) {
-        super.slotsChanged(container);
-        if(container == this.container) {
-
         }
     }
 
@@ -73,7 +63,7 @@ public class WeaponWorkbenchMenu extends AbstractContainerMenu {
     }
 
     private Container createContainer() {
-        Container c = new SimpleContainer(6) {
+        return new SimpleContainer(6) {
             @Override
             public void setChanged() {
                 super.setChanged();
@@ -87,7 +77,6 @@ public class WeaponWorkbenchMenu extends AbstractContainerMenu {
             }
 
         };
-        return c;
     }
 
     @Override
@@ -98,7 +87,7 @@ public class WeaponWorkbenchMenu extends AbstractContainerMenu {
 
     @Override
     protected void clearContainer(Player player, Container container) {
-        if (!player.isAlive() || player instanceof ServerPlayer && ((ServerPlayer)player).hasDisconnected()) {
+        if (!player.isAlive() || player instanceof ServerPlayer serverPlayer && serverPlayer.hasDisconnected()) {
             player.drop(container.removeItemNoUpdate(0), false);
         } else {
             Inventory inventory = player.getInventory();

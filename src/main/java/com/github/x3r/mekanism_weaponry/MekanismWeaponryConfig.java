@@ -1,6 +1,5 @@
 package com.github.x3r.mekanism_weaponry;
 
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 

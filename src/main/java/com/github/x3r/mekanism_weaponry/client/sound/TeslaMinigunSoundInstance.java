@@ -1,14 +1,9 @@
 package com.github.x3r.mekanism_weaponry.client.sound;
 
-import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
-import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.TeslaMinigunItem;
-import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;

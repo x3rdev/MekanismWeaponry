@@ -1,7 +1,6 @@
 package com.github.x3r.mekanism_weaponry.client.renderer;
 
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
-import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,11 +11,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.specialty.DynamicGeoItemRenderer;

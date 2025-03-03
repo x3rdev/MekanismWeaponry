@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = MekanismWeaponry.MOD_ID)
 public final class Scheduler {
 
-    public static final ConcurrentMap<Integer, List<Runnable>> SERVER_SCHEDULE = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Integer, List<Runnable>> SERVER_SCHEDULE = new ConcurrentHashMap<>();
 
     private Scheduler() {
 

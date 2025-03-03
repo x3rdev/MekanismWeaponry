@@ -1,12 +1,9 @@
 package com.github.x3r.mekanism_weaponry.common.entity;
 
-import com.github.x3r.mekanism_weaponry.common.particle.RodParticle;
 import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ParticleRegistry;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;

@@ -1,8 +1,6 @@
 package com.github.x3r.mekanism_weaponry.common.datagen;
 
-import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
-import mekanism.common.Mekanism;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;

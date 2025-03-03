@@ -2,7 +2,6 @@ package com.github.x3r.mekanism_weaponry.common.block;
 
 import com.github.x3r.mekanism_weaponry.common.menu.WeaponWorkbenchMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;

@@ -6,7 +6,6 @@ import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRifleRenderer;
 import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
 import com.github.x3r.mekanism_weaponry.common.item.addon.EnergyUsageChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
-import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
@@ -79,7 +78,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
     @Override
     public void clientShoot(ItemStack stack, Player player) {
         triggerAnim(player, GeoItem.getId(stack), "controller", "shoot");
-        ClientSetup.recoil += 5;
+        ClientSetup.addRecoil(5);
     }
 
     @Override

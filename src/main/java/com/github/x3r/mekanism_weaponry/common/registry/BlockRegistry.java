@@ -2,7 +2,6 @@ package com.github.x3r.mekanism_weaponry.common.registry;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.block.WeaponWorkbenchBlock;
-import mekanism.common.registration.impl.BlockDeferredRegister;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredHolder;

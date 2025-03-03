@@ -2,7 +2,6 @@ package com.github.x3r.mekanism_weaponry.common.item;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponryConfig;
 import com.github.x3r.mekanism_weaponry.client.renderer.GauntletRenderer;
-import mekanism.common.Mekanism;
 import mekanism.common.tags.MekanismTags;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.component.DataComponents;

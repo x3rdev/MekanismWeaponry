@@ -20,7 +20,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.PostChain;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceProvider;
@@ -29,7 +28,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -125,8 +123,12 @@ public class ClientSetup {
         event.register(RELOAD_MAPPING.get());
     }
 
-    public static float recoilO;
-    public static float recoil;
+    private static float recoilO;
+    private static float recoil;
+
+    public static void addRecoil(int i) {
+        recoil += i;
+    }
 
     // Neo Bus event, registered in mod class
     public static void cameraSetupEvent(ViewportEvent.ComputeCameraAngles event) {
@@ -177,10 +179,8 @@ public class ClientSetup {
             if(player != null) {
                 ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
                 scopeScale = Mth.lerp(0.5F * event.getPartialTick().getGameTimeDeltaTicks(), scopeScale, 1F);
-                if(stack.getItem() instanceof GunItem gunItem) {
-                    if(stack.get(DataComponentRegistry.IS_SCOPING)) {
-                        renderScopeOverlay(event.getGuiGraphics(), scopeScale, event.getPartialTick().getGameTimeDeltaTicks());
-                    }
+                if(stack.getItem() instanceof GunItem && stack.get(DataComponentRegistry.IS_SCOPING)) {
+                    renderScopeOverlay(event.getGuiGraphics(), scopeScale);
                 } else {
                     scopeScale = 0.5F;
                     PostChain postEffect = Minecraft.getInstance().gameRenderer.postEffect;
@@ -192,9 +192,9 @@ public class ClientSetup {
         }
     }
 
-    private static void renderScopeOverlay(GuiGraphics guiGraphics, float scopeScale, float partialTick) {
-        float f = (float)Math.min(guiGraphics.guiWidth(), guiGraphics.guiHeight());
-        float f1 = Math.min((float)guiGraphics.guiWidth() / f, (float)guiGraphics.guiHeight() / f) * scopeScale;
+    private static void renderScopeOverlay(GuiGraphics guiGraphics, float scopeScale) {
+        float f = Math.min(guiGraphics.guiWidth(), guiGraphics.guiHeight());
+        float f1 = Math.min(guiGraphics.guiWidth() / f, guiGraphics.guiHeight() / f) * scopeScale;
         int i = Mth.floor(f * f1);
         int j = Mth.floor(f * f1);
         int k = (guiGraphics.guiWidth() - i) / 2;
@@ -211,7 +211,7 @@ public class ClientSetup {
             Player player = minecraft.player;
             if(player != null) {
                 ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-                if(stack.getItem() instanceof GunItem gunItem && stack.get(DataComponentRegistry.IS_SCOPING)) {
+                if(stack.getItem() instanceof GunItem && stack.get(DataComponentRegistry.IS_SCOPING)) {
                     event.setNewFovModifier(0.2F);
                 }
             }

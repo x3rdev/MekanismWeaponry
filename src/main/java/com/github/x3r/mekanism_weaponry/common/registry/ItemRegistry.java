@@ -1,7 +1,10 @@
 package com.github.x3r.mekanism_weaponry.common.registry;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
-import com.github.x3r.mekanism_weaponry.common.item.*;
+import com.github.x3r.mekanism_weaponry.common.item.GauntletItem;
+import com.github.x3r.mekanism_weaponry.common.item.PlasmaRifleItem;
+import com.github.x3r.mekanism_weaponry.common.item.RailgunItem;
+import com.github.x3r.mekanism_weaponry.common.item.TeslaMinigunItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -9,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 

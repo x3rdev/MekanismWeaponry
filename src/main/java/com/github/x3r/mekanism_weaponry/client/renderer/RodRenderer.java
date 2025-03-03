@@ -1,7 +1,6 @@
 package com.github.x3r.mekanism_weaponry.client.renderer;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
-import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
 import com.github.x3r.mekanism_weaponry.common.entity.RodEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -11,11 +10,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
-import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.RenderUtil;
 

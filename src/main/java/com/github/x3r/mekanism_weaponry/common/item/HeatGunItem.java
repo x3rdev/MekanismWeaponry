@@ -1,16 +1,11 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
-import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.HeatPerShotChipItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
-import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.IItemDecorator;
@@ -31,10 +26,7 @@ public abstract class HeatGunItem extends GunItem {
 
     @Override
     public boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack) {
-        if(addonStack.getItem().getClass().equals(HeatPerShotChipItem.class)) {
-            return true;
-        }
-        return false;
+        return addonStack.getItem().getClass().equals(HeatPerShotChipItem.class);
     }
 
     @Override
@@ -95,18 +87,14 @@ public abstract class HeatGunItem extends GunItem {
     };
 
     public static IItemDecorator decorator() {
-        return new IItemDecorator() {
-
-            @Override
-            public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
-                HeatGunItem item = (HeatGunItem) stack.getItem();
-                float f = Math.min(1F, item.getHeat(stack)/HeatGunItem.MAX_HEAT);
-                for (int i = 0; i < MAX_BAR_WIDTH * f; i++) {
-                    guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+13, xOffset+2+i+1, yOffset+13+1, COLORS[i]);
-                    guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+14, xOffset+2+i+1, yOffset+14+1, 0xFF000000);
-                }
-                return true;
+        return (guiGraphics, font, stack, xOffset, yOffset) -> {
+            HeatGunItem item = (HeatGunItem) stack.getItem();
+            float f = Math.min(1F, item.getHeat(stack)/HeatGunItem.MAX_HEAT);
+            for (int i = 0; i < MAX_BAR_WIDTH * f; i++) {
+                guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+13, xOffset+2+i+1, yOffset+13+1, COLORS[i]);
+                guiGraphics.fill(RenderType.guiOverlay(), xOffset+2+i, yOffset+14, xOffset+2+i+1, yOffset+14+1, 0xFF000000);
             }
+            return true;
         };
     }
 

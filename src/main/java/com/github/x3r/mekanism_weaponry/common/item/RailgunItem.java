@@ -4,9 +4,11 @@ import com.github.x3r.mekanism_weaponry.MekanismWeaponryConfig;
 import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.client.renderer.RailgunRenderer;
 import com.github.x3r.mekanism_weaponry.common.entity.RodEntity;
-import com.github.x3r.mekanism_weaponry.common.item.addon.*;
+import com.github.x3r.mekanism_weaponry.common.item.addon.EnergyUsageChipItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
+import com.github.x3r.mekanism_weaponry.common.item.addon.ScopeAddonItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
-import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
@@ -16,11 +18,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -107,7 +106,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
         } else {
             triggerAnim(player, GeoItem.getId(stack), "controller", "shot_default");
         }
-        ClientSetup.recoil += 10;
+        ClientSetup.addRecoil(10);
     }
 
     @Override
@@ -139,10 +138,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
         if(addonStack.getItem().getClass().equals(PaintBucketItem.class)) {
             return true;
         }
-        if(addonStack.getItem().getClass().equals(ScopeAddonItem.class)) {
-            return true;
-        }
-        return false;
+        return addonStack.getItem().getClass().equals(ScopeAddonItem.class);
     }
 
     public boolean isSecondMode(ItemStack stack) {

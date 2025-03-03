@@ -3,19 +3,14 @@ package com.github.x3r.mekanism_weaponry.common.entity;
 import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.UUID;
 
 public class PlasmaEntity extends GunProjectileEntity implements GeoEntity {
 

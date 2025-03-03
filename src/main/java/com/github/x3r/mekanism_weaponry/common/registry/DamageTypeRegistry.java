@@ -3,16 +3,12 @@ package com.github.x3r.mekanism_weaponry.common.registry;
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
-
-import javax.annotation.Nullable;
 
 public class DamageTypeRegistry {
 
@@ -38,7 +34,7 @@ public class DamageTypeRegistry {
     }
 
     public DamageSource electricity(Entity entity) {
-        return source(plasma, entity);
+        return source(electricity, entity);
     }
 
     private DamageSource source(ResourceKey<DamageType> key) {

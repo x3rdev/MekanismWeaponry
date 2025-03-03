@@ -2,7 +2,6 @@ package com.github.x3r.mekanism_weaponry.client.renderer;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.item.RailgunItem;
-import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.ScopeAddonItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
