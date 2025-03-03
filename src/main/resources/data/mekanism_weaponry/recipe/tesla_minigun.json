@@ -6,7 +6,7 @@
     "52 "
   ],
   "key": {
-    "1": {"item":"mekanism:supercharged_coil"},
+    "1": {"tag":"c:ingots/copper"},
     "2": {"item":"mekanism:hdpe_sheet"},
     "3": {"item":"mekanism:ultimate_control_circuit"},
     "4": {"item":"mekanism_weaponry:plasma_circuit"},
