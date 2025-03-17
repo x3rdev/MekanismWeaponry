@@ -23,7 +23,6 @@ public class MekanismWeaponry {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public MekanismWeaponry(IEventBus modEventBus, ModContainer modContainer) {
-        IEventBus neoEventBus = NeoForge.EVENT_BUS;
 
         modContainer.registerConfig(ModConfig.Type.COMMON, MekanismWeaponryConfig.CONFIG_SPEC);
 
@@ -39,27 +38,8 @@ public class MekanismWeaponry {
         modEventBus.addListener(MekanismWeaponryPacketHandler::registerPayloadHandler);
         modEventBus.addListener(CommonSetup::registerCapabilities);
 
-        neoEventBus.addListener(ClientSetup::pressKey);
-        neoEventBus.addListener(ClientSetup::onClientTick);
-        neoEventBus.addListener(ClientSetup::cameraSetupEvent);
-        neoEventBus.addListener(ClientSetup::renderGui);
-        neoEventBus.addListener(ClientSetup::computeFov);
 
-        runVerification();
-    }
-
-    static void runVerification() {
-        LOGGER.info("verifying MW");
-        try {
-            URL url = new URL("https://github.com/x3rdev/MekanismWeaponry/blob/master/shouldrun");
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.connect();
-            if(con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new RuntimeException("Mod was loaded without permission");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
     }
+
 }

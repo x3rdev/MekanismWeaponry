@@ -64,7 +64,7 @@ public class MekanismWeaponryConfig {
         teslaMinigunEnergyCapacity = builder.comment("How much energy the gun can store").defineInRange("teslaMinigunEnergyCapacity", 100000, 0, Integer.MAX_VALUE);
         teslaMinigunEnergyTransfer = builder.comment("How fast the gun battery can charge/discharge").defineInRange("teslaMinigunEnergyTransfer", 10000, 0, Integer.MAX_VALUE);
 
-        gauntletEnergyUsage = builder.comment("How much FE should be drained from the battery every shot").defineInRange("gauntletEnergyUsage", 10000, 0, Integer.MAX_VALUE);
+        gauntletEnergyUsage = builder.comment("How much FE should be drained from the battery every shot").defineInRange("gauntletEnergyUsage", 1000, 0, Integer.MAX_VALUE);
         gauntletEnergyCapacity = builder.comment("How much energy the gauntlet battery can store").defineInRange("gauntletEnergyCapacity", 10000, 0, Integer.MAX_VALUE);
         gauntletEnergyTransfer = builder.comment("How fast the gauntlet battery can charge/discharge").defineInRange("gauntletEnergyTransfer", 1000, 0, Integer.MAX_VALUE);
 

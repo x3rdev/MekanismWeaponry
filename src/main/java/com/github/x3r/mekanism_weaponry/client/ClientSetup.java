@@ -27,14 +27,18 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +54,18 @@ public class ClientSetup {
 
     public static final Lazy<KeyMapping> RELOAD_MAPPING = Lazy.of(() -> new KeyMapping("key.mekanism_weaponry.reload", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, InputConstants.KEY_R, "key.categories.mekanism_weaponry"));
 
-    private static final ResourceLocation SCOPE_LOCATION = ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "textures/misc/scope_overlay.png");
+    private static final ResourceLocation SCOPE_LOCATION = ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "textures/misc/scope_overlay_0.png");
+
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent event) {
+        IEventBus neoEventBus = NeoForge.EVENT_BUS;
+
+        neoEventBus.addListener(ClientSetup::pressKey);
+        neoEventBus.addListener(ClientSetup::onClientTick);
+        neoEventBus.addListener(ClientSetup::cameraSetupEvent);
+        neoEventBus.addListener(ClientSetup::renderGui);
+        neoEventBus.addListener(ClientSetup::computeFov);
+    }
 
     // Neo Bus event, registered in mod class
     public static void onClientTick(ClientTickEvent.Post event) {
@@ -180,7 +195,7 @@ public class ClientSetup {
                 ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
                 scopeScale = Mth.lerp(0.5F * event.getPartialTick().getGameTimeDeltaTicks(), scopeScale, 1F);
                 if(stack.getItem() instanceof GunItem && stack.get(DataComponentRegistry.IS_SCOPING)) {
-                    renderScopeOverlay(event.getGuiGraphics(), scopeScale);
+                    renderScopeOverlay(event.getGuiGraphics(), getScopeLocation(stack), scopeScale);
                 } else {
                     scopeScale = 0.5F;
                     PostChain postEffect = Minecraft.getInstance().gameRenderer.postEffect;
@@ -192,7 +207,32 @@ public class ClientSetup {
         }
     }
 
-    private static void renderScopeOverlay(GuiGraphics guiGraphics, float scopeScale) {
+    private static ResourceLocation getScopeLocation(ItemStack stack) {
+        GunItem gun = ((GunItem) stack.getItem());
+        ItemStack paintItem = gun.getAddon(stack, 1);
+        int index = 0;
+        if(paintItem.isEmpty()) {
+            index = 3;
+        }
+        if(paintItem.is(ItemRegistry.ALIEN_PAINT_BUCKET)) {
+            index = 2;
+        }
+        if(paintItem.is(ItemRegistry.COTTON_CANDY_PAINT_BUCKET)) {
+            index = 0;
+        }
+        if(paintItem.is(ItemRegistry.EVA_PAINT_BUCKET)) {
+            index = 0;
+        }
+        if(paintItem.is(ItemRegistry.BUMBLEBEE_PAINT_BUCKET)) {
+            index = 0;
+        }
+        if(paintItem.is(ItemRegistry.CRIMSON_PAINT_BUCKET)) {
+            index = 1;
+        }
+        return ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, String.format("textures/misc/scope_overlay_%d.png", index));
+    }
+
+    private static void renderScopeOverlay(GuiGraphics guiGraphics, ResourceLocation scopeResource, float scopeScale) {
         float f = Math.min(guiGraphics.guiWidth(), guiGraphics.guiHeight());
         float f1 = Math.min(guiGraphics.guiWidth() / f, guiGraphics.guiHeight() / f) * scopeScale;
         int i = Mth.floor(f * f1);
@@ -200,7 +240,7 @@ public class ClientSetup {
         int k = (guiGraphics.guiWidth() - i) / 2;
         int l = (guiGraphics.guiHeight() - j) / 2;
         RenderSystem.enableBlend();
-        guiGraphics.blit(SCOPE_LOCATION, k, l, -90, 0.0F, 0.0F, i, j, i, j);
+        guiGraphics.blit(scopeResource, k, l, -90, 0.0F, 0.0F, i, j, i, j);
         RenderSystem.disableBlend();
         Minecraft.getInstance().gameRenderer.loadEffect(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, ("shaders/post/scope_blur.json")));
     }

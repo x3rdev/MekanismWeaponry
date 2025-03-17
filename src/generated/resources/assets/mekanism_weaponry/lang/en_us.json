@@ -46,6 +46,7 @@
   "mekanism_weaponry.tooltip.gun_energy": "Energy: ",
   "mekanism_weaponry.tooltip.gun_energy_usage": "Energy Usage",
   "mekanism_weaponry.tooltip.gun_heat_per_shot": "Heat Per Shot",
+  "mekanism_weaponry.tooltip.gun_loaded_ammo": "Loaded Ammo: ",
   "mekanism_weaponry.tooltip.gun_no_addons": "No Addons Installed",
   "mekanism_weaponry.tooltip.gun_reload_time": "Reload Time",
   "mekanism_weaponry.tooltip.gun_stats": "Gun Stats",

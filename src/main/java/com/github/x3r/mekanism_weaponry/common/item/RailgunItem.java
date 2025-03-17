@@ -3,6 +3,7 @@ package com.github.x3r.mekanism_weaponry.common.item;
 import com.github.x3r.mekanism_weaponry.MekanismWeaponryConfig;
 import com.github.x3r.mekanism_weaponry.client.ClientSetup;
 import com.github.x3r.mekanism_weaponry.client.renderer.RailgunRenderer;
+import com.github.x3r.mekanism_weaponry.common.datagen.MWItemTagsProvider;
 import com.github.x3r.mekanism_weaponry.common.entity.RodEntity;
 import com.github.x3r.mekanism_weaponry.common.item.addon.EnergyUsageChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
@@ -10,10 +11,10 @@ import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.ScopeAddonItem;
 import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
-import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -22,6 +23,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -33,6 +35,7 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -59,7 +62,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
     @Override
     public Predicate<ItemStack> isValidAmmo(ItemStack gunStack) {
-        return stack -> stack.is(ItemRegistry.STEEL_ROD.get());
+        return stack -> stack.is(MWItemTagsProvider.STEEL_ROD);
     }
 
     @Override
@@ -83,8 +86,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
             getEnergyStorage(stack).extractEnergy(isSecondMode(stack) ? getEnergyUsage(stack)*2 : getEnergyUsage(stack), false);
 
             if(isSecondMode(stack)) {
-                player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 0));
-                player.setRemainingFireTicks(player.getRemainingFireTicks() + 40);
+                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 4));
             }
 
         } else {
