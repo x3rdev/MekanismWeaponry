@@ -2,11 +2,14 @@ package com.github.x3r.mekanism_weaponry.common.item;
 
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.IItemDecorator;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class AmmoGunItem extends GunItem {
@@ -89,6 +92,16 @@ public abstract class AmmoGunItem extends GunItem {
 
             return true;
         };
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(
+                Component.translatable("mekanism_weaponry.tooltip.gun_loaded_ammo").withColor(0xc27ba0).append(
+                        Component.literal(String.format("%d/%d Steel Rods", getLoadedAmmo(stack).getCount(), maxAmmo)).withColor(0xFFFFFF)
+                )
+        );
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 
     public record DataComponentLoadedAmmo(ItemStack stack) {
