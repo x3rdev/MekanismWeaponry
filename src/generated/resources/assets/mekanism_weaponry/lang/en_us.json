@@ -26,6 +26,8 @@
   "item.mekanism_weaponry.steel_rod": "Steel Rod",
   "item.mekanism_weaponry.tesla_minigun": "Tesla Minigun",
   "item_group.mekanism_weaponry": "Mekanism Weaponry",
+  "key.categories.mekanism_weaponry": "Mekanism Weaponry",
+  "key.mekanism_weaponry.reload": "Reload",
   "mekanism_weaponry.subtitle.gun_out_of_ammo": "Gun out of ammo",
   "mekanism_weaponry.subtitle.gun_out_of_energy": "Gun out of energy",
   "mekanism_weaponry.subtitle.minigun_shoot": "Minigun shot",

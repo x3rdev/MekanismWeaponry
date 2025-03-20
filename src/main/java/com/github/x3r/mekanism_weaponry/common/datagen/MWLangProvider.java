@@ -53,6 +53,9 @@ public class MWLangProvider extends LanguageProvider {
         add("mekanism_weaponry.tooltip.energy_usage_chip", "Reduces the energy cost of the weapon");
         add("mekanism_weaponry.tooltip.fire_rate_chip", "Reduces the time between shot of the weapon");
         add("mekanism_weaponry.tooltip.heat_per_shot_chip", "Reduces the heat accumulated when the weapon is shot");
+
+        add("key.categories.mekanism_weaponry", "Mekanism Weaponry");
+        add("key.mekanism_weaponry.reload", "Reload");
     }
 
     private String idToName(ResourceLocation location) {
