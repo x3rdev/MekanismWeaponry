@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -90,8 +91,8 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
     }
 
     private void drawElectricity(Vec3 v0, Vec3 v1, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-
-        VertexConsumer consumer = bufferSource.getBuffer(MWRenderTypes.electricity(LOCATION));
+//        VertexConsumer consumer = bufferSource.getBuffer(MWRenderTypes.electricity(LOCATION));
+        VertexConsumer consumer = bufferSource.getBuffer(RenderType.eyes(LOCATION));
         poseStack.pushPose();
         Vec3 corner0 = new Vec3(v0.x, v0.y, v0.z);
         Vec3 corner1 = new Vec3(v1.x, v1.y, v1.z);

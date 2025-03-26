@@ -54,11 +54,6 @@ public abstract class GunRenderer<T extends GunItem & GeoAnimatable> extends Dyn
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
-    @Override
-    protected IntIntPair computeTextureSize(ResourceLocation texture) {
-        return TEXTURE_DIMENSIONS_CACHE.computeIfAbsent(getTextureLocation(this.animatable), RenderUtil::getTextureDimensions);
-    }
-
     protected int getTextureIndex() {
         if(animatable.hasAddon(currentItemStack, PaintBucketItem.class)) {
             return ((PaintBucketItem) animatable.getAddon(currentItemStack, 1).getItem()).getIndex();
