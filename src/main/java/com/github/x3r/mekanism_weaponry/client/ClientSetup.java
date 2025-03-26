@@ -8,16 +8,21 @@ import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.HeatGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
-import com.github.x3r.mekanism_weaponry.common.packet.DeactivateGunPayload;
-import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
-import com.github.x3r.mekanism_weaponry.common.registry.*;
+import com.github.x3r.mekanism_weaponry.common.packet.DeactivateGunPacket;
+import com.github.x3r.mekanism_weaponry.common.packet.MekanismWeaponryPacketHandler;
+import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunServerPacket;
+import com.github.x3r.mekanism_weaponry.common.registry.EntityRegistry;
+import com.github.x3r.mekanism_weaponry.common.registry.ItemRegistry;
+import com.github.x3r.mekanism_weaponry.common.registry.MenuTypeRegistry;
+import com.github.x3r.mekanism_weaponry.common.registry.ParticleRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import cpw.mods.util.Lazy;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.PostChain;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -25,62 +30,59 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import net.neoforged.neoforge.client.settings.KeyConflictContext;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.Lazy;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Objects;
 
-@EventBusSubscriber(modid = MekanismWeaponry.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = MekanismWeaponry.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
     @Nullable
     private static ShaderInstance rendertypeElectricityShader;
 
-    public static final Lazy<KeyMapping> RELOAD_MAPPING = Lazy.of(() -> new KeyMapping("key.mekanism_weaponry.reload", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, InputConstants.KEY_R, "key.categories.mekanism_weaponry"));
-
-    private static final ResourceLocation SCOPE_LOCATION = ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "textures/misc/scope_overlay_0.png");
+    public static final KeyMapping RELOAD_MAPPING = new KeyMapping("key.mekanism_weaponry.reload", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, InputConstants.KEY_R, "key.categories.mekanism_weaponry");
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        IEventBus neoEventBus = NeoForge.EVENT_BUS;
+        IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
-        neoEventBus.addListener(ClientSetup::pressKey);
-        neoEventBus.addListener(ClientSetup::onClientTick);
-        neoEventBus.addListener(ClientSetup::cameraSetupEvent);
-        neoEventBus.addListener(ClientSetup::renderGui);
-        neoEventBus.addListener(ClientSetup::computeFov);
+        forgeEventBus.addListener(ClientSetup::pressKey);
+        forgeEventBus.addListener(ClientSetup::onClientTick);
+        forgeEventBus.addListener(ClientSetup::cameraSetupEvent);
+        forgeEventBus.addListener(ClientSetup::renderGui);
+        forgeEventBus.addListener(ClientSetup::computeFov);
+
+        event.enqueueWork(() -> {
+            MenuScreens.register(MenuTypeRegistry.WEAPON_WORKBENCH.get(), WeaponWorkbenchScreen::new);
+        });
     }
 
     // Neo Bus event, registered in mod class
-    public static void onClientTick(ClientTickEvent.Post event) {
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = Minecraft.getInstance().player;
         if(player == null) return;
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        while (RELOAD_MAPPING.get().consumeClick()) {
+        while (RELOAD_MAPPING.consumeClick()) {
             if(stack.getItem() instanceof GunItem) {
-                PacketDistributor.sendToServer(new ReloadGunPayload());
+                MekanismWeaponryPacketHandler.sendToServer(new ReloadGunServerPacket());
             }
         }
         if(!mc.options.keyAttack.isDown()) {
             if(stack.getItem() instanceof GunItem item && item.isShooting(stack)) {
-                PacketDistributor.sendToServer(new DeactivateGunPayload());
+                MekanismWeaponryPacketHandler.sendToServer(new DeactivateGunPacket());
             }
         }
 
@@ -103,27 +105,6 @@ public class ClientSetup {
         event.registerEntityRenderer(EntityRegistry.ROD.get(), RodRenderer::new);
     }
 
-
-    @SubscribeEvent
-    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerItem(new IClientItemExtensions() {
-            @Override
-            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
-                return HumanoidModel.ArmPose.BOW_AND_ARROW;
-            }
-        },
-                ItemRegistry.PLASMA_RIFLE.get(),
-                ItemRegistry.RAILGUN.get()
-        );
-        event.registerItem(new IClientItemExtensions() {
-            @Override
-            public HumanoidModel.@Nullable ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
-                return ArmPoses.MINIGUN_POSE.getValue();
-            }
-        },
-                ItemRegistry.TESLA_MINIGUN.get());
-    }
-
     // Neo Bus event, registered in mod class
     public static void pressKey(InputEvent.InteractionKeyMappingTriggered event) {
         ItemStack stack = Minecraft.getInstance().player.getItemInHand(InteractionHand.MAIN_HAND);
@@ -135,7 +116,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event) {
-        event.register(RELOAD_MAPPING.get());
+        event.register(RELOAD_MAPPING);
     }
 
     private static float recoilO;
@@ -160,11 +141,6 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
-    public static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(MenuTypeRegistry.WEAPON_WORKBENCH.get(), WeaponWorkbenchScreen::new);
-    }
-
-    @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ParticleRegistry.ROD_TRAIL.get(), ParticleRegistry.RodTrailParticleProvider::new);
     }
@@ -173,7 +149,7 @@ public class ClientSetup {
     public static void registerRenderTypes(RegisterShadersEvent event) {
         ResourceProvider provider = event.getResourceProvider();
         try {
-            event.registerShader(new ShaderInstance(provider, ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "electricity"), DefaultVertexFormat.NEW_ENTITY), shaderInstance -> {
+            event.registerShader(new ShaderInstance(provider, new ResourceLocation(MekanismWeaponry.MOD_ID, "electricity"), DefaultVertexFormat.NEW_ENTITY), shaderInstance -> {
                 rendertypeElectricityShader = shaderInstance;
             });
         } catch (IOException e) {
@@ -193,8 +169,8 @@ public class ClientSetup {
             Player player = minecraft.player;
             if(player != null) {
                 ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-                scopeScale = Mth.lerp(0.5F * event.getPartialTick().getGameTimeDeltaTicks(), scopeScale, 1F);
-                if(stack.getItem() instanceof GunItem && stack.get(DataComponentRegistry.IS_SCOPING)) {
+                scopeScale = Mth.lerp(0.5F * Minecraft.getInstance().getDeltaFrameTime(), scopeScale, 1F);
+                if(stack.getItem() instanceof GunItem gunItem && gunItem.isScoping(stack)) {
                     renderScopeOverlay(event.getGuiGraphics(), getScopeLocation(stack), scopeScale);
                 } else {
                     scopeScale = 0.5F;
@@ -214,22 +190,22 @@ public class ClientSetup {
         if(paintItem.isEmpty()) {
             index = 3;
         }
-        if(paintItem.is(ItemRegistry.ALIEN_PAINT_BUCKET)) {
+        if(paintItem.is(ItemRegistry.ALIEN_PAINT_BUCKET.get())) {
             index = 2;
         }
-        if(paintItem.is(ItemRegistry.COTTON_CANDY_PAINT_BUCKET)) {
+        if(paintItem.is(ItemRegistry.COTTON_CANDY_PAINT_BUCKET.get())) {
             index = 0;
         }
-        if(paintItem.is(ItemRegistry.EVA_PAINT_BUCKET)) {
+        if(paintItem.is(ItemRegistry.EVA_PAINT_BUCKET.get())) {
             index = 0;
         }
-        if(paintItem.is(ItemRegistry.BUMBLEBEE_PAINT_BUCKET)) {
+        if(paintItem.is(ItemRegistry.BUMBLEBEE_PAINT_BUCKET.get())) {
             index = 0;
         }
-        if(paintItem.is(ItemRegistry.CRIMSON_PAINT_BUCKET)) {
+        if(paintItem.is(ItemRegistry.CRIMSON_PAINT_BUCKET.get())) {
             index = 1;
         }
-        return ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, String.format("textures/misc/scope_overlay_%d.png", index));
+        return new ResourceLocation(MekanismWeaponry.MOD_ID, String.format("textures/misc/scope_overlay_%d.png", index));
     }
 
     private static void renderScopeOverlay(GuiGraphics guiGraphics, ResourceLocation scopeResource, float scopeScale) {
@@ -242,7 +218,7 @@ public class ClientSetup {
         RenderSystem.enableBlend();
         guiGraphics.blit(scopeResource, k, l, -90, 0.0F, 0.0F, i, j, i, j);
         RenderSystem.disableBlend();
-        Minecraft.getInstance().gameRenderer.loadEffect(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, ("shaders/post/scope_blur.json")));
+        Minecraft.getInstance().gameRenderer.loadEffect(new ResourceLocation(MekanismWeaponry.MOD_ID, ("shaders/post/scope_blur.json")));
     }
 
     public static void computeFov(ComputeFovModifierEvent event) {
@@ -251,7 +227,7 @@ public class ClientSetup {
             Player player = minecraft.player;
             if(player != null) {
                 ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-                if(stack.getItem() instanceof GunItem && stack.get(DataComponentRegistry.IS_SCOPING)) {
+                if(stack.getItem() instanceof GunItem gunItem && gunItem.isScoping(stack)) {
                     event.setNewFovModifier(0.2F);
                 }
             }

@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class WeaponWorkbenchScreen extends AbstractContainerScreen<WeaponWorkbenchMenu> {
 
-    private static final ResourceLocation MENU_RESOURCE = ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "textures/gui/container/weapon_workbench.png");
+    private static final ResourceLocation MENU_RESOURCE = new ResourceLocation(MekanismWeaponry.MOD_ID, "textures/gui/container/weapon_workbench.png");
 
 
     public WeaponWorkbenchScreen(WeaponWorkbenchMenu menu, Inventory playerInventory, Component title) {

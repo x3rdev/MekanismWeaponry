@@ -7,6 +7,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -22,7 +24,7 @@ import java.util.Set;
 
 public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
 
-    private static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "textures/entity/electricity.png");
+    private static final ResourceLocation LOCATION = new ResourceLocation(MekanismWeaponry.MOD_ID, "textures/entity/electricity.png");
 
     private final RandomSource source;
 
@@ -30,13 +32,13 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
     private long lastNodeGenTick = 0;
 
     public TeslaMinigunRenderer() {
-        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "tesla_minigun")));
+        super(new DefaultedItemGeoModel<>(new ResourceLocation(MekanismWeaponry.MOD_ID, "tesla_minigun")));
         source = Minecraft.getInstance().player.getRandom();
     }
 
     @Override
     public ResourceLocation getTextureLocation(TeslaMinigunItem animatable) {
-        return ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, String.format("textures/item/tesla_minigun/tesla_minigun_%d.png", getTextureIndex()));
+        return new ResourceLocation(MekanismWeaponry.MOD_ID, String.format("textures/item/tesla_minigun/tesla_minigun_%d.png", getTextureIndex()));
 
     }
 
@@ -90,8 +92,8 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
     }
 
     private void drawElectricity(Vec3 v0, Vec3 v1, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-
-        VertexConsumer consumer = bufferSource.getBuffer(MWRenderTypes.electricity(LOCATION));
+//        VertexConsumer consumer = bufferSource.getBuffer(MWRenderTypes.electricity(LOCATION));
+        VertexConsumer consumer = bufferSource.getBuffer(RenderType.eyes(LOCATION));
         poseStack.pushPose();
         Vec3 corner0 = new Vec3(v0.x, v0.y, v0.z);
         Vec3 corner1 = new Vec3(v1.x, v1.y, v1.z);
@@ -114,12 +116,13 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
     }
 
     private void vertex(PoseStack poseStack, VertexConsumer consumer, Vec3 vec, int normalX, int normalY, int normalZ, int packedLight) {
-        consumer.addVertex(poseStack.last(), vec.toVector3f())
-                .setColor(255, 255, 255, 255)
-                .setUv1(0, 0)
-                .setUv(16, 16)
-                .setLight(packedLight)
-                .setNormal(poseStack.last(), normalX, normalY, normalZ);
+        consumer.vertex(poseStack.last().pose(), (float) vec.x, (float) vec.y, (float) vec.z)
+                .color(255, 255, 255, 255)
+                .uv(16, 16)
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(packedLight)
+                .normal(poseStack.last().normal(), normalX, normalY, normalZ)
+                .endVertex();
     }
 
     public static class ElectricityNode {

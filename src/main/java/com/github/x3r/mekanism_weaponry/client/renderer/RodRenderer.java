@@ -14,18 +14,18 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.util.RenderUtil;
+import software.bernie.geckolib.util.RenderUtils;
 
 public class RodRenderer extends GeoEntityRenderer<RodEntity> {
     public RodRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new DefaultedEntityGeoModel<>(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "rod")));
+        super(renderManager, new DefaultedEntityGeoModel<>(new ResourceLocation(MekanismWeaponry.MOD_ID, "rod")));
     }
 
     @Override
-    public void preRender(PoseStack poseStack, RodEntity animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        RenderUtil.faceRotation(poseStack, animatable, partialTick);
+    public void preRender(PoseStack poseStack, RodEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        RenderUtils.faceRotation(poseStack, animatable, partialTick);
         poseStack.mulPose(Axis.YP.rotationDegrees(90));
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override

@@ -1,13 +1,14 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
-import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.IItemDecorator;
+import net.minecraftforge.client.IItemDecorator;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -17,8 +18,7 @@ public abstract class AmmoGunItem extends GunItem {
     protected final int maxAmmo;
 
     protected AmmoGunItem(Properties pProperties, int cooldown, int energyUsage, int reloadTime, int maxAmmo) {
-        super(pProperties.component(DataComponentRegistry.LOADED_AMMO.get(),
-                new DataComponentLoadedAmmo()), cooldown, energyUsage, reloadTime);
+        super(pProperties, cooldown, energyUsage, reloadTime);
         this.maxAmmo = maxAmmo;
     }
 
@@ -33,12 +33,16 @@ public abstract class AmmoGunItem extends GunItem {
                 !getFirstAmmoStack(stack, serverPlayer).isEmpty();
     }
 
-    public ItemStack getLoadedAmmo(ItemStack gunStack) {
-        return gunStack.get(DataComponentRegistry.LOADED_AMMO).stack();
+    public ItemStack getLoadedAmmo(ItemStack stack) {
+        if(stack.getOrCreateTag().contains(ItemTags.LOADED_AMMO)) {
+            return ItemStack.of(stack.getOrCreateTag().getCompound(ItemTags.LOADED_AMMO));
+        }
+        stack.getOrCreateTag().put(ItemTags.LOADED_AMMO, ItemStack.EMPTY.serializeNBT());
+        return getLoadedAmmo(stack);
     }
 
-    public void setLoadedAmmo(ItemStack gunStack, ItemStack ammoStack) {
-        gunStack.set(DataComponentRegistry.LOADED_AMMO, new DataComponentLoadedAmmo(ammoStack));
+    public void setLoadedAmmo(ItemStack stack, ItemStack ammoStack) {
+        stack.getOrCreateTag().put(ItemTags.LOADED_AMMO, ammoStack.serializeNBT());
     }
 
     public void loadAmmo(ItemStack gunStack, ServerPlayer player) {
@@ -95,18 +99,12 @@ public abstract class AmmoGunItem extends GunItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(
-                Component.translatable("mekanism_weaponry.tooltip.gun_loaded_ammo").withColor(0xc27ba0).append(
-                        Component.literal(String.format("%d/%d Steel Rods", getLoadedAmmo(stack).getCount(), maxAmmo)).withColor(0xFFFFFF)
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(
+                Component.translatable("mekanism_weaponry.tooltip.gun_loaded_ammo").withStyle(Style.EMPTY.withColor(0xc27ba0)).append(
+                        Component.literal(String.format("%d/%d Steel Rods", getLoadedAmmo(pStack).getCount(), maxAmmo)).withStyle(Style.EMPTY.withColor(0xFFFFFF))
                 )
         );
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-    }
-
-    public record DataComponentLoadedAmmo(ItemStack stack) {
-        public DataComponentLoadedAmmo() {
-            this(ItemStack.EMPTY);
-        }
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 }

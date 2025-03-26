@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class MWItemTagsProvider extends ItemTagsProvider {
 
-    public static final TagKey<Item> STEEL_ROD = TagKey.create(BuiltInRegistries.ITEM.key(), ResourceLocation.fromNamespaceAndPath("c", "rods/steel"));
+    public static final TagKey<Item> STEEL_ROD = TagKey.create(BuiltInRegistries.ITEM.key(), new ResourceLocation("c", "rods/steel"));
 
     public MWItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTags) {
         super(output, lookupProvider, blockTags);

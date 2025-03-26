@@ -9,33 +9,41 @@ import com.github.x3r.mekanism_weaponry.common.item.addon.EnergyUsageChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.ScopeAddonItem;
-import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
-import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
+import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunClientPacket;
+import com.github.x3r.mekanism_weaponry.common.packet.MekanismWeaponryPacketHandler;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.network.chat.Component;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.EnergyStorage;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.animatable.client.GeoRenderProvider;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.Animation;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -52,12 +60,20 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public RailgunItem(Properties pProperties) {
-        super(pProperties.component(DataComponentRegistry.RAILGUN_SECONDARY_MODE, false),
+        super(pProperties,
                 MekanismWeaponryConfig.CONFIG.getRailgunCooldown(),
                 MekanismWeaponryConfig.CONFIG.getRailgunEnergyUsage(),
                 MekanismWeaponryConfig.CONFIG.getRailgunReloadTime(),
                 MekanismWeaponryConfig.CONFIG.getRailgunMaxAmmo());
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
+    }
+
+    @Override
+    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        return new ItemEnergyCapability(stack, new EnergyStorage(
+                MekanismWeaponryConfig.CONFIG.getRailgunEnergyCapacity(),
+                MekanismWeaponryConfig.CONFIG.getTeslaMinigunEnergyTransfer()
+        ));
     }
 
     @Override
@@ -73,7 +89,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
                 .add(lookAngle.normalize().scale(0.1));
         if(isReady(stack, player, level)) {
             setLastShotTick(stack, level.getGameTime());
-            PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
+            MekanismWeaponryPacketHandler.sendToClient(new ActivateGunClientPacket(), player);
 
             float dmg = isSecondMode(stack) ? 24F : 16F;
             RodEntity rod = new RodEntity(player, pos, dmg, isSecondMode(stack));
@@ -96,7 +112,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
             if(!hasAmmo(stack)) {
                 tryStartReload(stack, player);
             }
-            stack.set(DataComponentRegistry.IS_SHOOTING, false);
+            setShooting(stack, false);
         }
     }
 
@@ -104,7 +120,8 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     public void clientShoot(ItemStack stack, Player player) {
         if(isSecondMode(stack)) {
             triggerAnim(player, GeoItem.getId(stack), "controller", "shot_second");
-            player.push(player.getLookAngle().scale(-0.75F));
+            Vec3 v = player.getLookAngle().scale(-0.75F);
+            player.push(v.x, v.y, v.z);
         } else {
             triggerAnim(player, GeoItem.getId(stack), "controller", "shot_default");
         }
@@ -116,7 +133,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
         player.getCooldowns().addCooldown(stack.getItem(), getReloadTime(stack));
         player.serverLevel().playSound(null,
                 player.getX(), player.getY(), player.getZ(),
-                SoundRegistry.RAILGUN_RELOAD, SoundSource.PLAYERS, 1.0F, 1.0F);
+                SoundRegistry.RAILGUN_RELOAD.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
         Scheduler.schedule(() -> {
             if(player.getInventory().contains(stack)) {
                 loadAmmo(stack, player);
@@ -144,20 +161,28 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     }
 
     public boolean isSecondMode(ItemStack stack) {
-        return stack.get(DataComponentRegistry.RAILGUN_SECONDARY_MODE.get());
+        if(stack.getOrCreateTag().contains(ItemTags.RAILGUN_SECONDARY_MODE)) {
+            return stack.getOrCreateTag().getBoolean(ItemTags.RAILGUN_SECONDARY_MODE);
+        }
+        setSecondMode(stack, false);
+        return isSecondMode(stack);
+    }
+
+    public void setSecondMode(ItemStack stack, boolean secondMode) {
+        stack.getOrCreateTag().putBoolean(ItemTags.RAILGUN_SECONDARY_MODE, secondMode);
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
         if(player.isCrouching()) {
-            boolean secondMode = stack.get(DataComponentRegistry.RAILGUN_SECONDARY_MODE.get());
+            boolean secondMode = isSecondMode(stack);
             if(!secondMode) {
                 triggerAnim(player, GeoItem.getId(stack), "controller", "switch_to_second");
-                stack.set(DataComponentRegistry.RAILGUN_SECONDARY_MODE.get(), true);
+                setSecondMode(stack, true);
             } else {
                 triggerAnim(player, GeoItem.getId(stack), "controller", "switch_to_default");
-                stack.set(DataComponentRegistry.RAILGUN_SECONDARY_MODE.get(), false);
+                setSecondMode(stack, false);
             }
             player.getCooldowns().addCooldown(stack.getItem(), 20);
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
@@ -166,23 +191,28 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     }
 
     @Override
-    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
-        consumer.accept(new GeoRenderProvider() {
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(new IClientItemExtensions() {
             private RailgunRenderer renderer;
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null)
                     this.renderer = new RailgunRenderer();
 
                 return this.renderer;
+            }
+
+            @Override
+            public HumanoidModel.@NotNull ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
+                return HumanoidModel.ArmPose.BOW_AND_ARROW;
             }
         });
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 1, state -> {
+        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 1, state -> {
             if(!state.getController().isPlayingTriggeredAnimation()) {
                 if (!isSecondMode(state.getData(DataTickets.ITEMSTACK))) {
                     state.setAnimation(DEFAULT_MODE);

@@ -2,77 +2,87 @@ package com.github.x3r.mekanism_weaponry.common.item;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponryConfig;
 import com.github.x3r.mekanism_weaponry.client.renderer.GauntletRenderer;
-import mekanism.common.tags.MekanismTags;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.ItemAbilities;
-import net.neoforged.neoforge.common.ItemAbility;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.registries.holdersets.AnyHolderSet;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.animatable.client.GeoRenderProvider;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class GauntletItem extends Item implements GeoItem {
-
-    public static final Set<ItemAbility> ALWAYS_SUPPORTED_ACTIONS = Set.of(ItemAbilities.AXE_DIG, ItemAbilities.HOE_DIG, ItemAbilities.SHOVEL_DIG, ItemAbilities.PICKAXE_DIG,
-            ItemAbilities.SWORD_DIG, ItemAbilities.SWORD_SWEEP);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final int energyUsage;
 
     public GauntletItem(Properties properties) {
         super(properties.setNoRepair().stacksTo(1)
-                .component(DataComponents.TOOL, new Tool(List.of(
-                        Tool.Rule.deniesDrops(MekanismTags.Blocks.INCORRECT_FOR_MEKA_TOOL),
-                        new Tool.Rule(new AnyHolderSet<>(BuiltInRegistries.BLOCK.asLookup()), Optional.empty(), Optional.of(true))
-                ), -0.5F, 0))
-                .attributes(createAttributes())
+                .requiredFeatures()
                 .rarity(Rarity.UNCOMMON)
         );
         energyUsage = MekanismWeaponryConfig.CONFIG.getGauntletEnergyUsage();
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
-    public static ItemAttributeModifiers createAttributes() {
-        return ItemAttributeModifiers.builder()
-                .add(
-                        Attributes.ATTACK_DAMAGE,
-                        new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 6, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.MAINHAND
-                )
-                .add(
-                        Attributes.ATTACK_SPEED,
-                        new AttributeModifier(BASE_ATTACK_SPEED_ID, 1, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.MAINHAND
-                )
-                .build();
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        if(slot.equals(EquipmentSlot.MAINHAND)) {
+            if(hasSufficientEnergy(stack)) {
+                ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+                builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", 5, AttributeModifier.Operation.ADDITION));
+                builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", -3.0, AttributeModifier.Operation.ADDITION));
+                return builder.build();
+            } else {
+                ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+                builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", -3.6, AttributeModifier.Operation.ADDITION));
+                return builder.build();
+            }
+        }
+        return ImmutableMultimap.of();
+    }
+
+    @Override
+    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+        return ToolActions.DEFAULT_SWORD_ACTIONS.contains(toolAction);
+    }
+
+    @Override
+    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        return new ItemEnergyCapability(stack, new EnergyStorage(
+                MekanismWeaponryConfig.CONFIG.getGauntletEnergyCapacity(),
+                MekanismWeaponryConfig.CONFIG.getGauntletEnergyTransfer()
+        ));
     }
 
     @Override
@@ -82,11 +92,11 @@ public class GauntletItem extends Item implements GeoItem {
                 getEnergyStorage(stack).extractEnergy(energyUsage, false);
                 target.knockback(0.55, -attacker.getLookAngle().x, -attacker.getLookAngle().z);
                 target.addDeltaMovement(new Vec3(0, 0.35, 0));
-                target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.PISTON_CONTRACT, SoundSource.PLAYERS);
+                target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.PISTON_CONTRACT, SoundSource.PLAYERS, 1, 1);
                 ((ServerLevel) target.level()).sendParticles(ParticleTypes.SMOKE, target.getX(), target.getY(), target.getZ(), 1, 0, 0, 0, 0);
             }
         } else {
-            target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.CRAFTER_FAIL, SoundSource.PLAYERS);
+            target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1, 1);
         }
         return super.hurtEnemy(stack, target, attacker);
     }
@@ -96,27 +106,28 @@ public class GauntletItem extends Item implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(
-                Component.translatable("mekanism_weaponry.tooltip.gun_energy").withColor(0x2fb2d6).append(
-                        Component.literal(String.format("%d/%d FE", getEnergyStorage(stack).getEnergyStored(), getEnergyStorage(stack).getMaxEnergyStored())).withColor(0xFFFFFF)
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(
+                Component.translatable("mekanism_weaponry.tooltip.gun_energy").withStyle(Style.EMPTY.withColor(0x2fb2d6)).append(
+                        Component.literal(String.format("%d/%d FE", getEnergyStorage(pStack).getEnergyStored(), getEnergyStorage(pStack).getMaxEnergyStored())).withStyle(Style.EMPTY.withColor(0xFFFFFF))
                 )
         );
     }
 
     public IEnergyStorage getEnergyStorage(ItemStack stack) {
-        return stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        return stack.getCapability(ForgeCapabilities.ENERGY).orElseThrow(() -> new RuntimeException("Missing energy capability"));
     }
 
     @Override
-    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
-        consumer.accept(new GeoRenderProvider() {
-            private GauntletRenderer renderer;
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(new IClientItemExtensions() {
+            private GauntletRenderer renderer = null;
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
-                if (this.renderer == null)
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                if (this.renderer == null) {
                     this.renderer = new GauntletRenderer();
+                }
 
                 return this.renderer;
             }

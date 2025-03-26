@@ -3,10 +3,13 @@ package com.github.x3r.mekanism_weaponry.common.item;
 import com.github.x3r.mekanism_weaponry.common.item.addon.EnergyUsageChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.GunAddonItem;
-import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunPayload;
-import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
+import com.github.x3r.mekanism_weaponry.common.packet.MekanismWeaponryPacketHandler;
+import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunClientPacket;
+import com.github.x3r.mekanism_weaponry.common.packet.ReloadGunServerPacket;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -19,9 +22,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,24 +36,18 @@ public abstract class GunItem extends Item {
     private final int reloadTime;
 
     protected GunItem(Properties pProperties, int cooldown, int energyUsage, int reloadTime) {
-        super(pProperties.stacksTo(1).setNoRepair()
-                .component(DataComponentRegistry.LAST_SHOT_TICK.get(), 0L)
-                .component(DataComponentRegistry.RELOADING, false)
-                .component(DataComponentRegistry.ADDONS.get(), new DataComponentAddons())
-                .component(DataComponentRegistry.IS_SHOOTING, false)
-                .component(DataComponentRegistry.IS_SCOPING, false)
-                .rarity(Rarity.UNCOMMON));
-
+        super(pProperties.stacksTo(1).setNoRepair().rarity(Rarity.UNCOMMON));
         this.cooldown = cooldown;
         this.energyUsage = energyUsage;
         this.reloadTime = reloadTime;
+
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
         if (!getAddon(stack, 3).isEmpty()) {
-            stack.set(DataComponentRegistry.IS_SCOPING, !stack.get(DataComponentRegistry.IS_SCOPING));
+            setScoping(stack, !isScoping(stack));
             player.getCooldowns().addCooldown(stack.getItem(), 5);
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
         }
@@ -68,7 +65,7 @@ public abstract class GunItem extends Item {
         if(stack.getItem() instanceof GunItem item) {
             if(canReload(stack, player)) {
                 item.serverReload(stack, player);
-                PacketDistributor.sendToPlayer(player, new ReloadGunPayload());
+                MekanismWeaponryPacketHandler.sendToClient(new ReloadGunClientPacket(), player);
             }
             if(!player.getCooldowns().isOnCooldown(stack.getItem())) {
                 player.serverLevel().playSound(null, player.getEyePosition().x, player.getEyePosition().y, player.getEyePosition().z, SoundRegistry.GUN_OUT_OF_AMMO.get(), SoundSource.PLAYERS, 1.5F, 1.0F);
@@ -81,54 +78,58 @@ public abstract class GunItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(
-                Component.translatable("mekanism_weaponry.tooltip.gun_energy").withColor(0x2fb2d6).append(
-                        Component.literal(String.format("%d/%d FE", getEnergyStorage(stack).getEnergyStored(), getEnergyStorage(stack).getMaxEnergyStored())).withColor(0xFFFFFF)
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(
+                Component.translatable("mekanism_weaponry.tooltip.gun_energy").withStyle(Style.EMPTY.withColor(0x2fb2d6)).append(
+                        Component.literal(String.format("%d/%d FE", getEnergyStorage(pStack).getEnergyStored(), getEnergyStorage(pStack).getMaxEnergyStored())).withStyle(Style.EMPTY.withColor(0xFFFFFF))
                 )
         );
-        if(!tooltipFlag.hasShiftDown()) {
-            tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_stats")
-                    .append(" [SHIFT] ").withColor(0x5c5c5c)
+
+        if(!Screen.hasShiftDown()) {
+            pTooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_stats")
+                    .append(" [SHIFT] ").withStyle(Style.EMPTY.withColor(0x5c5c5c))
             );
         } else {
-            addStatsTooltip(stack, tooltipComponents);
+            addStatsTooltip(pStack, pTooltipComponents);
         }
-        if(!tooltipFlag.hasControlDown()) {
-            tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_addons")
-                    .append(" [CTRL] ").withColor(0x5c5c5c)
+        if(!Screen.hasControlDown()) {
+            pTooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_addons")
+                    .append(" [CTRL] ").withStyle(Style.EMPTY.withColor(0x5c5c5c))
             );
         } else {
-            addAddonsTooltip(stack, tooltipComponents);
+            addAddonsTooltip(pStack, pTooltipComponents);
         }
     }
 
     public void addStatsTooltip(ItemStack stack, List<Component> tooltipComponents) {
-        tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_stats").withColor(0x5c5c5c));
+        tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_stats").withStyle(Style.EMPTY.withColor(0x5c5c5c)));
         tooltipComponents.add(
-                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_cooldown")).append(": ").withColor(0x89c98d).append(
-                        Component.literal(String.format("%d ticks", getCooldown(stack))).withColor(0xFFFFFF)
+                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_cooldown")).append(": ").withStyle(Style.EMPTY.withColor(0x89c98d)).append(
+                        Component.literal(String.format("%d ticks", getCooldown(stack))).withStyle(Style.EMPTY.withColor(0xFFFFFF))
                 )
         );
         tooltipComponents.add(
-                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_energy_usage")).append(": ").withColor(0x89c98d).append(
-                        Component.literal(String.format("%d / shot", getEnergyUsage(stack))).withColor(0xFFFFFF)
+                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_energy_usage")).append(": ").withStyle(Style.EMPTY.withColor(0x89c98d)).append(
+                        Component.literal(String.format("%d / shot", getEnergyUsage(stack))).withStyle(Style.EMPTY.withColor(0xFFFFFF))
                 )
         );
         tooltipComponents.add(
-                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_reload_time")).append(": ").withColor(0x89c98d).append(
-                        Component.literal(String.format("%d ticks", reloadTime)).withColor(0xFFFFFF)
+                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_reload_time")).append(": ").withStyle(Style.EMPTY.withColor(0x89c98d)).append(
+                        Component.literal(String.format("%d ticks", reloadTime)).withStyle(Style.EMPTY.withColor(0xFFFFFF))
                 )
         );
     }
 
     public void addAddonsTooltip(ItemStack stack, List<Component> tooltipComponents) {
-        tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_addons").withColor(0x5c5c5c));
-        DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
-        if(Arrays.stream(addons.getAddons()).allMatch(s -> s.equals(ItemStack.EMPTY))) {
+        tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_addons").withStyle(Style.EMPTY.withColor(0x5c5c5c)));
+        ItemStack[] addons = new ItemStack[5];
+        for (int i = 0; i < addons.length; i++) {
+            addons[i] = getAddon(stack, i);
+        }
+        if(Arrays.stream(addons).allMatch(s -> s.equals(ItemStack.EMPTY))) {
             tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_no_addons"));
         } else {
-            for (ItemStack addon : addons.getAddons()) {
+            for (ItemStack addon : addons) {
                 if(!addon.equals(ItemStack.EMPTY)) {
                     tooltipComponents.add(Component.literal(" ").append(addon.getHoverName()));
                 }
@@ -137,7 +138,7 @@ public abstract class GunItem extends Item {
     }
 
     @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity, InteractionHand hand) {
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
         return true;
     }
 
@@ -166,11 +167,15 @@ public abstract class GunItem extends Item {
     }
 
     public long getLastShotTick(ItemStack stack) {
-        return stack.get(DataComponentRegistry.LAST_SHOT_TICK.get());
+        if(stack.getOrCreateTag().contains(ItemTags.LAST_SHOT_TICK)) {
+            return stack.getOrCreateTag().getLong(ItemTags.LAST_SHOT_TICK);
+        }
+        setLastShotTick(stack, 0L);
+        return getLastShotTick(stack);
     }
 
     public void setLastShotTick(ItemStack stack, long tick) {
-        stack.set(DataComponentRegistry.LAST_SHOT_TICK.get(), tick);
+        stack.getOrCreateTag().putLong(ItemTags.LAST_SHOT_TICK, tick);
     }
 
     public boolean isOffCooldown(ItemStack stack, long tick) {
@@ -178,7 +183,7 @@ public abstract class GunItem extends Item {
     }
 
     public IEnergyStorage getEnergyStorage(ItemStack stack) {
-        return stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        return stack.getCapability(ForgeCapabilities.ENERGY).orElseThrow(() -> new RuntimeException("Missing energy capability"));
     }
 
     public boolean hasSufficientEnergy(ItemStack stack) {
@@ -186,14 +191,37 @@ public abstract class GunItem extends Item {
     }
 
     public ItemStack getAddon(ItemStack stack, int index) {
-        DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
-        return addons.getAddon(index);
+        switch (index) {
+            case 0 -> {
+                return getAddon(stack, ItemTags.CHIP1);
+            }
+            case 1 -> {
+                return getAddon(stack, ItemTags.PAINT);
+            }
+            case 2 -> {
+                return getAddon(stack, ItemTags.CHIP2);
+            }
+            case 3 -> {
+                return getAddon(stack, ItemTags.SCOPE);
+            }
+            case 4 -> {
+                return getAddon(stack, ItemTags.CHIP3);
+            }
+            default -> throw new IllegalArgumentException();
+        }
     }
 
-    public boolean hasAddon(ItemStack stack, Class<? extends GunAddonItem> addon) {
-        DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
+    private ItemStack getAddon(ItemStack stack, String addonSlot) {
+        if(stack.getOrCreateTag().contains(addonSlot)) {
+            return ItemStack.of(stack.getOrCreateTag().getCompound(addonSlot));
+        }
+        stack.getOrCreateTag().put(addonSlot, ItemStack.EMPTY.serializeNBT());
+        return getAddon(stack, addonSlot);
+    }
+
+    public boolean hasAddon(ItemStack stack, Class<? extends GunAddonItem> addonClass) {
         for (int i = 0; i < 5; i++) {
-            if(addon.isInstance(addons.getAddon(i).getItem())) {
+            if(addonClass.isInstance(getAddon(stack, i).getItem())) {
                 return true;
             }
         }
@@ -202,33 +230,48 @@ public abstract class GunItem extends Item {
 
     public float getAddonMultiplier(ItemStack stack, Class<? extends GunAddonItem> addon) {
         float count = 0;
-        DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
         for (int i = 0; i < 5; i++) {
-            if(addon.isInstance(addons.getAddon(i).getItem())) {
-                count += ((GunAddonItem) addons.getAddon(i).getItem()).mul();
+            ItemStack addonStack = getAddon(stack, i);
+            if(addon.isInstance(addonStack.getItem())) {
+                count += ((GunAddonItem) addonStack.getItem()).mul();
             }
         }
         return count;
     }
 
     public void setAddon(ItemStack stack, ItemStack chipStack, int index) {
-        DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
-        ItemStack[] addonArr = new ItemStack[5];
-        for (int i = 0; i < addonArr.length; i++) {
-            addonArr[i] = addons.getAddon(i);
+        switch (index) {
+            case 0 -> stack.getOrCreateTag().put(ItemTags.CHIP1, chipStack.serializeNBT());
+            case 1 -> stack.getOrCreateTag().put(ItemTags.PAINT, chipStack.serializeNBT());
+            case 2 -> stack.getOrCreateTag().put(ItemTags.CHIP2, chipStack.serializeNBT());
+            case 3 -> stack.getOrCreateTag().put(ItemTags.SCOPE, chipStack.serializeNBT());
+            case 4 -> stack.getOrCreateTag().put(ItemTags.CHIP3, chipStack.serializeNBT());
+            default -> throw new IllegalArgumentException();
         }
-        addonArr[index] = chipStack;
-        stack.set(DataComponentRegistry.ADDONS.get(), new DataComponentAddons(
-                addonArr[0],
-                addonArr[1],
-                addonArr[2],
-                addonArr[3],
-                addonArr[4]
-        ));
     }
 
     public boolean isShooting(ItemStack stack) {
-        return stack.get(DataComponentRegistry.IS_SHOOTING);
+        if(stack.getOrCreateTag().contains(ItemTags.IS_SHOOTING)) {
+            return stack.getOrCreateTag().getBoolean(ItemTags.IS_SHOOTING);
+        }
+        setShooting(stack, false);
+        return isShooting(stack);
+    }
+
+    public void setShooting(ItemStack stack, boolean shooting) {
+        stack.getOrCreateTag().putBoolean(ItemTags.IS_SHOOTING, shooting);
+    }
+
+    public boolean isScoping(ItemStack stack) {
+        if(stack.getOrCreateTag().contains(ItemTags.IS_SCOPING)) {
+            return stack.getOrCreateTag().getBoolean(ItemTags.IS_SCOPING);
+        }
+        setScoping(stack, false);
+        return isScoping(stack);
+    }
+
+    public void setScoping(ItemStack stack, boolean scoping) {
+        stack.getOrCreateTag().putBoolean(ItemTags.IS_SCOPING, scoping);
     }
 
     public abstract void serverShoot(ItemStack stack, ServerPlayer player);
@@ -240,46 +283,9 @@ public abstract class GunItem extends Item {
     public abstract void clientReload(ItemStack stack, Player player);
 
     public void serverStoppedShooting(ItemStack stack){
-        stack.set(DataComponentRegistry.IS_SHOOTING, false);
+        setShooting(stack, false);
     }
 
     public abstract boolean canInstallAddon(ItemStack gunStack, ItemStack addonStack);
-
-    public record DataComponentAddons(ItemStack chip1, ItemStack paint, ItemStack chip2, ItemStack scope, ItemStack chip3) {
-        public DataComponentAddons() {
-            this(
-                    ItemStack.EMPTY,
-                    ItemStack.EMPTY,
-                    ItemStack.EMPTY,
-                    ItemStack.EMPTY,
-                    ItemStack.EMPTY
-            );
-        }
-
-        public ItemStack[] getAddons() {
-            return new ItemStack[]{chip1, paint, chip2, scope, chip3};
-        }
-
-        public ItemStack getAddon(int index) {
-            switch (index) {
-                case 0 -> {
-                    return chip1;
-                }
-                case 1 -> {
-                    return paint;
-                }
-                case 2 -> {
-                    return chip2;
-                }
-                case 3 -> {
-                    return scope;
-                }
-                case 4 -> {
-                    return chip3;
-                }
-            }
-            throw new IllegalArgumentException();
-        }
-    }
 
 }

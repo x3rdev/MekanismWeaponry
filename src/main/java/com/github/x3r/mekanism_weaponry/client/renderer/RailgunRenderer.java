@@ -14,20 +14,20 @@ public class RailgunRenderer extends GunRenderer<RailgunItem> {
 
 
     public RailgunRenderer() {
-        super(new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "railgun")));
+        super(new DefaultedItemGeoModel<>(new ResourceLocation(MekanismWeaponry.MOD_ID, "railgun")));
     }
 
     @Override
     public ResourceLocation getTextureLocation(RailgunItem animatable) {
-        return ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, String.format("textures/item/railgun/railgun_%d.png", getTextureIndex()));
+        return new ResourceLocation(MekanismWeaponry.MOD_ID, String.format("textures/item/railgun/railgun_%d.png", getTextureIndex()));
     }
 
     @Override
-    protected boolean boneRenderOverride(PoseStack poseStack, GeoBone bone, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int colour) {
+    protected boolean boneRenderOverride(PoseStack poseStack, GeoBone bone, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if(bone.getName().equals("scope")) {
             return !hasScopeAddon();
         }
-        return super.boneRenderOverride(poseStack, bone, bufferSource, buffer, partialTick, packedLight, packedOverlay, colour);
+        return super.boneRenderOverride(poseStack, bone, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     private boolean hasScopeAddon() {

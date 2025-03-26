@@ -6,37 +6,46 @@ import com.github.x3r.mekanism_weaponry.client.sound.TeslaMinigunSoundInstance;
 import com.github.x3r.mekanism_weaponry.common.item.addon.EnergyUsageChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
-import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
+import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunClientPacket;
+import com.github.x3r.mekanism_weaponry.common.packet.MekanismWeaponryPacketHandler;
 import com.github.x3r.mekanism_weaponry.common.registry.DamageTypeRegistry;
-import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.network.chat.Component;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.EnergyStorage;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.animatable.client.GeoRenderProvider;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.Animation;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
@@ -57,14 +66,22 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
     }
 
     @Override
+    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        return new ItemEnergyCapability(stack, new EnergyStorage(
+                MekanismWeaponryConfig.CONFIG.getTeslaMinigunEnergyCapacity(),
+                MekanismWeaponryConfig.CONFIG.getTeslaMinigunEnergyTransfer()
+        ));
+    }
+
+    @Override
     public void serverShoot(ItemStack stack, ServerPlayer player) {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
                 .add(player.getLookAngle().normalize().scale(0.1));
         if(isReady(stack, player, level)) {
-            stack.set(DataComponentRegistry.IS_SHOOTING, true);
+            setShooting(stack, true);
             setLastShotTick(stack, level.getGameTime());
-            PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
+            MekanismWeaponryPacketHandler.sendToClient(new ActivateGunClientPacket(), player);
             getEnergyStorage(stack).extractEnergy(getEnergyUsage(stack), false);
             setHeat(stack, getHeat(stack) + getHeatPerShot(stack));
             for (int i = 0; i < 6; i++) {
@@ -86,9 +103,10 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
             if(isOverheated(stack)) {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
-            stack.set(DataComponentRegistry.IS_SHOOTING, false);
+            setShooting(stack, false);
         }
     }
+
 
     @OnlyIn(Dist.CLIENT)
     @Override
@@ -139,23 +157,45 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
     }
 
     @Override
-    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
-        consumer.accept(new GeoRenderProvider() {
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(new IClientItemExtensions() {
+            private static final HumanoidModel.ArmPose MINIGUN_POSE = HumanoidModel.ArmPose.create("minigun", true, (model, livingEntity, humanoidArm) -> {
+                float torsoAngle = 0.6F;
+                model.body.yRot = torsoAngle;
+                model.rightArm.yRot = torsoAngle;
+                model.rightArm.x = (model.rightArm.x)* Mth.cos(torsoAngle);
+                model.rightArm.z = (model.rightArm.z+5F)*Mth.sin(torsoAngle)-1;
+                model.leftArm.yRot = torsoAngle;
+                model.leftArm.x = (model.leftArm.x)*Mth.cos(torsoAngle);
+                model.leftArm.z = (model.leftArm.z-5F)*Mth.sin(torsoAngle);
+
+                model.rightArm.xRot = -0.5F;
+                model.rightArm.yRot -= 0.5F;
+
+                model.leftArm.xRot = -1F;
+                model.leftArm.zRot = 0.1F;
+            });
             private TeslaMinigunRenderer renderer;
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null)
                     this.renderer = new TeslaMinigunRenderer();
 
                 return this.renderer;
             }
+
+            @Override
+            public HumanoidModel.@NotNull ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
+                return MINIGUN_POSE;
+            }
+
         });
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 1, state -> {
+        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 1, state -> {
             if(!state.getController().isPlayingTriggeredAnimation()) {
                 state.setAnimation(IDLE);
             }

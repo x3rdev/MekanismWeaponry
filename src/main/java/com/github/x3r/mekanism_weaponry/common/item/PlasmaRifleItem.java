@@ -7,25 +7,37 @@ import com.github.x3r.mekanism_weaponry.common.entity.PlasmaEntity;
 import com.github.x3r.mekanism_weaponry.common.item.addon.EnergyUsageChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.FireRateChipItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
-import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunPayload;
-import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
+import com.github.x3r.mekanism_weaponry.common.packet.ActivateGunClientPacket;
+import com.github.x3r.mekanism_weaponry.common.packet.MekanismWeaponryPacketHandler;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.EnergyStorage;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.animatable.client.GeoRenderProvider;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.Animation;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -48,14 +60,22 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
     }
 
     @Override
+    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        return new ItemEnergyCapability(stack, new EnergyStorage(
+                MekanismWeaponryConfig.CONFIG.getPlasmaRifleEnergyCapacity(),
+                MekanismWeaponryConfig.CONFIG.getPlasmaRifleEnergyTransfer()
+        ));
+    }
+
+    @Override
     public void serverShoot(ItemStack stack, ServerPlayer player) {
         Level level = player.level();
         Vec3 pos = player.getEyePosition()
                 .add(player.getLookAngle().normalize().scale(0.1));
         if(isReady(stack, player, level)) {
-            stack.set(DataComponentRegistry.IS_SHOOTING, true);
+            setShooting(stack, true);
             setLastShotTick(stack, level.getGameTime());
-            PacketDistributor.sendToPlayer(player, new ActivateGunPayload());
+            MekanismWeaponryPacketHandler.sendToClient(new ActivateGunClientPacket(), player);
 
             PlasmaEntity plasma = new PlasmaEntity(player, pos, 8.0F);
             plasma.setDeltaMovement(player.getLookAngle().normalize().scale(3));
@@ -71,7 +91,7 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
             if(isOverheated(stack)) {
                 level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
-            stack.set(DataComponentRegistry.IS_SHOOTING, false);
+            setShooting(stack, false);
         }
     }
 
@@ -114,23 +134,29 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
     }
 
     @Override
-    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
-        consumer.accept(new GeoRenderProvider() {
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(new IClientItemExtensions() {
             private PlasmaRifleRenderer renderer;
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null)
                     this.renderer = new PlasmaRifleRenderer();
 
                 return this.renderer;
             }
+
+            @Override
+            public HumanoidModel.@NotNull ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
+                return HumanoidModel.ArmPose.BOW_AND_ARROW;
+            }
         });
     }
 
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 1, state -> {
+        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 1, state -> {
             if(state.getData(DataTickets.ITEM_RENDER_PERSPECTIVE).firstPerson()) {
                 return PlayState.CONTINUE;
             }

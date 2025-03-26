@@ -8,16 +8,16 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 public class ParticleRegistry {
 
-    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, MekanismWeaponry.MOD_ID);
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MekanismWeaponry.MOD_ID);
 
-    public static final DeferredHolder<ParticleType<?>, ParticleType<SimpleParticleType>> ROD_TRAIL = PARTICLE_TYPES.register("rod_trail",
+    public static final RegistryObject<ParticleType<SimpleParticleType>> ROD_TRAIL = PARTICLE_TYPES.register("rod_trail",
             () -> new SimpleParticleType(false));
 
     public record RodTrailParticleProvider(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {

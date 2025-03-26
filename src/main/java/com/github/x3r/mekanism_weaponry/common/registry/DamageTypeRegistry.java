@@ -15,11 +15,11 @@ public class DamageTypeRegistry {
     private final Registry<DamageType> damageTypes;
 
     private final ResourceKey<DamageType> plasma = ResourceKey.create(Registries.DAMAGE_TYPE,
-            ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "plasma"));
+            new ResourceLocation(MekanismWeaponry.MOD_ID, "plasma"));
     private final ResourceKey<DamageType> rod = ResourceKey.create(Registries.DAMAGE_TYPE,
-            ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "rod"));
+            new ResourceLocation(MekanismWeaponry.MOD_ID, "rod"));
     private final ResourceKey<DamageType> electricity = ResourceKey.create(Registries.DAMAGE_TYPE,
-            ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "electricity"));
+            new ResourceLocation(MekanismWeaponry.MOD_ID, "electricity"));
 
     public DamageTypeRegistry(RegistryAccess registryAccess) {
         this.damageTypes = registryAccess.registryOrThrow(Registries.DAMAGE_TYPE);

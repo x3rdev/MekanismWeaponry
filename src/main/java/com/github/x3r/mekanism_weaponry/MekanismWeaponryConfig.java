@@ -1,46 +1,46 @@
 package com.github.x3r.mekanism_weaponry;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class MekanismWeaponryConfig {
 
     public static final MekanismWeaponryConfig CONFIG;
-    public static final ModConfigSpec CONFIG_SPEC;
+    public static final ForgeConfigSpec CONFIG_SPEC;
 
-    private final ModConfigSpec.IntValue plasmaRifleCooldown;
-    private final ModConfigSpec.IntValue plasmaRifleEnergyUsage;
-    private final ModConfigSpec.IntValue plasmaRifleReloadTime;
-    private final ModConfigSpec.IntValue plasmaRifleHeatPerShot;
-    private final ModConfigSpec.IntValue plasmaRifleEnergyCapacity;
-    private final ModConfigSpec.IntValue plasmaRifleEnergyTransfer;
+    private final ForgeConfigSpec.IntValue plasmaRifleCooldown;
+    private final ForgeConfigSpec.IntValue plasmaRifleEnergyUsage;
+    private final ForgeConfigSpec.IntValue plasmaRifleReloadTime;
+    private final ForgeConfigSpec.IntValue plasmaRifleHeatPerShot;
+    private final ForgeConfigSpec.IntValue plasmaRifleEnergyCapacity;
+    private final ForgeConfigSpec.IntValue plasmaRifleEnergyTransfer;
 
-    private final ModConfigSpec.IntValue railgunCooldown;
-    private final ModConfigSpec.IntValue railgunEnergyUsage;
-    private final ModConfigSpec.IntValue railgunReloadTime;
-    private final ModConfigSpec.IntValue railgunMaxAmmo;
-    private final ModConfigSpec.IntValue railgunEnergyCapacity;
-    private final ModConfigSpec.IntValue railgunEnergyTransfer;
+    private final ForgeConfigSpec.IntValue railgunCooldown;
+    private final ForgeConfigSpec.IntValue railgunEnergyUsage;
+    private final ForgeConfigSpec.IntValue railgunReloadTime;
+    private final ForgeConfigSpec.IntValue railgunMaxAmmo;
+    private final ForgeConfigSpec.IntValue railgunEnergyCapacity;
+    private final ForgeConfigSpec.IntValue railgunEnergyTransfer;
 
-    private final ModConfigSpec.IntValue teslaMinigunCooldown;
-    private final ModConfigSpec.IntValue teslaMinigunEnergyUsage;
-    private final ModConfigSpec.IntValue teslaMinigunReloadTime;
-    private final ModConfigSpec.IntValue teslaMinigunHeatPerShot;
-    private final ModConfigSpec.IntValue teslaMinigunEnergyCapacity;
-    private final ModConfigSpec.IntValue teslaMinigunEnergyTransfer;
+    private final ForgeConfigSpec.IntValue teslaMinigunCooldown;
+    private final ForgeConfigSpec.IntValue teslaMinigunEnergyUsage;
+    private final ForgeConfigSpec.IntValue teslaMinigunReloadTime;
+    private final ForgeConfigSpec.IntValue teslaMinigunHeatPerShot;
+    private final ForgeConfigSpec.IntValue teslaMinigunEnergyCapacity;
+    private final ForgeConfigSpec.IntValue teslaMinigunEnergyTransfer;
 
-    private final ModConfigSpec.IntValue gauntletEnergyUsage;
-    private final ModConfigSpec.IntValue gauntletEnergyCapacity;
-    private final ModConfigSpec.IntValue gauntletEnergyTransfer;
+    private final ForgeConfigSpec.IntValue gauntletEnergyUsage;
+    private final ForgeConfigSpec.IntValue gauntletEnergyCapacity;
+    private final ForgeConfigSpec.IntValue gauntletEnergyTransfer;
 
     static {
-        Pair<MekanismWeaponryConfig, ModConfigSpec> pair = new ModConfigSpec.Builder().configure(MekanismWeaponryConfig::new);
+        Pair<MekanismWeaponryConfig, ForgeConfigSpec> pair = new ForgeConfigSpec.Builder().configure(MekanismWeaponryConfig::new);
 
         CONFIG = pair.getLeft();
         CONFIG_SPEC = pair.getRight();
     }
 
-    public MekanismWeaponryConfig(ModConfigSpec.Builder builder) {
+    public MekanismWeaponryConfig(ForgeConfigSpec.Builder builder) {
         builder.push("Mekanism Weaponry Config");
 
         plasmaRifleCooldown = builder.comment("Cooldown in ticks between when gun can be shot").defineInRange("plasmaRifleCooldown", 6, 0, Integer.MAX_VALUE);

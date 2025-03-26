@@ -1,8 +1,11 @@
 package com.github.x3r.mekanism_weaponry.common.item.addon;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -40,9 +43,9 @@ public class PaintBucketItem extends GunAddonItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(
-                Component.translatable("mekanism_weaponry.tooltip.color_desc."+colorschemeName).withColor(0x2fb2d6)
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(
+                Component.translatable("mekanism_weaponry.tooltip.color_desc."+colorschemeName).withStyle(Style.EMPTY.withColor(0x2fb2d6))
         );
     }
 }

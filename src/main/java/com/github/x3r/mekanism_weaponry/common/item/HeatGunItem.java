@@ -1,14 +1,14 @@
 package com.github.x3r.mekanism_weaponry.common.item;
 
 import com.github.x3r.mekanism_weaponry.common.item.addon.HeatPerShotChipItem;
-import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.IItemDecorator;
+import net.minecraftforge.client.IItemDecorator;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public abstract class HeatGunItem extends GunItem {
     private final float heatPerShot;
 
     protected HeatGunItem(Properties pProperties, int cooldown, int energyUsage, int reloadTime, float heatPerShot) {
-        super(pProperties.component(DataComponentRegistry.HEAT.get(), 0F),
+        super(pProperties,
                 cooldown, energyUsage, reloadTime);
         this.heatPerShot = heatPerShot;
     }
@@ -52,8 +52,8 @@ public abstract class HeatGunItem extends GunItem {
     public void addStatsTooltip(ItemStack stack, List<Component> tooltipComponents) {
         super.addStatsTooltip(stack, tooltipComponents);
         tooltipComponents.add(
-                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_heat_per_shot")).append(": ").withColor(0x89c98d).append(
-                        Component.literal(String.format("%f heat", getHeatPerShot(stack))).withColor(0xFFFFFF)
+                Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_heat_per_shot")).append(": ").withStyle(Style.EMPTY.withColor(0x89c98d)).append(
+                        Component.literal(String.format("%f heat", getHeatPerShot(stack))).withStyle(Style.EMPTY.withColor(0xFFFFFF))
                 )
         );
     }
@@ -68,11 +68,15 @@ public abstract class HeatGunItem extends GunItem {
     }
 
     public float getHeat(ItemStack stack) {
-        return stack.get(DataComponentRegistry.HEAT.get());
+        if(stack.getOrCreateTag().contains(ItemTags.HEAT)) {
+            return stack.getOrCreateTag().getFloat(ItemTags.HEAT);
+        }
+        stack.getOrCreateTag().putFloat(ItemTags.HEAT, 0F);
+        return getHeat(stack);
     }
 
     public void setHeat(ItemStack stack, float heat) {
-        stack.set(DataComponentRegistry.HEAT.get(), heat);
+        stack.getOrCreateTag().putFloat(ItemTags.HEAT, heat);
     }
 
     public boolean isOverheated(ItemStack stack) {
