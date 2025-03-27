@@ -52,5 +52,8 @@
   "mekanism_weaponry.tooltip.gun_no_addons": "No Addons Installed",
   "mekanism_weaponry.tooltip.gun_reload_time": "Reload Time",
   "mekanism_weaponry.tooltip.gun_stats": "Gun Stats",
-  "mekanism_weaponry.tooltip.heat_per_shot_chip": "Reduces the heat accumulated when the weapon is shot"
+  "mekanism_weaponry.tooltip.heat_per_shot_chip": "Reduces the heat accumulated when the weapon is shot",
+  "mekanism_weaponry.tooltip.railgun_first_mode": "Regular",
+  "mekanism_weaponry.tooltip.railgun_mode_label": "Mode: ",
+  "mekanism_weaponry.tooltip.railgun_second_mode": "High Power"
 }

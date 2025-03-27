@@ -16,6 +16,8 @@ import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -25,6 +27,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -44,6 +47,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -208,6 +212,20 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
                 return HumanoidModel.ArmPose.BOW_AND_ARROW;
             }
         });
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(
+                Component.translatable("mekanism_weaponry.tooltip.railgun_mode_label").withStyle(Style.EMPTY.withColor(0x76ff26)).append(
+                        Component.translatable(isSecondMode(pStack) ?
+                                "mekanism_weaponry.tooltip.railgun_second_mode" :
+                                "mekanism_weaponry.tooltip.railgun_first_mode")
+                                .withStyle(Style.EMPTY.withColor(0xFFFFFF)).append(
+                                        Component.literal(" [SHIFT + RMB]").withStyle(Style.EMPTY.withColor(0x5c5c5c))
+                                ))
+        );
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
     @Override

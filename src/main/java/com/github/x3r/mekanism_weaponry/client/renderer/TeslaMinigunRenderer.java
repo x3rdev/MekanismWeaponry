@@ -1,7 +1,6 @@
 package com.github.x3r.mekanism_weaponry.client.renderer;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
-import com.github.x3r.mekanism_weaponry.client.shader.MWRenderTypes;
 import com.github.x3r.mekanism_weaponry.common.item.TeslaMinigunItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
