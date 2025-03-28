@@ -99,6 +99,7 @@ public abstract class GunItem extends Item {
         } else {
             addAddonsTooltip(pStack, pTooltipComponents);
         }
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
     public void addStatsTooltip(ItemStack stack, List<Component> tooltipComponents) {
