@@ -15,6 +15,7 @@ import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
@@ -178,6 +180,20 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
                 return this.renderer;
             }
         });
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(
+                Component.translatable("mekanism_weaponry.tooltip.railgun_mode_label").withColor(0x76ff26).append(
+                        Component.translatable(isSecondMode(stack) ?
+                                        "mekanism_weaponry.tooltip.railgun_second_mode" :
+                                        "mekanism_weaponry.tooltip.railgun_first_mode")
+                                .withStyle(Style.EMPTY.withColor(0xFFFFFF)).append(
+                                        Component.literal(" [SHIFT + RMB]").withColor(0x5c5c5c)
+                                ))
+        );
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 
     @Override

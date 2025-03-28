@@ -37,6 +37,9 @@ public class MWLangProvider extends LanguageProvider {
         add("mekanism_weaponry.tooltip.gun_reload_time", "Reload Time");
         add("mekanism_weaponry.tooltip.gun_heat_per_shot", "Heat Per Shot");
         add("mekanism_weaponry.tooltip.gun_loaded_ammo", "Loaded Ammo: ");
+        add("mekanism_weaponry.tooltip.railgun_mode_label", "Mode: ");
+        add("mekanism_weaponry.tooltip.railgun_first_mode", "Regular");
+        add("mekanism_weaponry.tooltip.railgun_second_mode", "High Power");
 
         add("mekanism_weaponry.tooltip.gun_addons", "Gun Addons");
         add("mekanism_weaponry.tooltip.gun_no_addons", "No Addons Installed");
