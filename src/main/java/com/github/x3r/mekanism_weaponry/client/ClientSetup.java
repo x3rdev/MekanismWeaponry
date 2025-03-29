@@ -4,6 +4,7 @@ import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.RodRenderer;
 import com.github.x3r.mekanism_weaponry.client.screen.WeaponWorkbenchScreen;
+import com.github.x3r.mekanism_weaponry.client.skin.PlayerSkinService;
 import com.github.x3r.mekanism_weaponry.common.item.AmmoGunItem;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.HeatGunItem;
@@ -62,6 +63,8 @@ public class ClientSetup {
         neoEventBus.addListener(ClientSetup::cameraSetupEvent);
         neoEventBus.addListener(ClientSetup::renderGui);
         neoEventBus.addListener(ClientSetup::computeFov);
+
+        PlayerSkinService.reloadCachedSkins();
     }
 
     // Neo Bus event, registered in mod class
