@@ -43,7 +43,6 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        super.renderByItem(stack, transformType, poseStack, bufferSource, packedLight, packedOverlay);
         if(transformType != ItemDisplayContext.GUI && ((TeslaMinigunItem) stack.getItem()).isShooting(stack)) {
             poseStack.pushPose();
             poseStack.translate(0.5, 0.64, -0.25); // magic numbers for aligning lightning to barrel of gun
@@ -54,6 +53,7 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
             drawElectricity(buildNodes(4), poseStack, bufferSource, packedLight);
             poseStack.popPose();
         }
+        super.renderByItem(stack, transformType, poseStack, bufferSource, packedLight, packedOverlay);
     }
 
     private ElectricityNode buildNodes(int maxDepth) {
