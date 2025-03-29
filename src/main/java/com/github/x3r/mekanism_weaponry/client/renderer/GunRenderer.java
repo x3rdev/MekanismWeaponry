@@ -1,17 +1,24 @@
 package com.github.x3r.mekanism_weaponry.client.renderer;
 
+import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
 import com.github.x3r.mekanism_weaponry.common.item.GunItem;
 import com.github.x3r.mekanism_weaponry.common.item.addon.PaintBucketItem;
 import com.github.x3r.mekanism_weaponry.common.registry.DataComponentRegistry;
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import it.unimi.dsi.fastutil.ints.IntIntImmutablePair;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.GeckoLibConstants;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
@@ -26,8 +33,9 @@ public abstract class GunRenderer<T extends GunItem & GeoAnimatable> extends Dyn
 
     @Override
     protected @Nullable ResourceLocation getTextureOverrideForBone(GeoBone bone, T animatable, float partialTick) {
-        if(bone.getParent() != null && bone.getParent().getParent() != null && bone.getParent().getParent().getName().equals("arms")) {
-            return Minecraft.getInstance().player.getSkin().texture();
+        LocalPlayer player = Minecraft.getInstance().player;
+        if(player != null && bone.getParent() != null && bone.getParent().getParent() != null && bone.getParent().getParent().getName().equals("arms")) {
+            return player.connection.getPlayerInfo(player.getUUID()).getSkin().texture();
         }
         return super.getTextureOverrideForBone(bone, animatable, partialTick);
     }
@@ -60,4 +68,14 @@ public abstract class GunRenderer<T extends GunItem & GeoAnimatable> extends Dyn
         }
         return 0;
     }
+
+    @Override
+    protected IntIntPair computeTextureSize(ResourceLocation texture) {
+        if(texture.getNamespace().equals("minecraft") && texture.getPath().substring(0, texture.getPath().indexOf('/')).equals("skins")) {
+            return IntIntPair.of(64, 64);
+        }
+        return super.computeTextureSize(texture);
+    }
+
+
 }
