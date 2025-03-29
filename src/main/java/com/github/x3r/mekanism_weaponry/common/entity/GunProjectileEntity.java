@@ -89,7 +89,7 @@ public class GunProjectileEntity extends Projectile {
     private void handleEntityCollision(EntityHitResult hitResult) {
         Entity entity = hitResult.getEntity();
         if(!entity.equals(getOwner())) {
-            entity.hurt(damageSource.apply(entity), (float) this.damage);
+            entity.hurt(damageSource.apply(getOwner()), (float) this.damage);
             Vec3 pos = hitResult.getLocation();
             ((ServerLevel) level()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()),
                     pos.x, pos.y, pos.z, 15, 0, 0, 0, 0);
