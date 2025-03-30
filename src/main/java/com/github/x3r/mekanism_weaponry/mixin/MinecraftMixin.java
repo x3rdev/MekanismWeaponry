@@ -30,7 +30,7 @@ public abstract class MinecraftMixin {
 
     @Shadow @Nullable public ClientLevel level;
 
-    @Inject(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"), cancellable = true)
+    @Inject(method = {"handleKeybinds", "m_91279_"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"), cancellable = true)
     private void handleKeybinds(CallbackInfo ci) {
         if(player == null) return;
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
