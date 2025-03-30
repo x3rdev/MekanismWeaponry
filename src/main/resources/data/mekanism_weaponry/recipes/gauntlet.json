@@ -6,12 +6,12 @@
     " 1 "
   ],
   "key": {
-    "0": {"tag":"c:ingots/osmium"},
+    "0": {"tag":"forge:ingots/osmium"},
     "1": {"item":"mekanism:hdpe_sheet"},
     "2": {"item":"mekanism:energy_tablet"}
   },
   "result": {
-    "id": "mekanism_weaponry:gauntlet",
+    "item": "mekanism_weaponry:gauntlet",
     "count": 1
   }
 }

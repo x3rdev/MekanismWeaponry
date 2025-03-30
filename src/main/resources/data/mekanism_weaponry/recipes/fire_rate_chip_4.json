@@ -6,11 +6,11 @@
     "   "
   ],
   "key": {
-    "0": {"item":"mekanism_weaponry:heat_per_shot_chip_3"},
+    "0": {"item":"mekanism_weaponry:fire_rate_chip_3"},
     "1": {"item":"mekanism:ultimate_control_circuit"}
   },
   "result": {
-    "id": "mekanism_weaponry:heat_per_shot_chip_4",
+    "item": "mekanism_weaponry:fire_rate_chip_4",
     "count": 1
   }
 }

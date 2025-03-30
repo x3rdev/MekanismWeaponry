@@ -10,7 +10,7 @@
     "1": {"item":"mekanism:elite_control_circuit"}
   },
   "result": {
-    "id": "mekanism_weaponry:heat_per_shot_chip_3",
+    "item": "mekanism_weaponry:heat_per_shot_chip_3",
     "count": 1
   }
 }

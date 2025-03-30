@@ -5,10 +5,10 @@
     "i"
   ],
   "key": {
-    "i": {"tag":"c:ingots/steel"}
+    "i": {"tag":"forge:ingots/steel"}
   },
   "result": {
-    "id": "mekanism_weaponry:steel_rod",
+    "item": "mekanism_weaponry:steel_rod",
     "count": 4
   }
 }

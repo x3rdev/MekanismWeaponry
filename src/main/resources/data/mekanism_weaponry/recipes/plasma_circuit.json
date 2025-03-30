@@ -6,12 +6,12 @@
     "010"
   ],
   "key": {
-    "0": {"item":"minecraft:redstone"},
-    "1": {"tag":"c:ingots/osmium"},
+    "0": {"tag":"forge:ingots/copper"},
+    "1": {"tag":"forge:ingots/steel"},
     "2": {"item":"mekanism:elite_control_circuit"}
   },
   "result": {
-    "id": "mekanism_weaponry:magnetic_circuit",
+    "item": "mekanism_weaponry:plasma_circuit",
     "count": 1
   }
 }

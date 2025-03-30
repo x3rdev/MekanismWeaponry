@@ -6,13 +6,13 @@
     "41 "
   ],
   "key": {
-    "1": {"tag":"c:ingots/steel"},
+    "1": {"tag":"forge:ingots/steel"},
     "2": {"item":"mekanism:elite_control_circuit"},
     "3": {"item":"mekanism_weaponry:plasma_circuit"},
     "4": {"item":"mekanism:steel_casing"}
   },
   "result": {
-    "id": "mekanism_weaponry:plasma_rifle",
+    "item": "mekanism_weaponry:plasma_rifle",
     "count": 1
   }
 }

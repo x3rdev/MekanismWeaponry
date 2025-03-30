@@ -6,11 +6,11 @@
     "   "
   ],
   "key": {
-    "0": {"item":"mekanism_weaponry:energy_usage_chip_1"},
+    "0": {"item":"mekanism_weaponry:fire_rate_chip_1"},
     "1": {"item":"mekanism:advanced_control_circuit"}
   },
   "result": {
-    "id": "mekanism_weaponry:energy_usage_chip_2",
+    "item": "mekanism_weaponry:fire_rate_chip_2",
     "count": 1
   }
 }

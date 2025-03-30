@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "000",
+    " 0 ",
     "121",
     "343"
   ],
   "key": {
-    "0": {"item":"minecraft:clock"},
+    "0": {"item":"mekanism:superheating_element"},
     "1": {"item":"mekanism:basic_control_circuit"},
     "2": {"item":"minecraft:green_dye"},
-    "3": {"tag":"c:ingots/copper"},
-    "4": {"tag":"c:ingots/gold"}
+    "3": {"tag":"forge:ingots/copper"},
+    "4": {"tag":"forge:ingots/gold"}
   },
   "result": {
-    "id": "mekanism_weaponry:fire_rate_chip_1",
+    "item": "mekanism_weaponry:heat_per_shot_chip_1",
     "count": 1
   }
 }

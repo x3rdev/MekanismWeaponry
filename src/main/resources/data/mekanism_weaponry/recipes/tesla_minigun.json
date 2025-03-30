@@ -6,14 +6,14 @@
     "52 "
   ],
   "key": {
-    "1": {"tag":"c:ingots/copper"},
+    "1": {"tag":"forge:ingots/copper"},
     "2": {"item":"mekanism:hdpe_sheet"},
     "3": {"item":"mekanism:ultimate_control_circuit"},
     "4": {"item":"mekanism_weaponry:plasma_circuit"},
     "5": {"item":"mekanism:energy_tablet"}
   },
   "result": {
-    "id": "mekanism_weaponry:tesla_minigun",
+    "item": "mekanism_weaponry:tesla_minigun",
     "count": 1
   }
 }

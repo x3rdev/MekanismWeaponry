@@ -12,7 +12,7 @@
     "4": {"item":"mekanism:basic_control_circuit"}
   },
   "result": {
-    "id": "mekanism_weaponry:scope",
+    "item": "mekanism_weaponry:scope",
     "count": 1
   }
 }

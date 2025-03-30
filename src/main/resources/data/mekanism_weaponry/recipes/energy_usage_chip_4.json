@@ -10,7 +10,7 @@
     "1": {"item":"mekanism:ultimate_control_circuit"}
   },
   "result": {
-    "id": "mekanism_weaponry:energy_usage_chip_4",
+    "item": "mekanism_weaponry:energy_usage_chip_4",
     "count": 1
   }
 }

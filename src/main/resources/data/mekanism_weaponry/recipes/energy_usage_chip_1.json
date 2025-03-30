@@ -9,11 +9,11 @@
     "0": {"item":"mekanism:energy_tablet"},
     "1": {"item":"mekanism:basic_control_circuit"},
     "2": {"item":"minecraft:green_dye"},
-    "3": {"tag":"c:ingots/copper"},
-    "4": {"tag":"c:ingots/gold"}
+    "3": {"tag":"forge:ingots/copper"},
+    "4": {"tag":"forge:ingots/gold"}
   },
   "result": {
-    "id": "mekanism_weaponry:energy_usage_chip_1",
+    "item": "mekanism_weaponry:energy_usage_chip_1",
     "count": 1
   }
 }
