@@ -127,11 +127,11 @@ public abstract class GunItem extends Item {
         for (int i = 0; i < addons.length; i++) {
             addons[i] = getAddon(stack, i);
         }
-        if(Arrays.stream(addons).allMatch(s -> s.equals(ItemStack.EMPTY))) {
+        if(Arrays.stream(addons).allMatch(ItemStack::isEmpty)) {
             tooltipComponents.add(Component.translatable("mekanism_weaponry.tooltip.gun_no_addons"));
         } else {
             for (ItemStack addon : addons) {
-                if(!addon.equals(ItemStack.EMPTY)) {
+                if(!addon.isEmpty()) {
                     tooltipComponents.add(Component.literal(" ").append(addon.getHoverName()));
                 }
             }
@@ -160,7 +160,7 @@ public abstract class GunItem extends Item {
     }
 
     public int getEnergyUsage(ItemStack stack) {
-        return (int) Math.max(0, this.energyUsage - 10* getAddonMultiplier(stack, EnergyUsageChipItem.class));
+        return (int) Math.max(0, this.energyUsage - 10 * getAddonMultiplier(stack, EnergyUsageChipItem.class));
     }
 
     public int getReloadTime(ItemStack stack) {

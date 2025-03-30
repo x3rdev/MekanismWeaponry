@@ -24,15 +24,6 @@ public abstract class GunAddonItem extends Item {
         this.mul = mul;
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(
-                Component.translatable("mekanism_weaponry.tooltip.addon_effect_multiplier").append(": ").withStyle(Style.EMPTY.withColor(0x2fb2d6)).append(
-                        Component.literal(DF.format(mul)+"x").withStyle(Style.EMPTY.withColor(0xFFFFFF))
-                )
-        );
-    }
-
     public float mul() {
         return mul;
     }

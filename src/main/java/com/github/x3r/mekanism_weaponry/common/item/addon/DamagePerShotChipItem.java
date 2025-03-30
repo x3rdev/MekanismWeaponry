@@ -8,16 +8,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class EnergyUsageChipItem extends GunAddonItem {
+public class DamagePerShotChipItem extends GunAddonItem {
 
-    public EnergyUsageChipItem(Properties properties, AddonType addonType, float mul) {
+    public DamagePerShotChipItem(Properties properties, AddonType addonType, float mul) {
         super(properties, addonType, mul);
     }
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         pTooltipComponents.add(
-                Component.translatable("mekanism_weaponry.tooltip.energy_usage_chip", (int) mul()*10)
+                Component.translatable("mekanism_weaponry.tooltip.damage_per_shot_chip")
         );
     }
 }
