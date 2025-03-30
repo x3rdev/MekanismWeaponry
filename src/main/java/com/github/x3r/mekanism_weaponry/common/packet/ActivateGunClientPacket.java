@@ -1,11 +1,8 @@
 package com.github.x3r.mekanism_weaponry.common.packet;
 
-import com.github.x3r.mekanism_weaponry.common.item.GunItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -26,11 +23,7 @@ public class ActivateGunClientPacket  {
 
     public void receivePacket(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
-            Player player = Minecraft.getInstance().player;
-            ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-            if(stack.getItem() instanceof GunItem item) {
-                item.clientShoot(stack, player);
-            }
+            DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> MekanismWeaponryClientPacketHandler.activateGunClientPacket(context));
         });
         context.get().setPacketHandled(true);
     }
