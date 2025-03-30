@@ -6,7 +6,7 @@
     "010"
   ],
   "key": {
-    "0": {"tag":"c:ingots/bronze"},
+    "0": {"tag":"c:ingots/copper"},
     "1": {"tag":"c:ingots/steel"},
     "2": {"item":"mekanism:elite_control_circuit"}
   },

@@ -16,7 +16,7 @@ public class EnergyUsageChipItem extends GunAddonItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         tooltipComponents.add(
-                Component.translatable("mekanism_weaponry.tooltip.energy_usage_chip")
+                Component.translatable("mekanism_weaponry.tooltip.energy_usage_chip", (int) mul()*10)
         );
     }
 }

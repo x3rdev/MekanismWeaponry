@@ -16,7 +16,7 @@ public class FireRateChipItem extends GunAddonItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         tooltipComponents.add(
-                Component.translatable("mekanism_weaponry.tooltip.fire_rate_chip")
+                Component.translatable("mekanism_weaponry.tooltip.fire_rate_chip", (int) mul())
         );
     }
 }

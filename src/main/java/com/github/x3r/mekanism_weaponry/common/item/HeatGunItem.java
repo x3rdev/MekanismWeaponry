@@ -53,7 +53,7 @@ public abstract class HeatGunItem extends GunItem {
         super.addStatsTooltip(stack, tooltipComponents);
         tooltipComponents.add(
                 Component.literal(" ").append(Component.translatable("mekanism_weaponry.tooltip.gun_heat_per_shot")).append(": ").withColor(0x89c98d).append(
-                        Component.literal(String.format("%f heat", getHeatPerShot(stack))).withColor(0xFFFFFF)
+                        Component.literal(String.format("%.2f heat", getHeatPerShot(stack))).withColor(0xFFFFFF)
                 )
         );
     }
@@ -64,7 +64,7 @@ public abstract class HeatGunItem extends GunItem {
     }
 
     public float getHeatPerShot(ItemStack stack) {
-        return Math.max(0, this.heatPerShot/(1+getAddonMultiplier(stack, HeatPerShotChipItem.class)));
+        return Math.max(0, this.heatPerShot-(this.heatPerShot/8F * getAddonMultiplier(stack, HeatPerShotChipItem.class)));
     }
 
     public float getHeat(ItemStack stack) {

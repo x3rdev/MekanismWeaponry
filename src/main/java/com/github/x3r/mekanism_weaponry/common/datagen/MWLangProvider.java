@@ -44,8 +44,6 @@ public class MWLangProvider extends LanguageProvider {
         add("mekanism_weaponry.tooltip.gun_addons", "Gun Addons");
         add("mekanism_weaponry.tooltip.gun_no_addons", "No Addons Installed");
 
-        add("mekanism_weaponry.tooltip.addon_effect_multiplier", "Effect multiplier");
-
         add("mekanism_weaponry.tooltip.color_desc.nimbus", "Classic blue and white");
         add("mekanism_weaponry.tooltip.color_desc.alien", "Out of this world");
         add("mekanism_weaponry.tooltip.color_desc.cotton_candy", "Sugar tooth");
@@ -53,9 +51,9 @@ public class MWLangProvider extends LanguageProvider {
         add("mekanism_weaponry.tooltip.color_desc.bumblebee", "Float like a butterfly");
         add("mekanism_weaponry.tooltip.color_desc.crimson", "Blood red");
 
-        add("mekanism_weaponry.tooltip.energy_usage_chip", "Reduces the energy cost of the weapon");
-        add("mekanism_weaponry.tooltip.fire_rate_chip", "Reduces the time between shot of the weapon");
-        add("mekanism_weaponry.tooltip.heat_per_shot_chip", "Reduces the heat accumulated when the weapon is shot");
+        add("mekanism_weaponry.tooltip.energy_usage_chip", "Reduces energy cost by %d RF/shot");
+        add("mekanism_weaponry.tooltip.fire_rate_chip", "Reduces cooldown by %d ticks");
+        add("mekanism_weaponry.tooltip.heat_per_shot_chip", "Reduces heat accumulated by %s");
 
         add("key.categories.mekanism_weaponry", "Mekanism Weaponry");
         add("key.mekanism_weaponry.reload", "Reload");

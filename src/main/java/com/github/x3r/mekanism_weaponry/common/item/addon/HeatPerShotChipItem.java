@@ -15,8 +15,9 @@ public class HeatPerShotChipItem extends GunAddonItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        float percent = mul()/8;
         tooltipComponents.add(
-                Component.translatable("mekanism_weaponry.tooltip.heat_per_shot_chip")
+                Component.translatable("mekanism_weaponry.tooltip.heat_per_shot_chip", String.format("%.2f", 100 * percent) +"%")
         );
     }
 }

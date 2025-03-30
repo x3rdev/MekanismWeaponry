@@ -159,7 +159,7 @@ public abstract class GunItem extends Item {
     }
 
     public int getEnergyUsage(ItemStack stack) {
-        return (int) Math.max(0, this.energyUsage - 10* getAddonMultiplier(stack, EnergyUsageChipItem.class));
+        return (int) Math.max(0, this.energyUsage - 10 * getAddonMultiplier(stack, EnergyUsageChipItem.class));
     }
 
     public int getReloadTime(ItemStack stack) {
