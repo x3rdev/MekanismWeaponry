@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.github.x3r.mekanism_weaponry.mixin",
   "compatibilityLevel": "JAVA_21",
-  "refmap": "mekanism_weaponry.refmap.json",
+  "refmap": "mixins.mekanism_weaponry.refmap.json",
   "mixins": [
   ],
   "client": [

@@ -9,7 +9,8 @@ authors="${mod_authors}"
 description='''${mod_description}'''
 enumExtensions="META-INF/enumextensions.json"
 [[mixins]]
-config="mekanism_weaponry.mixins.json"
+config="mixins.mekanism_weaponry.json"
+refmap="mixins.mekanism_weaponry.refmap.json"
 [[dependencies.${mod_id}]]
    modId="neoforge"
    mandatory=true
