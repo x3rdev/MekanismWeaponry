@@ -7,7 +7,7 @@
   ],
   "key": {
     "1": {"item":"minecraft:anvil"},
-    "2": {"item":"mekanism:ingot_refined_obsitemian"},
+    "2": {"item":"mekanism:ingot_refined_obsidian"},
     "3": {"item":"mekanism_weaponry:plasma_circuit"},
     "4": {"item":"minecraft:breeze_rod"},
     "5": {"tag":"forge:ingots/steel"}
