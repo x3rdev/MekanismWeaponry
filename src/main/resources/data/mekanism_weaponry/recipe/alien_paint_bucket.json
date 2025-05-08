@@ -12,7 +12,7 @@
     "4": {"item":"minecraft:bucket"}
   },
   "result": {
-    "id": "mekanism_weaponry:alien_paint_bucket",
+    "item": "mekanism_weaponry:alien_paint_bucket",
     "count": 1
   }
 }
