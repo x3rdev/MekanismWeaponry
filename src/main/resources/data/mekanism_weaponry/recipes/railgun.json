@@ -9,7 +9,7 @@
     "1": {"item":"minecraft:anvil"},
     "2": {"item":"mekanism:ingot_refined_obsidian"},
     "3": {"item":"mekanism_weaponry:plasma_circuit"},
-    "4": {"item":"minecraft:breeze_rod"},
+    "4": {"item":"minecraft:blaze_rod"},
     "5": {"tag":"forge:ingots/steel"}
   },
   "result": {
