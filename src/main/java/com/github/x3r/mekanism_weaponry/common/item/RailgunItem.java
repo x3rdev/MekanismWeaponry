@@ -76,7 +76,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
     public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new ItemEnergyCapability(stack, new EnergyStorage(
                 MekanismWeaponryConfig.CONFIG.getRailgunEnergyCapacity(),
-                MekanismWeaponryConfig.CONFIG.getTeslaMinigunEnergyTransfer()
+                MekanismWeaponryConfig.CONFIG.getRailgunEnergyTransfer()
         ));
     }
 

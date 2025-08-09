@@ -8,6 +8,7 @@ public class MekanismWeaponryConfig {
     public static final MekanismWeaponryConfig CONFIG;
     public static final ForgeConfigSpec CONFIG_SPEC;
 
+    private final ForgeConfigSpec.DoubleValue plasmaRifleDamage;
     private final ForgeConfigSpec.IntValue plasmaRifleCooldown;
     private final ForgeConfigSpec.IntValue plasmaRifleEnergyUsage;
     private final ForgeConfigSpec.IntValue plasmaRifleReloadTime;
@@ -42,7 +43,8 @@ public class MekanismWeaponryConfig {
 
     public MekanismWeaponryConfig(ForgeConfigSpec.Builder builder) {
         builder.push("Mekanism Weaponry Config");
-
+        
+        plasmaRifleDamage = builder.comment("Damage dealt by plasma rifle projectiles").defineInRange("plasmaRifleDamage", 8.0, 0, Float.MAX_VALUE);
         plasmaRifleCooldown = builder.comment("Cooldown in ticks between when gun can be shot").defineInRange("plasmaRifleCooldown", 6, 0, Integer.MAX_VALUE);
         plasmaRifleEnergyUsage = builder.comment("How much FE should be drained from the guns battery every shot").defineInRange("plasmaRifleEnergyUsage", 250, 0, Integer.MAX_VALUE);
         plasmaRifleReloadTime = builder.comment("How many ticks it should take to reload the weapon").defineInRange("plasmaRifleReloadTime", 45, 0, Integer.MAX_VALUE);
@@ -71,7 +73,13 @@ public class MekanismWeaponryConfig {
         builder.pop();
     }
 
-
+    public float getPlasmaRifleDamage() {
+        if(!CONFIG_SPEC.isLoaded()) {
+            return (float) (double) plasmaRifleDamage.get();
+        }
+        return (float) (double) plasmaRifleDamage.getDefault();
+    }
+    
     public int getPlasmaRifleCooldown() {
         if(!CONFIG_SPEC.isLoaded()) {
             return plasmaRifleCooldown.getDefault();
