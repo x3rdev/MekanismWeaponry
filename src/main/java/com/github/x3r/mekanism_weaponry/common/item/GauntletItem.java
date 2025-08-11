@@ -64,7 +64,7 @@ public class GauntletItem extends Item implements GeoItem {
         return ItemAttributeModifiers.builder()
                 .add(
                         Attributes.ATTACK_DAMAGE,
-                        new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 6, AttributeModifier.Operation.ADD_VALUE),
+                        new AttributeModifier(BASE_ATTACK_DAMAGE_ID, MekanismWeaponryConfig.CONFIG.getGauntletDamage(), AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.MAINHAND
                 )
                 .add(

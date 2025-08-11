@@ -2,8 +2,10 @@ package com.github.x3r.mekanism_weaponry.client.sound;
 
 import com.github.x3r.mekanism_weaponry.common.item.TeslaMinigunItem;
 import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -48,5 +50,12 @@ public class TeslaMinigunSoundInstance extends AbstractTickableSoundInstance {
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (TeslaMinigunSoundInstance) obj;
         return Objects.equals(this.player, that.player);
+    }
+    public static void playSound(Player player) {
+        SoundManager manager = Minecraft.getInstance().getSoundManager();
+        TeslaMinigunSoundInstance instance = new TeslaMinigunSoundInstance(player);
+        if(!manager.isActive(instance)) {
+            manager.play(instance);
+        }
     }
 }

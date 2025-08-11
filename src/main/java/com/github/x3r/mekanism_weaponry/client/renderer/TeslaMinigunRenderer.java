@@ -70,9 +70,9 @@ public class TeslaMinigunRenderer extends GunRenderer<TeslaMinigunItem> {
             Vector3f dir = new Vector3f(0, -0.01F,-4);
             for (int i = 0; i < source.nextInt(4); i++) {
                 ElectricityNode newNode = new ElectricityNode(new Vec3(
-                        (float) (curr.pos.x + (dir.x*1/(depth+1))+(source.nextGaussian()* Mth.sqrt(depth+0.1F)/3)),
-                        (float) (curr.pos.y + (dir.y*1/(depth+1))+(source.nextGaussian()*Mth.sqrt(depth+0.1F)/4)),
-                        (float) (curr.pos.z + (dir.z*1/(depth+1))+(source.nextGaussian()*Mth.sqrt(depth+0.1F)/3))
+                        (float) (curr.pos.x + (dir.x*1/(depth+2))+(source.nextGaussian()* Mth.sqrt(depth+0.1F)/3)),
+                        (float) (curr.pos.y + (dir.y*1/(depth+2))+(source.nextGaussian()*Mth.sqrt(depth+0.1F)/4)),
+                        (float) (curr.pos.z + (dir.z*1/(depth+2))+(source.nextGaussian()*Mth.sqrt(depth+0.1F)/3))
                 ));
                 buildNodes(newNode, depth+1, maxDepth);
                 curr.children.add(newNode);

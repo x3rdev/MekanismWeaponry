@@ -8,6 +8,7 @@ public class MekanismWeaponryConfig {
     public static final MekanismWeaponryConfig CONFIG;
     public static final ModConfigSpec CONFIG_SPEC;
 
+    private final ModConfigSpec.DoubleValue plasmaRifleDamage;
     private final ModConfigSpec.IntValue plasmaRifleCooldown;
     private final ModConfigSpec.IntValue plasmaRifleEnergyUsage;
     private final ModConfigSpec.IntValue plasmaRifleReloadTime;
@@ -15,13 +16,16 @@ public class MekanismWeaponryConfig {
     private final ModConfigSpec.IntValue plasmaRifleEnergyCapacity;
     private final ModConfigSpec.IntValue plasmaRifleEnergyTransfer;
 
+    private final ModConfigSpec.DoubleValue railgunDamage;
     private final ModConfigSpec.IntValue railgunCooldown;
     private final ModConfigSpec.IntValue railgunEnergyUsage;
     private final ModConfigSpec.IntValue railgunReloadTime;
     private final ModConfigSpec.IntValue railgunMaxAmmo;
     private final ModConfigSpec.IntValue railgunEnergyCapacity;
     private final ModConfigSpec.IntValue railgunEnergyTransfer;
+    private final ModConfigSpec.DoubleValue railgunSecondModeScale;
 
+    private final ModConfigSpec.DoubleValue teslaMinigunDamage;
     private final ModConfigSpec.IntValue teslaMinigunCooldown;
     private final ModConfigSpec.IntValue teslaMinigunEnergyUsage;
     private final ModConfigSpec.IntValue teslaMinigunReloadTime;
@@ -29,6 +33,7 @@ public class MekanismWeaponryConfig {
     private final ModConfigSpec.IntValue teslaMinigunEnergyCapacity;
     private final ModConfigSpec.IntValue teslaMinigunEnergyTransfer;
 
+    private final ModConfigSpec.DoubleValue gauntletDamage;
     private final ModConfigSpec.IntValue gauntletEnergyUsage;
     private final ModConfigSpec.IntValue gauntletEnergyCapacity;
     private final ModConfigSpec.IntValue gauntletEnergyTransfer;
@@ -43,34 +48,45 @@ public class MekanismWeaponryConfig {
     public MekanismWeaponryConfig(ModConfigSpec.Builder builder) {
         builder.push("Mekanism Weaponry Config");
 
+        plasmaRifleDamage = builder.comment("Damage dealt by plasma rifle projectile").defineInRange("plasmaRifleDamage", 8.0, 0, Float.MAX_VALUE);
         plasmaRifleCooldown = builder.comment("Cooldown in ticks between when gun can be shot").defineInRange("plasmaRifleCooldown", 6, 0, Integer.MAX_VALUE);
-        plasmaRifleEnergyUsage = builder.comment("How much FE should be drained from the guns battery every shot").defineInRange("plasmaRifleEnergyUsage", 250, 0, Integer.MAX_VALUE);
+        plasmaRifleEnergyUsage = builder.comment("How much FE should be drained from the guns battery every shot").defineInRange("plasmaRifleEnergyUsage", 175, 0, Integer.MAX_VALUE);
         plasmaRifleReloadTime = builder.comment("How many ticks it should take to reload the weapon").defineInRange("plasmaRifleReloadTime", 45, 0, Integer.MAX_VALUE);
         plasmaRifleHeatPerShot = builder.comment("How much heat should accumulate every shot").defineInRange("plasmaRifleHeatPerShot", 20, 0, Integer.MAX_VALUE);
-        plasmaRifleEnergyCapacity = builder.comment("How much energy the gun can store").defineInRange("plasmaRifleEnergyCapacity", 10000, 0, Integer.MAX_VALUE);
+        plasmaRifleEnergyCapacity = builder.comment("How much energy the gun can store").defineInRange("plasmaRifleEnergyCapacity", 50000, 0, Integer.MAX_VALUE);
         plasmaRifleEnergyTransfer = builder.comment("How fast the gun battery can charge/discharge").defineInRange("plasmaRifleEnergyTransfer", 1000, 0, Integer.MAX_VALUE);
 
+        railgunDamage = builder.comment("Damage dealt by railgun rod").defineInRange("railgunDamage", 16.0, 0, Float.MAX_VALUE);
         railgunCooldown = builder.comment("Cooldown in ticks between when gun can be shot").defineInRange("railgunCooldown", 20, 0, Integer.MAX_VALUE);
         railgunEnergyUsage = builder.comment("How much FE should be drained from the guns battery every shot").defineInRange("railgunEnergyUsage", 1000, 0, Integer.MAX_VALUE);
         railgunReloadTime = builder.comment("How many ticks it should take to reload the weapon").defineInRange("railgunReloadTime", 55, 0, Integer.MAX_VALUE);
         railgunMaxAmmo = builder.comment("Max ammo the gun can hold").defineInRange("railgunMaxAmmo", 5, 1, Integer.MAX_VALUE);
-        railgunEnergyCapacity = builder.comment("How much energy the gun can store").defineInRange("railgunEnergyCapacity", 100000, 0, Integer.MAX_VALUE);
+        railgunEnergyCapacity = builder.comment("How much energy the gun can store").defineInRange("railgunEnergyCapacity", 75000, 0, Integer.MAX_VALUE);
         railgunEnergyTransfer = builder.comment("How fast the gun battery can charge/discharge").defineInRange("railgunEnergyTransfer", 10000, 0, Integer.MAX_VALUE);
+        railgunSecondModeScale = builder.comment("Stats scaling when railgun is in second mode").defineInRange("railgunSecondModeScale", 2, 0, Float.MAX_VALUE);
 
+        teslaMinigunDamage = builder.comment("Damage dealt by tesla minigun").defineInRange("teslaMinigunDamage", 2.5, 0, Float.MAX_VALUE);
         teslaMinigunCooldown = builder.comment("Cooldown in ticks between when gun can be shot").defineInRange("teslaMinigunCooldown", 4, 0, Integer.MAX_VALUE);
-        teslaMinigunEnergyUsage = builder.comment("How much FE should be drained from the guns battery every shot").defineInRange("teslaMinigunEnergyUsage", 1000, 0, Integer.MAX_VALUE);
+        teslaMinigunEnergyUsage = builder.comment("How much FE should be drained from the guns battery every shot").defineInRange("teslaMinigunEnergyUsage", 500, 0, Integer.MAX_VALUE);
         teslaMinigunReloadTime = builder.comment("How many ticks it should take to reload the weapon").defineInRange("teslaMinigunReloadTime", 100, 0, Integer.MAX_VALUE);
         teslaMinigunHeatPerShot = builder.comment("How much heat should accumulate every shot").defineInRange("teslaMinigunHeatPerShot", 5, 0, Integer.MAX_VALUE);
-        teslaMinigunEnergyCapacity = builder.comment("How much energy the gun can store").defineInRange("teslaMinigunEnergyCapacity", 100000, 0, Integer.MAX_VALUE);
+        teslaMinigunEnergyCapacity = builder.comment("How much energy the gun can store").defineInRange("teslaMinigunEnergyCapacity", 75000, 0, Integer.MAX_VALUE);
         teslaMinigunEnergyTransfer = builder.comment("How fast the gun battery can charge/discharge").defineInRange("teslaMinigunEnergyTransfer", 10000, 0, Integer.MAX_VALUE);
 
+        gauntletDamage = builder.comment("Damage dealt by gauntlet").defineInRange("gauntletDamage", 5, 0, Float.MAX_VALUE);
         gauntletEnergyUsage = builder.comment("How much FE should be drained from the battery every shot").defineInRange("gauntletEnergyUsage", 1000, 0, Integer.MAX_VALUE);
-        gauntletEnergyCapacity = builder.comment("How much energy the gauntlet battery can store").defineInRange("gauntletEnergyCapacity", 10000, 0, Integer.MAX_VALUE);
+        gauntletEnergyCapacity = builder.comment("How much energy the gauntlet battery can store").defineInRange("gauntletEnergyCapacity", 15000, 0, Integer.MAX_VALUE);
         gauntletEnergyTransfer = builder.comment("How fast the gauntlet battery can charge/discharge").defineInRange("gauntletEnergyTransfer", 1000, 0, Integer.MAX_VALUE);
 
         builder.pop();
     }
 
+    public double getPlasmaRifleDamage() {
+        if(!CONFIG_SPEC.isLoaded()) {
+            return plasmaRifleDamage.getDefault();
+        }
+        return plasmaRifleDamage.get();
+    }
 
     public int getPlasmaRifleCooldown() {
         if(!CONFIG_SPEC.isLoaded()) {
@@ -114,6 +130,13 @@ public class MekanismWeaponryConfig {
         return plasmaRifleEnergyTransfer.get();
     }
 
+    public double getRailgunDamage() {
+        if(!CONFIG_SPEC.isLoaded()) {
+            return railgunDamage.getDefault();
+        }
+        return railgunDamage.get();
+    }
+
     public int getRailgunCooldown() {
         if(!CONFIG_SPEC.isLoaded()) {
             return railgunCooldown.getDefault();
@@ -154,6 +177,19 @@ public class MekanismWeaponryConfig {
             return railgunEnergyTransfer.getDefault();
         }
         return railgunEnergyTransfer.get();
+    }
+    public double getRailgunSecondModeScale() {
+        if(!CONFIG_SPEC.isLoaded()) {
+            return railgunSecondModeScale.getDefault();
+        }
+        return railgunSecondModeScale.get();
+    }
+
+    public double getTeslaMinigunDamage() {
+        if(!CONFIG_SPEC.isLoaded()) {
+            return teslaMinigunDamage.getDefault();
+        }
+        return teslaMinigunDamage.get();
     }
 
     public int getTeslaMinigunCooldown() {
@@ -196,6 +232,13 @@ public class MekanismWeaponryConfig {
             return teslaMinigunEnergyTransfer.getDefault();
         }
         return teslaMinigunEnergyTransfer.get();
+    }
+
+    public double getGauntletDamage() {
+        if(!CONFIG_SPEC.isLoaded()) {
+            return gauntletDamage.getDefault();
+        }
+        return gauntletDamage.get();
     }
 
     public int getGauntletEnergyUsage() {
