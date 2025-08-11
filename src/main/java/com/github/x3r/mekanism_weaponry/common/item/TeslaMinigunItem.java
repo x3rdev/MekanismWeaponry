@@ -72,9 +72,9 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
             getEnergyStorage(stack).extractEnergy(getEnergyUsage(stack), false);
             setHeat(stack, getHeat(stack) + getHeatPerShot(stack));
             Set<Entity> entitiesToHurt = new HashSet<>();
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i <= 3; i++) {
                 Vec3 hurtVolumeCenter = player.position().add(player.getLookAngle().normalize().scale(2*i));
-                AABB hurtBox = AABB.ofSize(hurtVolumeCenter, 2, 2, 2);
+                AABB hurtBox = AABB.ofSize(hurtVolumeCenter, 2, 3, 2);
                 entitiesToHurt.addAll(level.getEntities(player, hurtBox));
             }
             entitiesToHurt.forEach(entity -> {
