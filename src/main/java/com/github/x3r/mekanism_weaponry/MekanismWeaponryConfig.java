@@ -83,9 +83,9 @@ public class MekanismWeaponryConfig {
 
     public double getPlasmaRifleDamage() {
         if(!CONFIG_SPEC.isLoaded()) {
-            return plasmaRifleDamage.get();
+            return plasmaRifleDamage.getDefault();
         }
-        return plasmaRifleDamage.getDefault();
+        return plasmaRifleDamage.get();
     }
     
     public int getPlasmaRifleCooldown() {
@@ -132,9 +132,9 @@ public class MekanismWeaponryConfig {
 
     public double getRailgunDamage() {
         if(!CONFIG_SPEC.isLoaded()) {
-            return railgunDamage.get();
+            return railgunDamage.getDefault();
         }
-        return railgunDamage.getDefault();
+        return railgunDamage.get();
     }
 
     public int getRailgunCooldown() {
@@ -181,16 +181,16 @@ public class MekanismWeaponryConfig {
 
     public double getRailgunSecondModeScale() {
         if(!CONFIG_SPEC.isLoaded()) {
-            return railgunSecondModeScale.get();
+            return railgunSecondModeScale.getDefault();
         }
-        return railgunSecondModeScale.getDefault();
+        return railgunSecondModeScale.get();
     }
 
     public double getTeslaMinigunDamage() {
         if(!CONFIG_SPEC.isLoaded()) {
-            return teslaMinigunDamage.get();
+            return teslaMinigunDamage.getDefault();
         }
-        return teslaMinigunDamage.getDefault();
+        return teslaMinigunDamage.get();
     }
 
     public int getTeslaMinigunCooldown() {
@@ -237,9 +237,9 @@ public class MekanismWeaponryConfig {
 
     public double getGauntletDamage() {
         if(!CONFIG_SPEC.isLoaded()) {
-            return gauntletDamage.get();
+            return gauntletDamage.getDefault();
         }
-        return gauntletDamage.getDefault();
+        return gauntletDamage.get();
     }
 
     public int getGauntletEnergyUsage() {
