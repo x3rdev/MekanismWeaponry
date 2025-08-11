@@ -95,15 +95,15 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
             setLastShotTick(stack, level.getGameTime());
             MekanismWeaponryPacketHandler.sendToClient(new ActivateGunClientPacket(), player);
 
-            float dmg = isSecondMode(stack) ? 24F : 16F;
+            double dmg = MekanismWeaponryConfig.CONFIG.getRailgunDamage() * getScale(stack);
             RodEntity rod = new RodEntity(player, pos, dmg, isSecondMode(stack));
-            rod.setDeltaMovement(lookAngle.add(0, 0.015, 0).normalize().scale(isSecondMode(stack) ? 4 : 3));
+            rod.setDeltaMovement(lookAngle.add(0, 0.015, 0).normalize().scale(2 * getScale(stack)));
             level.addFreshEntity(rod);
-            level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.RAILGUN_SHOOT.get(), SoundSource.PLAYERS, 3F, 1.0F);
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.RAILGUN_SHOOT.get(), SoundSource.PLAYERS, 3F, 1.0F);
 
             getLoadedAmmo(stack).shrink(1);
 
-            getEnergyStorage(stack).extractEnergy(isSecondMode(stack) ? getEnergyUsage(stack)*2 : getEnergyUsage(stack), false);
+            getEnergyStorage(stack).extractEnergy((int) (getEnergyUsage(stack)*getScale(stack)), false);
 
             if(isSecondMode(stack)) {
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 4));
@@ -111,13 +111,17 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
 
         } else {
             if(!hasSufficientEnergy(stack)) {
-                player.serverLevel().playSound(null, player.getEyePosition().x, player.getEyePosition().y, player.getEyePosition().z, SoundRegistry.GUN_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.GUN_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
             }
             if(!hasAmmo(stack)) {
                 tryStartReload(stack, player);
             }
             setShooting(stack, false);
         }
+    }
+
+    private double getScale(ItemStack stack) {
+        return isSecondMode(stack) ? MekanismWeaponryConfig.CONFIG.getRailgunSecondModeScale() : 1F;
     }
 
     @Override

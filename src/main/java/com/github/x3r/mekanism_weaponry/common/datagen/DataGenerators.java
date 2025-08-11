@@ -26,6 +26,7 @@ public final class DataGenerators {
         generator.addProvider(event.includeServer(), new MWItemTagsProvider(packOutput, lookupProvider, blockTagsProvider.contentsGetter()));
         generator.addProvider(event.includeClient(), new MWModelProvider(packOutput, existingFileHelper));
         generator.addProvider(event.includeClient(), new MWLangProvider(packOutput, "en_us"));
+        generator.addProvider(event.includeServer(), new MWLootTableProvider(packOutput));
         generator.addProvider(event.includeClient(), new MWSoundDefProvider(packOutput, existingFileHelper));
     }
 }

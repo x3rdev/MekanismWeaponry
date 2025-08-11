@@ -30,5 +30,6 @@ public class ReloadGunServerPacket {
                 item.tryStartReload(stack, player);
             }
         });
+        context.get().setPacketHandled(true);
     }
 }

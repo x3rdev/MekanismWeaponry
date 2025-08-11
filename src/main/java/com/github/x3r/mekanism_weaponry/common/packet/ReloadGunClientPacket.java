@@ -23,7 +23,9 @@ public class ReloadGunClientPacket {
 
     public void receivePacket(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
-            DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> MekanismWeaponryClientPacketHandler.reloadGunClientPacket(context));
+//            DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> MekanismWeaponryClientPacketHandler.reloadGunClientPacket(context));
+            MekanismWeaponryClientPacketHandler.reloadGunClientPacket(context);
         });
+        context.get().setPacketHandled(true);
     }
 }

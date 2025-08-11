@@ -13,14 +13,18 @@ import com.github.x3r.mekanism_weaponry.common.registry.SoundRegistry;
 import com.github.x3r.mekanism_weaponry.common.scheduler.Scheduler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,6 +50,10 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
@@ -76,46 +84,38 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
     @Override
     public void serverShoot(ItemStack stack, ServerPlayer player) {
         Level level = player.level();
-        Vec3 pos = player.getEyePosition()
-                .add(player.getLookAngle().normalize().scale(0.1));
         if(isReady(stack, player, level)) {
             setShooting(stack, true);
             setLastShotTick(stack, level.getGameTime());
             MekanismWeaponryPacketHandler.sendToClient(new ActivateGunClientPacket(), player);
             getEnergyStorage(stack).extractEnergy(getEnergyUsage(stack), false);
             setHeat(stack, getHeat(stack) + getHeatPerShot(stack));
-            for (int i = 0; i < 6; i++) {
-                Vec3 hurtVolumeCenter = player.position().add(player.getLookAngle().normalize().scale(i));
-                AABB hurtBox = new AABB(
-                        hurtVolumeCenter.subtract(0.5, 0.5, 0.5),
-                        hurtVolumeCenter.add(0.5, 0.5, 0.5)
-                ).inflate(1);
-                level.getEntities(player, hurtBox).forEach(entity -> {
-                    if(entity instanceof LivingEntity) {
-                        entity.hurt(new DamageTypeRegistry(player.level().registryAccess()).electricity(player), 4);
-                    }
-                });
+            Set<Entity> entitiesToHurt = new HashSet<>();
+            for (int i = 0; i < 3; i++) {
+                Vec3 hurtVolumeCenter = player.position().add(player.getLookAngle().normalize().scale(2*i));
+                AABB hurtBox = AABB.ofSize(hurtVolumeCenter, 2, 2, 2);
+                entitiesToHurt.addAll(level.getEntities(player, hurtBox));
+                ((ServerLevel) level).sendParticles(ParticleTypes.ANGRY_VILLAGER, hurtVolumeCenter.x, hurtVolumeCenter.y, hurtVolumeCenter.z, 1, 0, 0, 0, 0);
             }
+            entitiesToHurt.forEach(entity -> {
+                if(entity instanceof LivingEntity) {
+                    entity.hurt(new DamageTypeRegistry(player.level().registryAccess()).electricity(player), (float) MekanismWeaponryConfig.CONFIG.getTeslaMinigunDamage());
+                }
+            });
         } else {
             if(!hasSufficientEnergy(stack)) {
-                level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.GUN_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.GUN_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
             }
             if(isOverheated(stack)) {
-                level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
             setShooting(stack, false);
         }
     }
 
-
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void clientShoot(ItemStack stack, Player player) {
-        SoundManager manager = Minecraft.getInstance().getSoundManager();
-        TeslaMinigunSoundInstance instance = new TeslaMinigunSoundInstance(player);
-        if(!manager.isActive(instance)) {
-            manager.play(instance);
-        }
+        TeslaMinigunSoundInstance.playSound(player);
     }
 
     @Override

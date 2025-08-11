@@ -31,5 +31,6 @@ public class DeactivateGunPacket {
                 item.serverStoppedShooting(stack);
             }
         });
+        context.get().setPacketHandled(true);
     }
 }

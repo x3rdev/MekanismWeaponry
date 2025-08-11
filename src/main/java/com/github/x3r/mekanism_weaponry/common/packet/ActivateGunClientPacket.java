@@ -23,7 +23,8 @@ public class ActivateGunClientPacket  {
 
     public void receivePacket(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
-            DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> MekanismWeaponryClientPacketHandler.activateGunClientPacket(context));
+//            DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> MekanismWeaponryClientPacketHandler.activateGunClientPacket(context));
+            MekanismWeaponryClientPacketHandler.activateGunClientPacket(context);
         });
         context.get().setPacketHandled(true);
     }

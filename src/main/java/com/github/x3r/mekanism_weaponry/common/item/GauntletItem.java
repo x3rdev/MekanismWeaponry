@@ -60,7 +60,7 @@ public class GauntletItem extends Item implements GeoItem {
         if(slot.equals(EquipmentSlot.MAINHAND)) {
             if(hasSufficientEnergy(stack)) {
                 ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-                builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", 5, AttributeModifier.Operation.ADDITION));
+                builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", MekanismWeaponryConfig.CONFIG.getGauntletDamage(), AttributeModifier.Operation.ADDITION));
                 builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", -3.0, AttributeModifier.Operation.ADDITION));
                 return builder.build();
             } else {

@@ -77,19 +77,19 @@ public class PlasmaRifleItem extends HeatGunItem implements GeoItem {
             setLastShotTick(stack, level.getGameTime());
             MekanismWeaponryPacketHandler.sendToClient(new ActivateGunClientPacket(), player);
 
-            PlasmaEntity plasma = new PlasmaEntity(player, pos, 8.0F);
+            PlasmaEntity plasma = new PlasmaEntity(player, pos, MekanismWeaponryConfig.CONFIG.getPlasmaRifleDamage());
             plasma.setDeltaMovement(player.getLookAngle().normalize().scale(3));
             level.addFreshEntity(plasma);
-            level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.PLASMA_RIFLE_SHOOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.PLASMA_RIFLE_SHOOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
 
             getEnergyStorage(stack).extractEnergy(getEnergyUsage(stack), false);
             setHeat(stack, getHeat(stack) + getHeatPerShot(stack));
         } else {
             if(!hasSufficientEnergy(stack)) {
-                level.playSound(null, pos.x, pos.y, pos.z, SoundRegistry.GUN_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.GUN_OUT_OF_ENERGY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
             }
             if(isOverheated(stack)) {
-                level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
             setShooting(stack, false);
         }
