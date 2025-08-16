@@ -83,7 +83,7 @@ public class RailgunItem extends AmmoGunItem implements GeoItem {
             level.addFreshEntity(rod);
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.RAILGUN_SHOOT.get(), SoundSource.PLAYERS, 3F, 1.0F);
 
-            getLoadedAmmo(stack).shrink(1);
+            setLoadedAmmo(stack, getLoadedAmmo(stack).copyWithCount(getLoadedAmmo(stack).getCount()-1));
 
             getEnergyStorage(stack).extractEnergy((int) (getEnergyUsage(stack)*getScale(stack)), false);
 

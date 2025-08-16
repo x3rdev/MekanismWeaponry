@@ -36,14 +36,15 @@ public abstract class HeatGunItem extends GunItem {
             float heat = getHeat(stack);
             if (heat > 0) {
                 if(!isShooting(stack)) {
-                    setHeat(stack, heat - 0.25F);
+                    setHeat(stack, heat - 1F);
                 }
-                if (heat < 0.01) {
-                    setHeat(stack, 0F);
-                }
+
                 if (heat > MAX_HEAT) {
                     tryStartReload(stack, player);
                 }
+            }
+            if (heat < 0.05) {
+                setHeat(stack, 0F);
             }
         }
     }
@@ -64,7 +65,12 @@ public abstract class HeatGunItem extends GunItem {
     }
 
     public float getHeatPerShot(ItemStack stack) {
-        return Math.max(0, this.heatPerShot-(this.heatPerShot/8F * getAddonMultiplier(stack, HeatPerShotChipItem.class)));
+        List<ItemStack> heatPerShotAddon = getAddonsOfType(stack, HeatPerShotChipItem.class);
+        float modifiedHeatPerShot = this.heatPerShot;
+        for (ItemStack addonStack : heatPerShotAddon) {
+            modifiedHeatPerShot *= ((HeatPerShotChipItem) addonStack.getItem()).mul() / 8F;
+        }
+        return modifiedHeatPerShot;
     }
 
     public float getHeat(ItemStack stack) {

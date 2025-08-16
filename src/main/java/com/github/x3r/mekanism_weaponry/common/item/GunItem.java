@@ -23,6 +23,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -201,11 +202,22 @@ public abstract class GunItem extends Item {
         return false;
     }
 
-    public float getAddonMultiplier(ItemStack stack, Class<? extends GunAddonItem> addon) {
+    public List<ItemStack> getAddonsOfType(ItemStack stack, Class<? extends GunAddonItem> addonClass) {
+        List<ItemStack> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            ItemStack addonStack = getAddon(stack, i);
+            if(addonClass.isInstance(addonStack.getItem())) {
+                list.add(addonStack);
+            }
+        }
+        return list;
+    }
+
+    public float getAddonMultiplier(ItemStack stack, Class<? extends GunAddonItem> addonClass) {
         float count = 0;
         DataComponentAddons addons = stack.get(DataComponentRegistry.ADDONS.get());
         for (int i = 0; i < 5; i++) {
-            if(addon.isInstance(addons.getAddon(i).getItem())) {
+            if(addonClass.isInstance(addons.getAddon(i).getItem())) {
                 count += ((GunAddonItem) addons.getAddon(i).getItem()).mul();
             }
         }
