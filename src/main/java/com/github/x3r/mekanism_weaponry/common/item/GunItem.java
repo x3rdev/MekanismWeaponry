@@ -26,6 +26,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -229,11 +230,22 @@ public abstract class GunItem extends Item {
         return false;
     }
 
-    public float getAddonMultiplier(ItemStack stack, Class<? extends GunAddonItem> addon) {
+    public List<ItemStack> getAddonsOfType(ItemStack stack, Class<? extends GunAddonItem> addonClass) {
+        List<ItemStack> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            ItemStack addonStack = getAddon(stack, i);
+            if(addonClass.isInstance(addonStack.getItem())) {
+                list.add(addonStack);
+            }
+        }
+        return list;
+    }
+
+    public float getAddonMultiplier(ItemStack stack, Class<? extends GunAddonItem> addonClass) {
         float count = 0;
         for (int i = 0; i < 5; i++) {
             ItemStack addonStack = getAddon(stack, i);
-            if(addon.isInstance(addonStack.getItem())) {
+            if(addonClass.isInstance(addonStack.getItem())) {
                 count += ((GunAddonItem) addonStack.getItem()).mul();
             }
         }

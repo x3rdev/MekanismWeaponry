@@ -95,7 +95,6 @@ public class TeslaMinigunItem extends HeatGunItem implements GeoItem {
                 Vec3 hurtVolumeCenter = player.position().add(player.getLookAngle().normalize().scale(2*i));
                 AABB hurtBox = AABB.ofSize(hurtVolumeCenter, 2, 3, 2);
                 entitiesToHurt.addAll(level.getEntities(player, hurtBox));
-                ((ServerLevel) level).sendParticles(ParticleTypes.ANGRY_VILLAGER, hurtVolumeCenter.x, hurtVolumeCenter.y, hurtVolumeCenter.z, 1, 0, 0, 0, 0);
             }
             entitiesToHurt.forEach(entity -> {
                 if(entity instanceof LivingEntity) {
