@@ -23,7 +23,7 @@ public class EntityRegistry {
                     .canSpawnFarFromPlayer()
                     .setTrackingRange(16)
                     .clientTrackingRange(16)
-                    .updateInterval(20)
+                    .updateInterval(3)
                     .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "plasma").toString()));
 
     public static final DeferredHolder<EntityType<?>, EntityType<RodEntity>> ROD = ENTITY_TYPES.register("rod",
@@ -33,6 +33,6 @@ public class EntityRegistry {
                     .canSpawnFarFromPlayer()
                     .setTrackingRange(16)
                     .clientTrackingRange(16)
-                    .updateInterval(20)
+                    .updateInterval(3)
                     .build(ResourceLocation.fromNamespaceAndPath(MekanismWeaponry.MOD_ID, "rod").toString()));
 }
