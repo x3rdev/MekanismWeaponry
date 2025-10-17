@@ -20,6 +20,8 @@ import software.bernie.geckolib.renderer.specialty.DynamicGeoItemRenderer;
 
 public abstract class GunRenderer<T extends GunItem & GeoAnimatable> extends DynamicGeoItemRenderer<T> {
 
+    private static ResourceLocation skinTexture;
+
     protected GunRenderer(GeoModel<T> model) {
         super(model);
     }
@@ -28,10 +30,19 @@ public abstract class GunRenderer<T extends GunItem & GeoAnimatable> extends Dyn
     protected @Nullable ResourceLocation getTextureOverrideForBone(GeoBone bone, T animatable, float partialTick) {
         LocalPlayer player = Minecraft.getInstance().player;
         if(player != null && bone.getParent() != null && bone.getParent().getParent() != null && bone.getParent().getParent().getName().equals("arms")) {
-            return player.getSkin().texture();
+            ResourceLocation skin = getSkinResourceLocation(player);
+            return skin;
         }
         return super.getTextureOverrideForBone(bone, animatable, partialTick);
     }
+
+    private static ResourceLocation getSkinResourceLocation(LocalPlayer player) {
+        if(skinTexture == null) {
+            skinTexture = player.getSkin().texture();
+        }
+        return skinTexture;
+    }
+
 
     @Override
     protected boolean boneRenderOverride(PoseStack poseStack, GeoBone bone, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int colour) {
@@ -64,6 +75,9 @@ public abstract class GunRenderer<T extends GunItem & GeoAnimatable> extends Dyn
 
     @Override
     protected IntIntPair computeTextureSize(ResourceLocation texture) {
+        if(texture.equals(skinTexture)) {
+            return IntIntPair.of(64, 64);
+        }
         if(texture.getNamespace().equals("minecraft") && texture.getPath().substring(0, texture.getPath().indexOf('/')).equals("skins")) {
             return IntIntPair.of(64, 64);
         }
