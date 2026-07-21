@@ -1,6 +1,7 @@
 package com.github.x3r.mekanism_weaponry.client;
 
 import com.github.x3r.mekanism_weaponry.MekanismWeaponry;
+import com.github.x3r.mekanism_weaponry.MekanismWeaponryConfig;
 import com.github.x3r.mekanism_weaponry.client.renderer.PlasmaRenderer;
 import com.github.x3r.mekanism_weaponry.client.renderer.RodRenderer;
 import com.github.x3r.mekanism_weaponry.client.screen.WeaponWorkbenchScreen;
@@ -147,7 +148,7 @@ public class ClientSetup {
 
     // Neo Bus event, registered in mod class
     public static void cameraSetupEvent(ViewportEvent.ComputeCameraAngles event) {
-        if(recoil > 0) {
+        if(MekanismWeaponryConfig.CONFIG.getEnableRecoil() && recoil > 0) {
             event.setPitch((float) (event.getPitch() - Mth.lerp(event.getPartialTick(), recoilO, recoil)));
         }
     }

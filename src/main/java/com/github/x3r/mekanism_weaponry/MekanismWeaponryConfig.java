@@ -38,6 +38,8 @@ public class MekanismWeaponryConfig {
     private final ModConfigSpec.IntValue gauntletEnergyCapacity;
     private final ModConfigSpec.IntValue gauntletEnergyTransfer;
 
+    private final ModConfigSpec.BooleanValue enableRecoil;
+
     static {
         Pair<MekanismWeaponryConfig, ModConfigSpec> pair = new ModConfigSpec.Builder().configure(MekanismWeaponryConfig::new);
 
@@ -77,6 +79,8 @@ public class MekanismWeaponryConfig {
         gauntletEnergyUsage = builder.comment("How much FE should be drained from the battery every shot").defineInRange("gauntletEnergyUsage", 1000, 0, Integer.MAX_VALUE);
         gauntletEnergyCapacity = builder.comment("How much energy the gauntlet battery can store").defineInRange("gauntletEnergyCapacity", 15000, 0, Integer.MAX_VALUE);
         gauntletEnergyTransfer = builder.comment("How fast the gauntlet battery can charge/discharge").defineInRange("gauntletEnergyTransfer", 1000, 0, Integer.MAX_VALUE);
+
+        enableRecoil = builder.comment("Recoil effect enabled?").define("enableRecoil", true);
 
         builder.pop();
     }
@@ -260,5 +264,12 @@ public class MekanismWeaponryConfig {
             return gauntletEnergyTransfer.getDefault();
         }
         return gauntletEnergyTransfer.get();
+    }
+
+    public boolean getEnableRecoil() {
+        if(!CONFIG_SPEC.isLoaded()) {
+            return enableRecoil.getDefault();
+        }
+        return enableRecoil.get();
     }
 }
